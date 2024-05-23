@@ -1,0 +1,3 @@
+id;especie_quimica;formula;coeficiente_estequiometrico;detalle;tipo_especie;nombre_reaccion
+1;A;A;2;Reaccion de transformacion de A en R 2A=>R;reactivo_limitante;2A=>R
+2;R;R;1;Reaccion de transformacion de A en R 2A=>R;producto;2A=>R

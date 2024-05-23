@@ -1,0 +1,2 @@
+id;temperatura;tiempo;presion_total;presion_parcial;fraccion_molar;especie_quimica;tipo_especie;detalle;nombre_data
+1;300;0;2;0.8;0.4;A;reactivo_limitante;;01_DisenoReactores_Roman_p2r_p25
