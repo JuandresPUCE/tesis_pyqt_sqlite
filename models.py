@@ -45,3 +45,15 @@ class DatosIngresadosCineticos(Base):
 
     def __str__(self):
         return f"ID: {self.id}, Tiempo: {self.tiempo}, Concentración: {self.concentracion}, Otra Propiedad: {self.otra_propiedad}, Conversión Reactivo Limitante: {self.conversion_reactivo_limitante}, Tipo de Especie: {self.tipo_especie}, ID Condiciones Iniciales: {self.id_condiciones_iniciales}, Nombre de Data: {self.nombre_data}, Nombre de Reacción: {self.nombre_reaccion}, Especie Química: {self.especie_quimica}"
+
+class RegistroDataExperimental(Base):
+    __tablename__ = "registro_data_experimental"
+
+    id = Column(Integer, primary_key=True)
+    nombre_data = Column(String)
+    fecha = Column(String)
+    detalle = Column(String)
+
+    def __str__(self):
+        return f"ID: {self.id}, Nombre Data: {self.nombre_data}, Fecha: {self.fecha}, Detalle: {self.detalle}"
+

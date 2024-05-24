@@ -123,3 +123,61 @@ class DatosCineticosManejador:
             #print(f"No se encontró la condición con id {id}")     # Linea para check en consola
             return False
 
+class RegistroDataExperimentalManejador:
+    def __init__(self):
+        self.engine = create_engine(f'sqlite:///{db_path}')
+        self.Session = sessionmaker(bind=self.engine)    
+    
+    def agregar_registro(self, registro):
+        session = self.Session()
+        session.add(registro)
+        session.commit()
+       
+    def consultar_registro(self, filtros=None, formato=None):
+        session = self.Session()
+        query = session.query(RegistroDataExperimental)
+
+        # Aplicar filtros si se proporcionan
+        if filtros:
+            condiciones = []
+            for columna, valor in filtros.items():
+                if valor:
+                    condiciones.append(getattr(RegistroDataExperimental, columna).like(f'%{valor}%'))
+
+            # Unir todas las condiciones con OR
+            if condiciones:
+                query = query.filter(or_(*condiciones))
+
+        # Ejecutar la consulta
+        if formato == 'pandas':
+            datos = query.all()
+        else:
+            datos = query.all()
+        return datos
+    
+    def consultar_registro_por_nombre(self, nombre_data):
+        session = self.Session()
+        datos = session.query(RegistroDataExperimental).filter(RegistroDataExperimental.nombre_data == nombre_data)
+        return datos
+
+    def borrar_registro(self, id):
+        session = self.Session()
+        registro = session.query(RegistroDataExperimental).filter(RegistroDataExperimental.id == id).first()
+        if registro:
+            session.delete(registro)
+            session.commit()
+            return True
+        return False    
+    
+    def actualizar_registro(self, id, new_registro):
+        session = self.Session()
+        registro = session.query(RegistroDataExperimental).filter(RegistroDataExperimental.id == id).first()
+        if registro:
+            for key, value in new_registro.items():
+                setattr(registro, key, value)
+            session.commit()
+            #print(f"Condition with ID {id} updated successfully.")  # Linea para check en consola
+            return True
+        else:
+            #print(f"No se encontró la condición con id {id}")     # Linea para check en consola
+            return False
