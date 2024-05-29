@@ -1,4 +1,5 @@
 from sqlalchemy import create_engine, Column, Integer, String, Float
+from sqlalchemy.pool import QueuePool
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import *
@@ -22,7 +23,7 @@ db_path = r"D:\candidatos_proyectof\tesis_tec\dataReactor\tesis_GUI_sqlite\tesis
 
 class CondicionesInicialesManejador:
     def __init__(self):
-        self.engine = create_engine(f'sqlite:///{db_path}')
+        self.engine = create_engine(f'sqlite:///{db_path}', poolclass=QueuePool, pool_size=20, max_overflow=0)
         self.Session = sessionmaker(bind=self.engine)
 
     def agregar_condicion(self, condicion):
@@ -77,7 +78,7 @@ class CondicionesInicialesManejador:
 
 class DatosCineticosManejador:
     def __init__(self):
-        self.engine = create_engine(f'sqlite:///{db_path}')
+        self.engine = create_engine(f'sqlite:///{db_path}', poolclass=QueuePool, pool_size=20, max_overflow=0)
         self.Session = sessionmaker(bind=self.engine)
 
     def agregar_dato(self, dato):
@@ -145,7 +146,7 @@ class DatosCineticosManejador:
 
 class RegistroDataExperimentalManejador:
     def __init__(self):
-        self.engine = create_engine(f'sqlite:///{db_path}')
+        self.engine = create_engine(f'sqlite:///{db_path}', poolclass=QueuePool, pool_size=20, max_overflow=0)
         self.Session = sessionmaker(bind=self.engine)    
     
     def agregar_registro(self, registro):
@@ -204,7 +205,7 @@ class RegistroDataExperimentalManejador:
         
 class ReaccionQuimicaManejador:
     def __init__(self):
-        self.engine = create_engine(f'sqlite:///{db_path}')
+        self.engine = create_engine(f'sqlite:///{db_path}', poolclass=QueuePool, pool_size=20, max_overflow=0)
         self.Session = sessionmaker(bind=self.engine)
     
     def agregar_reaccion(self, reaccion):
