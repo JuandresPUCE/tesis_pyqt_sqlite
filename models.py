@@ -57,3 +57,17 @@ class RegistroDataExperimental(Base):
     def __str__(self):
         return f"ID: {self.id}, Nombre Data: {self.nombre_data}, Fecha: {self.fecha}, Detalle: {self.detalle}"
 
+class ReaccionQuimica(Base):
+    __tablename__ = "reaccion_quimica"
+
+    id = Column(Integer, primary_key=True)
+    especie_quimica = Column(String)
+    formula = Column(String)
+    coeficiente_estequiometrico = Column(Float)
+    detalle = Column(String)
+    tipo_especie = Column(String)
+    nombre_reaccion = Column(String)
+
+    def __str__(self):
+        return f"ID: {self.id}, Especie Química: {self.especie_quimica}, Fórmula: {self.formula}, Coeficiente Estequiométrico: {self.coeficiente_estequiometrico}, Detalle: {self.detalle}, Tipo de Especie: {self.tipo_especie}, Nombre de Reacción: {self.nombre_reaccion}"
+

@@ -1,0 +1,3 @@
+#cambiar los archivos
+
+pyuic6 -x .\panel_data_analisis.ui -o .\panel_data_analisis.py

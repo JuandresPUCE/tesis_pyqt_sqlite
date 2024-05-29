@@ -30,15 +30,32 @@ class CondicionesInicialesManejador:
         session.add(condicion)
         session.commit()
     
-    def consultar_condicion(self, formato=None):
+    def consultar_condicion(self, filtros=None, formato=None):
         session = self.Session()
+        query = session.query(CondicionesIniciales)
+
+        # Aplicar filtros si se proporcionan
+        if filtros:
+            condiciones = []
+            for columna, valor in filtros.items():
+                if valor:
+                    #registro exacto
+                    condiciones.append(getattr(CondicionesIniciales, columna) == valor)
+                    #registro con like similar
+                    #condiciones.append(getattr(CondicionesIniciales, columna).like(f'%{valor}%'))
+
+            # Unir todas las condiciones con OR
+            if condiciones:
+                query = query.filter(or_(*condiciones))
+
+        # Ejecutar la consulta
         if formato == 'pandas':
-            datos = session.query(CondicionesIniciales)
+            datos = query.all()
         else:
-            datos = session.query(CondicionesIniciales).all()
+            datos = query.all()
         return datos
 
-    def borar_condicion(self, id):
+    def borrar_condicion(self, id):
         session = self.Session()
         condicion = session.query(CondicionesIniciales).filter(CondicionesIniciales.id == id).first()
         if condicion:
@@ -78,7 +95,10 @@ class DatosCineticosManejador:
             condiciones = []
             for columna, valor in filtros.items():
                 if valor:
-                    condiciones.append(getattr(DatosIngresadosCineticos, columna).like(f'%{valor}%'))
+                    #registro exacto
+                    condiciones.append(getattr(DatosIngresadosCineticos, columna) == valor)
+                    #registro con like similar
+                    #condiciones.append(getattr(DatosIngresadosCineticos, columna).like(f'%{valor}%'))
 
             # Unir todas las condiciones con OR
             if condiciones:
@@ -175,6 +195,60 @@ class RegistroDataExperimentalManejador:
         if registro:
             for key, value in new_registro.items():
                 setattr(registro, key, value)
+            session.commit()
+            #print(f"Condition with ID {id} updated successfully.")  # Linea para check en consola
+            return True
+        else:
+            #print(f"No se encontró la condición con id {id}")     # Linea para check en consola
+            return False
+        
+class ReaccionQuimicaManejador:
+    def __init__(self):
+        self.engine = create_engine(f'sqlite:///{db_path}')
+        self.Session = sessionmaker(bind=self.engine)
+    
+    def agregar_reaccion(self, reaccion):
+        session = self.Session()
+        session.add(reaccion)
+        session.commit()
+    
+    def consultar_reaccion(self, filtros=None, formato=None):
+        session = self.Session()
+        query = session.query(ReaccionQuimica)
+
+        # Aplicar filtros si se proporcionan
+        if filtros:
+            condiciones = []
+            for columna, valor in filtros.items():
+                if valor:
+                    condiciones.append(getattr(ReaccionQuimica, columna).like(f'%{valor}%'))
+
+            # Unir todas las condiciones con OR
+            if condiciones:
+                query = query.filter(or_(*condiciones))
+
+        # Ejecutar la consulta
+        if formato == 'pandas':
+            datos = query.all()
+        else:
+            datos = query.all()
+        return datos
+
+    def borrar_reaccion(self, id):
+        session = self.Session()
+        reaccion = session.query(ReaccionQuimica).filter(ReaccionQuimica.id == id).first()
+        if reaccion:
+            session.delete(reaccion)
+            session.commit()
+            return True
+        return False
+    
+    def actualizar_reaccion(self, id, new_reaccion):
+        session = self.Session()
+        reaccion = session.query(ReaccionQuimica).filter(ReaccionQuimica.id == id).first()
+        if reaccion:
+            for key, value in new_reaccion.items():
+                setattr(reaccion, key, value)
             session.commit()
             #print(f"Condition with ID {id} updated successfully.")  # Linea para check en consola
             return True
