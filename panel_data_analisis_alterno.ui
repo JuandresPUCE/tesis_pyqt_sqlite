@@ -110,11 +110,6 @@
            </column>
            <column>
             <property name="text">
-             <string>Nueva columna</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
              <string>formula</string>
             </property>
            </column>

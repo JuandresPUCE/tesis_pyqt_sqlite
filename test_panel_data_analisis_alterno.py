@@ -6,13 +6,16 @@ from PyQt6 import QtCore, QtWidgets
 from PyQt6.uic import loadUi
 from models import *
 from repository import *
+import pandas as pd
 
-
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
 
 from panel_data_analisis_alterno import Ui_MainWindow
 from repository import *
 
-
+from funciones import *
 
 
 class PanelDataAnalisis(QMainWindow):
@@ -24,6 +27,7 @@ class PanelDataAnalisis(QMainWindow):
         self.RegistroDataExperimentalManejador = RegistroDataExperimentalManejador()
         self.CondicionesInicialesManejador = CondicionesInicialesManejador()
         self.DatosCineticosManejador = DatosCineticosManejador()
+        self.ReaccionQuimicaManejador = ReaccionQuimicaManejador()
 
 
     #elementos gráficos
@@ -39,6 +43,10 @@ class PanelDataAnalisis(QMainWindow):
         self.datos_cineticos_tabla = self.ui.datos_cineticos_tabla
         self.datos_cineticos_tabla.setSortingEnabled(False)
 
+        #Tabla de Reaccion Quimica
+        self.reaccion_quimica_tabla = self.ui.reaccion_quimica_tabla
+        self.reaccion_quimica_tabla.setSortingEnabled(False)
+
         # Combobox de registro datos experimentales
         self.registro_datos_box = self.ui.registro_datos_box
         self.registro_datos_box.currentIndexChanged.connect(self.actualizar_condiciones_iniciales)
@@ -49,6 +57,11 @@ class PanelDataAnalisis(QMainWindow):
         self.condiciones_iniciales_box = self.ui.condiciones_iniciales_box
         self.condiciones_iniciales_box.currentIndexChanged.connect(self.actualizar_datos_cineticos)
         
+        # Crear un widget para el gráfico de Matplotlib
+        self.matplotlib_widget = MatplotlibWidget(self)
+
+        # Agregar el widget de Matplotlib al QVBoxLayout vista_grafica
+        self.ui.vista_grafica.addWidget(self.matplotlib_widget)
 
 
 
@@ -122,7 +135,24 @@ class PanelDataAnalisis(QMainWindow):
                     self.datos_cineticos_tabla.setItem(fila, 9, QTableWidgetItem(dato.especie_quimica))
             else:
                 QMessageBox.information(self, "Información", "No se encontraron datos", QMessageBox.StandardButton.Ok)
-
+    
+    def mostrar_reaccion_tabla(self, resultados):
+        tabla = self.reaccion_quimica_tabla
+        tabla.clearContents()
+        tabla.setRowCount(0)
+        if resultados:
+            tabla.setRowCount(len(resultados))
+            tabla.setColumnCount(7)
+            for fila, dato in enumerate(resultados):
+                tabla.setItem(fila, 0, QTableWidgetItem(str(dato.id)))
+                tabla.setItem(fila, 1, QTableWidgetItem(str(dato.especie_quimica)))
+                tabla.setItem(fila, 2, QTableWidgetItem(str(dato.formula)))
+                tabla.setItem(fila, 3, QTableWidgetItem(str(dato.coeficiente_estequiometrico)))
+                tabla.setItem(fila, 4, QTableWidgetItem(str(dato.detalle)))
+                tabla.setItem(fila, 5, QTableWidgetItem(str(dato.tipo_especie)))
+                tabla.setItem(fila, 6, QTableWidgetItem(str(dato.nombre_reaccion)))
+        else:
+            QMessageBox.information(self, "Información", "No se encontraron datos", QMessageBox.StandardButton.Ok)
 
     def actualizar_datos_cineticos(self):
             nombre_data = self.registro_datos_box.currentText()
@@ -147,15 +177,56 @@ class PanelDataAnalisis(QMainWindow):
         filtros = {'nombre_data': nombre_data}
         condiciones = self.CondicionesInicialesManejador.consultar_condicion(filtros=filtros)
 
-        for condicion in condiciones:
-            print("\n -start-", condicion, "\n -end-")
+        # Convertir las condiciones a un DataFrame de pandas
+        df_condiciones_iniciales = pd.DataFrame.from_records([condicion.__dict__ for condicion in condiciones])
+        print(df_condiciones_iniciales)
 
         datos_cineticos = self.DatosCineticosManejador.consultar_datos(filtros=filtros)
+        # Convertir los datos a un DataFrame de pandas
+        df_datos_cineticos_listos = pd.DataFrame.from_records([dato.__dict__ for dato in datos_cineticos])
+        print(df_datos_cineticos_listos)
 
-        for dato in datos_cineticos:
-            print("\n -start-", dato, "\n -end-")
+        # Verificar si la columna 'nombre_reaccion' existe en el DataFrame
+        if 'nombre_reaccion' in df_datos_cineticos_listos.columns:
+            # Obtener el nombre de la reacción de la base de datos datos_ingresados_cineticos
+            nombre_reaccion = df_datos_cineticos_listos['nombre_reaccion'].iloc[0]
+
+            filtro_reaccion = {'nombre_reaccion': nombre_reaccion}
+            reaccion_quimica = self.ReaccionQuimicaManejador.consultar_reaccion(filtros=filtro_reaccion)
+
+            # Convertir la reacción química a un DataFrame de pandas
+            df_reaccion_quimica = pd.DataFrame.from_records([reaccion.__dict__ for reaccion in reaccion_quimica])
+            print(df_reaccion_quimica)
+
+            # Mostrar la tabla de reacciones químicas
+            self.mostrar_reaccion_tabla(reaccion_quimica)
+        else:
+            print("La columna 'nombre_reaccion' no existe en el DataFrame.")
+
+
         
-        
+class MatplotlibWidget(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        # Crear la figura de Matplotlib
+        self.figure = plt.figure()
+
+        # Crear un lienzo para la figura
+        self.canvas = FigureCanvas(self.figure)
+
+        # Obtener el eje actual (ax)
+        self.ax = self.figure.add_subplot(111)
+
+        # Agregar un gráfico de ejemplo
+        self.ax.plot([1, 2, 3, 4], [10, 20, 25, 30])
+
+        # Agregar el lienzo al diseño del widget
+        layout = QVBoxLayout()
+        layout.addWidget(self.canvas)
+        self.setLayout(layout) 
+
+           
 
 
 if __name__ == "__main__":

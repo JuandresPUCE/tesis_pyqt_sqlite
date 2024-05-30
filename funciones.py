@@ -183,5 +183,39 @@ class Funciones:
         return concentracion_componente
 
 
+# graficas
+
+    def graficar_datos_experimentales_iniciales_widget(self, datos_eje_horizontal, datos_eje_vertical,
+                                                    etiqueta_horizontal, etiqueta_vertical, titulo, componente):
+            """
+            Grafica los datos experimentales iniciales en el lienzo de Matplotlib.
+
+            Args:
+                datos_eje_horizontal (array-like): Datos del eje horizontal, como el tiempo.
+                datos_eje_vertical (array-like): Datos del eje vertical, como la concentración.
+                etiqueta_horizontal (str): Etiqueta del eje horizontal.
+                etiqueta_vertical (str): Etiqueta del eje vertical.
+                titulo (str): Título del gráfico.
+                componente (str): Etiqueta de la curva en el gráfico.
+
+            Returns:
+                None
+            """
+            # Borrar cualquier gráfico previo en el lienzo
+            self.ax.clear()
+
+            # Graficar los datos en el lienzo
+            self.ax.plot(datos_eje_horizontal, datos_eje_vertical, linestyle=':', label=componente, color='orange', linewidth=5)
+            
+            # Configurar etiquetas y título
+            self.ax.set_xlabel(etiqueta_horizontal)
+            self.ax.set_ylabel(etiqueta_vertical)
+            self.ax.set_title(titulo)
+            
+            # Mostrar la leyenda
+            self.ax.legend()
+
+            # Actualizar el lienzo para que se muestre el nuevo gráfico
+            self.canvas.draw()
 
 # revisar R https://cruzfierro.com/formularios/R.pdf
