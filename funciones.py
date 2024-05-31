@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 
 #para encontrar curvas
 from scipy.optimize import curve_fit
@@ -21,7 +22,7 @@ class Funciones:
     #documentados
 
     def graficar_datos_experimentales_iniciales(self, datos_eje_horizontal, datos_eje_vertical,
-                                                 etiqueta_horizontal, etiqueta_vertical, titulo,componente):
+                                                etiqueta_horizontal, etiqueta_vertical, titulo, componente, grafico=None, ax=None, canvas=None):
         """
         Grafica los datos experimentales iniciales.
 
@@ -34,16 +35,31 @@ class Funciones:
             etiqueta_horizontal (str): Etiqueta del eje horizontal.
             etiqueta_vertical (str): Etiqueta del eje vertical.
             titulo (str): Título del gráfico.
+            componente (str): Componente a graficar.
+            grafico (str, optional): Tipo de gráfico. Si es "MatplotlibWidget", se usará ax y canvas. Por defecto es None.
+            ax (matplotlib.axes.Axes, optional): El objeto de ejes de Matplotlib para el gráfico. Por defecto es None.
+            canvas (matplotlib.backends.backend_qt5agg.FigureCanvasQTAgg, optional): El objeto de lienzo de Matplotlib para el gráfico. Por defecto es None.
 
         Returns:
             None
         """
-        plt.plot(datos_eje_horizontal, datos_eje_vertical, linestyle=':', label=componente, color='orange', linewidth=5)        
-        plt.xlabel(etiqueta_horizontal)  # Tiempo ('t (s)')
-        plt.ylabel(etiqueta_vertical)    # Concentración ('Concentracion (mol/L)')
-        plt.title(titulo)                # Título del gráfico ('Modelo de datos: A vs t' o similar)
-        plt.legend()
-        plt.show()
+        if grafico == "MatplotlibWidget":
+            ax.clear()  # Limpiar el eje para una nueva gráfica
+            ax.plot(datos_eje_horizontal, datos_eje_vertical, linestyle=':', label=componente, color='orange', linewidth=5)
+            ax.set_xlabel(etiqueta_horizontal)  # Tiempo ('t (s)')
+            ax.set_ylabel(etiqueta_vertical)    # Concentración ('Concentracion (mol/L)')
+            ax.set_title(titulo)                # Título del gráfico ('Modelo de datos: A vs t' o similar)
+            ax.legend()
+            canvas.draw()  # Actualizar el lienzo con el nuevo gráfico
+        else:
+            plt.plot(datos_eje_horizontal, datos_eje_vertical, linestyle=':', label=componente, color='orange', linewidth=5)        
+            plt.xlabel(etiqueta_horizontal)  # Tiempo ('t (s)')
+            plt.ylabel(etiqueta_vertical)    # Concentración ('Concentracion (mol/L)')
+            plt.title(titulo)                # Título del gráfico ('Modelo de datos: A vs t' o similar)
+            plt.legend()
+            plt.show()
+    
+    
 
 
     def concentracion_producto_principal(self,A0, XA):

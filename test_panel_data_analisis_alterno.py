@@ -7,6 +7,7 @@ from PyQt6.uic import loadUi
 from models import *
 from repository import *
 import pandas as pd
+import matplotlib.image as mpimg
 
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -28,6 +29,8 @@ class PanelDataAnalisis(QMainWindow):
         self.CondicionesInicialesManejador = CondicionesInicialesManejador()
         self.DatosCineticosManejador = DatosCineticosManejador()
         self.ReaccionQuimicaManejador = ReaccionQuimicaManejador()
+        #traer funciones
+        self.funciones = Funciones()
 
 
     #elementos gráficos
@@ -186,6 +189,11 @@ class PanelDataAnalisis(QMainWindow):
         df_datos_cineticos_listos = pd.DataFrame.from_records([dato.__dict__ for dato in datos_cineticos])
         print(df_datos_cineticos_listos)
 
+        if df_datos_cineticos_listos.empty:
+            ruta_imagen = 'assets/_2dcfdd65-68b6-4c73-ab67-0c542d136375.jpeg'
+            self.matplotlib_widget.mostrar_imagen(ruta_imagen)
+            return
+
         # Verificar si la columna 'nombre_reaccion' existe en el DataFrame
         if 'nombre_reaccion' in df_datos_cineticos_listos.columns:
             # Obtener el nombre de la reacción de la base de datos datos_ingresados_cineticos
@@ -203,7 +211,30 @@ class PanelDataAnalisis(QMainWindow):
         else:
             print("La columna 'nombre_reaccion' no existe en el DataFrame.")
 
+        # Llamar a la función para graficar
+           
+        etiqueta_horizontal="tiempo"
+        etiqueta_vertical="concentracion"
+        titulo="concentracion vs tiempo"
+        componente="reactivo_limitnate"
+        try:
+            # Limpiar la figura por completo
+            self.matplotlib_widget.canvas.figure.clf()
+            # Crear un nuevo conjunto de ejes
+            self.matplotlib_widget.ax = self.matplotlib_widget.canvas.figure.subplots()
 
+            self.matplotlib_widget.funciones.graficar_datos_experimentales_iniciales(df_datos_cineticos_listos["tiempo"], df_datos_cineticos_listos["concentracion"],
+                                                etiqueta_horizontal, etiqueta_vertical, titulo, componente, grafico="MatplotlibWidget", ax=self.matplotlib_widget.ax, canvas=self.matplotlib_widget.canvas)
+            # Configurar los límites y las etiquetas de los ejes
+            self.matplotlib_widget.ax.set_xlim([df_datos_cineticos_listos["tiempo"].min(), df_datos_cineticos_listos["tiempo"].max()])
+            self.matplotlib_widget.ax.set_ylim([df_datos_cineticos_listos["concentracion"].min(), df_datos_cineticos_listos["concentracion"].max()])
+            self.matplotlib_widget.ax.set_xlabel(etiqueta_horizontal)
+            self.matplotlib_widget.ax.set_ylabel(etiqueta_vertical)
+
+            # Actualizar el gráfico
+            self.matplotlib_widget.canvas.draw()
+        except KeyError as e:
+            print(f"Error: {e}. La columna no existe en el DataFrame.")
         
 class MatplotlibWidget(QWidget):
     def __init__(self, parent=None):
@@ -219,14 +250,21 @@ class MatplotlibWidget(QWidget):
         self.ax = self.figure.add_subplot(111)
 
         # Agregar un gráfico de ejemplo
-        self.ax.plot([1, 2, 3, 4], [10, 20, 25, 30])
+        #self.ax.plot([1, 2, 3, 4], [10, 20, 25, 30])
+        self.funciones = Funciones()
 
         # Agregar el lienzo al diseño del widget
         layout = QVBoxLayout()
         layout.addWidget(self.canvas)
         self.setLayout(layout) 
 
-           
+    def mostrar_imagen(self, ruta_imagen):
+        self.ax.clear()
+        img = mpimg.imread(ruta_imagen)
+        self.ax.imshow(img)
+        self.ax.axis('off')  # Ocultar los ejes
+        self.canvas.draw()
+ 
 
 
 if __name__ == "__main__":

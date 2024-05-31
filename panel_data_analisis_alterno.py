@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'pantalla_d_a_c_tipo_dashb.ui'
+# Form implementation generated from reading ui file '.\pantalla_d_a_c_tipo_dashb_1.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.2
 #
@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(1024, 720)
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -75,27 +75,27 @@ class Ui_MainWindow(object):
         self.frame_5.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.frame_5.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.frame_5.setObjectName("frame_5")
-        self.horizontalLayout_7 = QtWidgets.QHBoxLayout(self.frame_5)
-        self.horizontalLayout_7.setObjectName("horizontalLayout_7")
+        self.verticalLayout_8 = QtWidgets.QVBoxLayout(self.frame_5)
+        self.verticalLayout_8.setObjectName("verticalLayout_8")
         self.registro_datos_label = QtWidgets.QLabel(parent=self.frame_5)
         self.registro_datos_label.setObjectName("registro_datos_label")
-        self.horizontalLayout_7.addWidget(self.registro_datos_label)
+        self.verticalLayout_8.addWidget(self.registro_datos_label)
         self.registro_datos_box = QtWidgets.QComboBox(parent=self.frame_5)
         self.registro_datos_box.setObjectName("registro_datos_box")
-        self.horizontalLayout_7.addWidget(self.registro_datos_box)
+        self.verticalLayout_8.addWidget(self.registro_datos_box)
         self.verticalLayout_3.addWidget(self.frame_5)
         self.frame_6 = QtWidgets.QFrame(parent=self.frame_3)
         self.frame_6.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
         self.frame_6.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
         self.frame_6.setObjectName("frame_6")
-        self.horizontalLayout_8 = QtWidgets.QHBoxLayout(self.frame_6)
-        self.horizontalLayout_8.setObjectName("horizontalLayout_8")
+        self.verticalLayout_9 = QtWidgets.QVBoxLayout(self.frame_6)
+        self.verticalLayout_9.setObjectName("verticalLayout_9")
         self.condiciones_iniciales_label = QtWidgets.QLabel(parent=self.frame_6)
         self.condiciones_iniciales_label.setObjectName("condiciones_iniciales_label")
-        self.horizontalLayout_8.addWidget(self.condiciones_iniciales_label)
+        self.verticalLayout_9.addWidget(self.condiciones_iniciales_label)
         self.condiciones_iniciales_box = QtWidgets.QComboBox(parent=self.frame_6)
         self.condiciones_iniciales_box.setObjectName("condiciones_iniciales_box")
-        self.horizontalLayout_8.addWidget(self.condiciones_iniciales_box)
+        self.verticalLayout_9.addWidget(self.condiciones_iniciales_box)
         self.verticalLayout_3.addWidget(self.frame_6)
         self.verticalLayout_7.addWidget(self.frame_3)
         self.frame_7 = QtWidgets.QFrame(parent=self.menu_derecho)
