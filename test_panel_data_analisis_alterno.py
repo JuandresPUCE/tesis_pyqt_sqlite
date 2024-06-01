@@ -17,6 +17,7 @@ from panel_data_analisis_alterno import Ui_MainWindow
 from repository import *
 
 from funciones import *
+from modelos_metodo_integral import *
 
 
 class PanelDataAnalisis(QMainWindow):
@@ -32,8 +33,11 @@ class PanelDataAnalisis(QMainWindow):
         #traer funciones
         self.funciones = Funciones()
 
+        # Inicializar la variable para almacenar el DataFrame
+        #self.df_datos_cineticos_listos = None
 
     #elementos gráficos
+    
         # Inicializar elementos gráficos
         self.init_ui_elements()
 
@@ -50,6 +54,10 @@ class PanelDataAnalisis(QMainWindow):
         self.reaccion_quimica_tabla = self.ui.reaccion_quimica_tabla
         self.reaccion_quimica_tabla.setSortingEnabled(False)
 
+        # Tabla de condiciones iniciales
+        self.condiciones_iniciales_tabla = self.ui.condiciones_iniciales_tabla
+        self.condiciones_iniciales_tabla.setSortingEnabled(False)
+
         # Combobox de registro datos experimentales
         self.registro_datos_box = self.ui.registro_datos_box
         self.registro_datos_box.currentIndexChanged.connect(self.actualizar_condiciones_iniciales)
@@ -59,6 +67,7 @@ class PanelDataAnalisis(QMainWindow):
         # Combobox de condiciones iniciales
         self.condiciones_iniciales_box = self.ui.condiciones_iniciales_box
         self.condiciones_iniciales_box.currentIndexChanged.connect(self.actualizar_datos_cineticos)
+        self.condiciones_iniciales_box.currentIndexChanged.connect(self.mostrar_condiciones_iniciales_en_tabla)
         
         # Crear un widget para el gráfico de Matplotlib
         self.matplotlib_widget = MatplotlibWidget(self)
@@ -66,6 +75,22 @@ class PanelDataAnalisis(QMainWindow):
         # Agregar el widget de Matplotlib al QVBoxLayout vista_grafica
         self.ui.vista_grafica.addWidget(self.matplotlib_widget)
 
+        #combo box de ajustar_modelo_box
+        self.ajustar_modelo_box=self.ui.ajustar_modelo_box
+            # Poblar el combobox
+        self.mostrar_metodos_ajustador()
+
+        # Conectar la señal currentIndexChanged a la función manejadora
+        self.ajustar_modelo_box.currentIndexChanged.connect(self.manejador_seleccion_modelo)
+
+        # line edit de modelo de ajuste
+        self.reactivo_limitante_inicial_edit = self.ui.reactivo_limitante_inicial_edit
+        self.estimacion_inicial_k_edit = self.ui.estimacion_inicial_k_edit
+        self.estimacion_inicial_n_edit = self.ui.estimacion_inicial_n_edit
+
+        #boton de ejecutar modelo
+        self.ejecutar_modelo_button = self.ui.pushButton_2
+        self.ejecutar_modelo_button.clicked.connect(self.ejecutar_modelo)
 
 
 
@@ -108,6 +133,40 @@ class PanelDataAnalisis(QMainWindow):
             for condicion in condiciones:
                 self.condiciones_iniciales_box.addItem(condicion.nombre_data, condicion.id)
         else:
+            QMessageBox.information(self, "No hay condiciones iniciales", "No se encontraron condiciones iniciales en la base de datos.", QMessageBox.StandardButton.Ok)
+    
+    def mostrar_condiciones_iniciales_en_tabla(self):
+        nombre_data = self.registro_datos_box.currentText()
+        condicion_inicial_id = self.condiciones_iniciales_box.currentData()
+
+        filtros = {}
+        if nombre_data and nombre_data != "Todos":
+            filtros['nombre_data'] = nombre_data
+        if condicion_inicial_id and condicion_inicial_id != "Todos":
+            filtros['id'] = condicion_inicial_id
+
+        condiciones = self.CondicionesInicialesManejador.consultar_condicion(filtros=filtros)
+        self.mostrar_condiciones_iniciales_tabla(condiciones)
+
+    def mostrar_condiciones_iniciales_tabla(self, condiciones):
+        self.tabla = self.condiciones_iniciales_tabla
+        if condiciones:
+            self.tabla.setRowCount(len(condiciones))
+            self.tabla.setColumnCount(10)
+
+            for fila, condicion in enumerate(condiciones):
+                self.tabla.setItem(fila, 0, QTableWidgetItem(str(condicion.id)))
+                self.tabla.setItem(fila, 1, QTableWidgetItem(str(condicion.temperatura)))
+                self.tabla.setItem(fila, 2, QTableWidgetItem(str(condicion.tiempo)))
+                self.tabla.setItem(fila, 3, QTableWidgetItem(str(condicion.presion_total)))
+                self.tabla.setItem(fila, 4, QTableWidgetItem(str(condicion.presion_parcial)))
+                self.tabla.setItem(fila, 5, QTableWidgetItem(str(condicion.fraccion_molar)))
+                self.tabla.setItem(fila, 6, QTableWidgetItem(condicion.especie_quimica))
+                self.tabla.setItem(fila, 7, QTableWidgetItem(condicion.tipo_especie))
+                self.tabla.setItem(fila, 8, QTableWidgetItem(condicion.detalle))
+                self.tabla.setItem(fila, 9, QTableWidgetItem(condicion.nombre_data))
+        else:
+            self.tabla.setRowCount(0)
             QMessageBox.information(self, "No hay condiciones iniciales", "No se encontraron condiciones iniciales en la base de datos.", QMessageBox.StandardButton.Ok)
 
 # organizar en otra clase
@@ -211,6 +270,10 @@ class PanelDataAnalisis(QMainWindow):
         else:
             print("La columna 'nombre_reaccion' no existe en el DataFrame.")
 
+            # Llamar al manejador para seleccionar el modelo
+            #index = self.ajustar_modelo_box.currentIndex()
+            #self.manejador_seleccion_modelo(index, df_datos_cineticos_listos)
+
         # Llamar a la función para graficar
            
         etiqueta_horizontal="tiempo"
@@ -235,6 +298,49 @@ class PanelDataAnalisis(QMainWindow):
             self.matplotlib_widget.canvas.draw()
         except KeyError as e:
             print(f"Error: {e}. La columna no existe en el DataFrame.")
+
+        # Llamar a manejador_seleccion_modelo
+
+
+    def mostrar_metodos_ajustador(self):
+        self.ajustar_modelo_box.clear()
+        metodos = [metodo for metodo in dir(MetodoIntegralAjustador) if callable(getattr(MetodoIntegralAjustador, metodo)) and not metodo.startswith("__")]
+        for metodo in metodos:
+            self.ajustar_modelo_box.addItem(metodo)
+
+    # Maneja la selección del modelo de ajuste
+        # Maneja la selección del modelo de ajuste
+    def manejador_seleccion_modelo(self, index):
+        dataframe = self.df_datos_cineticos_listos
+        if dataframe is None:
+            QMessageBox.information(self, "Datos no disponibles", "No se han cargado datos cinéticos para ejecutar el modelo.", QMessageBox.StandardButton.Ok)
+            return
+
+        # Obtener el nombre del método seleccionado
+        nombre_metodo = self.ajustar_modelo_box.itemText(index)
+
+        # Obtener el método de la clase MetodoIntegralAjustador
+        metodo = getattr(MetodoIntegralAjustador, nombre_metodo)
+
+        # Obtener los parámetros necesarios para el método
+        #reactivo_limitante_inicial = self.reactivo_limitante_inicial_edit.text()
+        #estimacion_inicial_k = float(self.estimacion_inicial_k_edit.text())
+        #estimacion_inicial_n = float(self.estimacion_inicial_n_edit.text())
+        #test
+        estimacion_inicial_k = 1.1
+        estimacion_inicial_n = 1.7
+
+        # Llamar al método con los parámetros para realizar el cálculo
+        resultado = metodo(dataframe, "tiempo", "concentracion", estimacion_inicial_k, estimacion_inicial_n)
+        print(resultado)
+
+    def ejecutar_modelo(self):
+        index = self.ajustar_modelo_box.currentIndex()
+        self.manejador_seleccion_modelo(index, self.df_datos_cineticos_listos)
+
+
+
+        
         
 class MatplotlibWidget(QWidget):
     def __init__(self, parent=None):

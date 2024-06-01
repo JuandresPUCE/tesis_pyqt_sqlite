@@ -7,6 +7,13 @@ class MetodoIntegralModelos:
     @staticmethod
     def modelo_n_orden(t, k_ord_n, A_0, n):
         return ((A_0**(1-n))-(1-n)*k_ord_n * t)**(1/(1-n))
+    
+    @staticmethod
+    def modelo_segundo_orden(t, k_ord_2, A_0):
+        return 1/((1/A_0) + k_ord_2*t)
+
+    
+class MetodoIntegralAjustador:
 
     @staticmethod
     def ajustar_modelo_n_orden(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, estimacion_inicial_k, n_orden, estimacion_inicial_A0=None):
@@ -29,8 +36,31 @@ class MetodoIntegralModelos:
         print('n_optimo:', n_optimo)
 
         return k_ord_n_optimo, A_0_optimo, n_optimo
+    
+    @staticmethod
+    def ajustar_modelo_segundo_orden(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, estimacion_inicial_k, estimacion_inicial_A0=None):
+        # Obtener los datos experimentales
+        t_data = np.array((data_cinetica[columna_tiempo]))
+        A_data = np.array(data_cinetica[columna_concentracion_reactivo_limitante])
 
+        # Si estimacion_inicial_A0 es None, asignarle el valor de A_data[0]
+        if estimacion_inicial_A0 is None:
+            estimacion_inicial_A0 = A_data[0]
 
+        # Ajustar el modelo a los datos experimentales para encontrar k_ord_n, A_0 y n
+        params, covariance = curve_fit(MetodoIntegralModelos.modelo_segundo_orden, t_data, A_data, p0=[estimacion_inicial_k, estimacion_inicial_A0])
+
+        # Los valores óptimos de k_ord_n, A_0 y n
+        k_ord_2_optimo, A_0_optimo = params
+
+        n=2
+        print('k_ord_n_optimo:', k_ord_2_optimo)
+        print('A_0_optimo:', A_0_optimo)
+        print('n_optimo:', n)
+
+        return k_ord_2_optimo, A_0_optimo, n
+
+class MetodoIntegralGraficador:
     @staticmethod
     def graficar_modelo(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, data_producto, columna_concentracion_producto, k_ord_n_optimo, n_optimo):
         # Graficos de los datos
