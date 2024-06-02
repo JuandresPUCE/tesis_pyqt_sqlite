@@ -35,7 +35,7 @@ class PanelDataAnalisis(QMainWindow):
         self.funciones = Funciones()
 
         # Inicializar la variable para almacenar el DataFrame
-        #self.df_datos_cineticos_listos = None
+        self.df_datos_cineticos_listos = None
 
     #elementos gráficos
     
@@ -83,6 +83,7 @@ class PanelDataAnalisis(QMainWindow):
 
         # Conectar la señal currentIndexChanged a la función manejadora
         self.ajustar_modelo_box.currentIndexChanged.connect(self.manejador_seleccion_modelo)
+        
 
         # line edit de modelo de ajuste
         self.reactivo_limitante_inicial_edit = self.ui.reactivo_limitante_inicial_edit
@@ -248,6 +249,8 @@ class PanelDataAnalisis(QMainWindow):
         # Convertir los datos a un DataFrame de pandas
         df_datos_cineticos_listos = pd.DataFrame.from_records([dato.__dict__ for dato in datos_cineticos])
         print(df_datos_cineticos_listos)
+        # Guardar df_datos_cineticos_listos como variable de instancia
+        self.df_datos_cineticos_listos = df_datos_cineticos_listos
 
         if df_datos_cineticos_listos.empty:
             ruta_imagen = 'assets/_2dcfdd65-68b6-4c73-ab67-0c542d136375.jpeg'
@@ -337,7 +340,8 @@ class PanelDataAnalisis(QMainWindow):
 
     def ejecutar_modelo(self):
         index = self.ajustar_modelo_box.currentIndex()
-        self.manejador_seleccion_modelo(index, self.df_datos_cineticos_listos)
+        #self.manejador_seleccion_modelo(index, self.df_datos_cineticos_listos)
+        self.manejador_seleccion_modelo(index)
 
 
 
