@@ -308,6 +308,7 @@ class PanelDataAnalisis(QMainWindow):
 
     def mostrar_metodos_ajustador(self):
         self.ajustar_modelo_box.clear()
+        self.ajustar_modelo_box.addItem("Modelos cinéticos")
         metodos = [metodo for metodo in dir(MetodoIntegralAjustador) if callable(getattr(MetodoIntegralAjustador, metodo)) and not metodo.startswith("__")]
         for metodo in metodos:
             self.ajustar_modelo_box.addItem(metodo)
@@ -315,29 +316,42 @@ class PanelDataAnalisis(QMainWindow):
     # Maneja la selección del modelo de ajuste
         # Maneja la selección del modelo de ajuste
     def manejador_seleccion_modelo(self, index):
-        dataframe = self.df_datos_cineticos_listos
-        if dataframe is None:
-            QMessageBox.information(self, "Datos no disponibles", "No se han cargado datos cinéticos para ejecutar el modelo.", QMessageBox.StandardButton.Ok)
+        if index == 0:  # Si se selecciona "Modelos cinéticos", no computa
             return
 
-        # Obtener el nombre del método seleccionado
-        nombre_metodo = self.ajustar_modelo_box.itemText(index)
+        try:
+            dataframe = self.df_datos_cineticos_listos
+            if dataframe is None:
+                QMessageBox.information(self, "Datos no disponibles", "No se han cargado datos cinéticos para ejecutar el modelo.", QMessageBox.StandardButton.Ok)
+                return
 
-        # Obtener el método de la clase MetodoIntegralAjustador
-        metodo = getattr(MetodoIntegralAjustador, nombre_metodo)
+            # Obtener el nombre del método seleccionado
+            nombre_metodo = self.ajustar_modelo_box.itemText(index)
 
-        # Obtener los parámetros necesarios para el método
-        #reactivo_limitante_inicial = self.reactivo_limitante_inicial_edit.text()
-        #estimacion_inicial_k = float(self.estimacion_inicial_k_edit.text())
-        #estimacion_inicial_n = float(self.estimacion_inicial_n_edit.text())
-        #test
-        estimacion_inicial_k = 1.1
-        estimacion_inicial_n = 1.7
+            # Obtener el método de la clase MetodoIntegralAjustador
+            metodo = getattr(MetodoIntegralAjustador, nombre_metodo)
 
-        # Llamar al método con los parámetros para realizar el cálculo
-        resultado = metodo(dataframe, "tiempo", "concentracion", estimacion_inicial_k, estimacion_inicial_n)
-        print(resultado)
+            # Obtener los parámetros necesarios para el método
+            reactivo_limitante_inicial = self.reactivo_limitante_inicial_edit.text().strip()
+            estimacion_inicial_k = self.estimacion_inicial_k_edit.text().strip()
+            estimacion_inicial_n = self.estimacion_inicial_n_edit.text().strip()
 
+            # Verificar si los valores son numéricos antes de convertirlos
+            if reactivo_limitante_inicial.isdigit() and estimacion_inicial_k.isdigit() and estimacion_inicial_n.isdigit():
+                reactivo_limitante_inicial = float(reactivo_limitante_inicial)
+                estimacion_inicial_k = float(estimacion_inicial_k)
+                estimacion_inicial_n = float(estimacion_inicial_n)
+            else:
+                QMessageBox.warning(self, "Error", "Por favor ingrese valores numéricos válidos.", QMessageBox.StandardButton.Ok)
+                return
+
+            # Llamar al método con los parámetros para realizar el cálculo
+            resultado = metodo(dataframe, "tiempo", "concentracion", estimacion_inicial_k, estimacion_inicial_n,reactivo_limitante_inicial)
+            print(resultado)
+
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Ocurrió un error al ejecutar el modelo: {str(e)}", QMessageBox.StandardButton.Ok)
+            
     def ejecutar_modelo(self):
         index = self.ajustar_modelo_box.currentIndex()
         #self.manejador_seleccion_modelo(index, self.df_datos_cineticos_listos)
