@@ -3,7 +3,8 @@ from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from PyQt6 import QtCore, QtWidgets
-from PyQt6.uic import loadUi
+#from PyQt6.uic import loadUi
+from PyQt6.uic import *
 from models import *
 from repository import *
 import pandas as pd

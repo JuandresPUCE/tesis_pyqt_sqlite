@@ -15,8 +15,10 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 #relative_path = os.path.join(current_dir, 'dataReactor', 'tesis_flet_sqlite', 'tesis_flet_sqlite', 'data', 'data_reactor1.db')
 
 #db_path = relative_path
-db_path = r"D:\candidatos_proyectof\tesis_tec\dataReactor\tesis_GUI_sqlite\tesis_pyqt_sqlite\data\data_reactor1.db"
-
+#absolute
+#db_path = r"D:\candidatos_proyectof\tesis_tec\dataReactor\tesis_GUI_sqlite\tesis_pyqt_sqlite\data\data_reactor1.db"
+#realtive
+db_path = r"data\data_reactor1.db"
 
 
 # crud SQLalchemy
