@@ -43,7 +43,7 @@ class MetodoIntegralAjustador:
         return k_ord_n_optimo, A_0_optimo, n_optimo
     
     @staticmethod
-    def ajustar_modelo_primer_orden(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, estimacion_inicial_k, estimacion_inicial_A0=None):
+    def ajustar_modelo_primer_orden(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, estimacion_inicial_k, n, estimacion_inicial_A0=None):
         # Obtener los datos experimentales
         t_data = np.array((data_cinetica[columna_tiempo]))
         A_data = np.array(data_cinetica[columna_concentracion_reactivo_limitante])
@@ -66,7 +66,7 @@ class MetodoIntegralAjustador:
         return k_ord_1_optimo, A_0_optimo, n
     
     @staticmethod
-    def ajustar_modelo_segundo_orden(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, estimacion_inicial_k, estimacion_inicial_A0=None):
+    def ajustar_modelo_segundo_orden(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, estimacion_inicial_k,n, estimacion_inicial_A0=None):
         # Obtener los datos experimentales
         t_data = np.array((data_cinetica[columna_tiempo]))
         A_data = np.array(data_cinetica[columna_concentracion_reactivo_limitante])
@@ -120,6 +120,56 @@ class MetodoIntegralAjustador:
 
 class MetodoIntegralGraficador:
     @staticmethod
+    def graficar_modelo_salida_opcional(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, k_ord_n_optimo, A_0_optimo, n_optimo, data_producto=None, columna_concentracion_producto=None, grafico=None, ax=None, canvas=None):
+        # Graficos de los datos
+        if grafico == "MatplotlibWidget":
+            print("Iniciando graficado con MatplotlibWidget")
+            print(f"Datos cinéticos: {data_cinetica}")
+            print(f"k_ord_n_optimo: {k_ord_n_optimo}, A_0_optimo: {A_0_optimo}, n_optimo: {n_optimo}")
+            
+            ax.clear()  # Limpiar el eje para una nueva gráfica
+            ax.plot(data_cinetica[columna_tiempo], data_cinetica[columna_concentracion_reactivo_limitante], linestyle=':', label='A', color='orange', linewidth=5)
+            
+            if data_producto is not None and columna_concentracion_producto is not None:
+                ax.plot(data_producto[columna_tiempo], data_producto[columna_concentracion_producto], linestyle='--', label='R', color='cyan', linewidth=1)
+
+            # Grafica de la funcion 
+            t_data_graf = data_cinetica[columna_tiempo]
+            A_funcion_n_orden = MetodoIntegralGraficador.calcular_funcion_n_orden(t_data_graf, k_ord_n_optimo, A_0_optimo, n_optimo)
+            print("Valores calculados para la función n-orden:", A_funcion_n_orden)
+
+            ax.plot(t_data_graf, A_funcion_n_orden, label='Modelo de n orden', color='green')
+            ax.set_xlabel('tiempo')
+            ax.set_ylabel('Concentracion ')
+            ax.set_title('Modelo de datos: A vs t')
+            ax.legend()
+            canvas.draw()  # Actualizar el lienzo con el nuevo gráfico
+        else:
+            plt.plot(data_cinetica[columna_tiempo], data_cinetica[columna_concentracion_reactivo_limitante], linestyle=':', label='A', color='orange', linewidth=5)
+            
+            if data_producto is not None and columna_concentracion_producto is not None:
+                plt.plot(data_producto[columna_tiempo], data_producto[columna_concentracion_producto], linestyle='--', label='R', color='cyan', linewidth=1)
+
+            # Grafica de la funcion 
+            t_data_graf = data_cinetica[columna_tiempo]
+            A_funcion_n_orden = MetodoIntegralGraficador.calcular_funcion_n_orden(t_data_graf, k_ord_n_optimo, A_0_optimo, n_optimo)
+
+            plt.plot(t_data_graf, A_funcion_n_orden, label='Modelo de n orden', color='green')
+            plt.xlabel('tiempo')
+            plt.ylabel('Concentracion ')
+            plt.title('Modelo de datos: A vs t')
+            plt.legend()
+            plt.show()
+
+    @staticmethod
+    def calcular_funcion_n_orden(t_data_graf, k_ord_n_optimo, A_0_optimo, n_optimo):
+        if n_optimo == 1:
+            return MetodoIntegralModelos.modelo_primer_orden(t_data_graf, k_ord_n_optimo, A_0_optimo)
+        elif n_optimo == 2:
+            return MetodoIntegralModelos.modelo_segundo_orden(t_data_graf, k_ord_n_optimo, A_0_optimo)
+        else:
+            return MetodoIntegralModelos.modelo_n_orden(t_data_graf, k_ord_n_optimo, A_0_optimo, n_optimo)
+        
     def graficar_modelo(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, data_producto, columna_concentracion_producto, k_ord_n_optimo, n_optimo):
         # Graficos de los datos
         plt.plot(data_cinetica[columna_tiempo], data_cinetica[columna_concentracion_reactivo_limitante], linestyle=':', label='A', color='orange', linewidth=5)
@@ -130,7 +180,7 @@ class MetodoIntegralGraficador:
         A_data_graf = data_cinetica[columna_concentracion_reactivo_limitante]
         A_0_data_graf = A_data_graf[0]
 
-        A_funcion_n_orden = MetodoIntegralModelos.modelo_n_orden(t_data_graf, k_ord_n_optimo, A_0_data_graf, n_optimo)
+        A_funcion_n_orden = MetodoIntegralGraficador.calcular_funcion_n_orden(t_data_graf, k_ord_n_optimo, A_0_data_graf, n_optimo)
 
  
         plt.plot(t_data_graf, A_funcion_n_orden, label='Modelo de n orden', color='green')

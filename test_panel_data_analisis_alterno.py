@@ -244,12 +244,12 @@ class PanelDataAnalisis(QMainWindow):
 
         # Convertir las condiciones a un DataFrame de pandas
         df_condiciones_iniciales = pd.DataFrame.from_records([condicion.__dict__ for condicion in condiciones])
-        print(df_condiciones_iniciales)
+        print("Condiciones iniciales:", df_condiciones_iniciales)
 
         datos_cineticos = self.DatosCineticosManejador.consultar_datos(filtros=filtros)
         # Convertir los datos a un DataFrame de pandas
         df_datos_cineticos_listos = pd.DataFrame.from_records([dato.__dict__ for dato in datos_cineticos])
-        print(df_datos_cineticos_listos)
+        print("Datos cinéticos listos:", df_datos_cineticos_listos)
         # Guardar df_datos_cineticos_listos como variable de instancia
         self.df_datos_cineticos_listos = df_datos_cineticos_listos
 
@@ -268,31 +268,37 @@ class PanelDataAnalisis(QMainWindow):
 
             # Convertir la reacción química a un DataFrame de pandas
             df_reaccion_quimica = pd.DataFrame.from_records([reaccion.__dict__ for reaccion in reaccion_quimica])
-            print(df_reaccion_quimica)
+            print("Reacción química:", df_reaccion_quimica)
 
             # Mostrar la tabla de reacciones químicas
             self.mostrar_reaccion_tabla(reaccion_quimica)
         else:
             print("La columna 'nombre_reaccion' no existe en el DataFrame.")
 
-            # Llamar al manejador para seleccionar el modelo
-            #index = self.ajustar_modelo_box.currentIndex()
-            #self.manejador_seleccion_modelo(index, df_datos_cineticos_listos)
-
         # Llamar a la función para graficar
-           
-        etiqueta_horizontal="tiempo"
-        etiqueta_vertical="concentracion"
-        titulo="concentracion vs tiempo"
-        componente="reactivo_limitate"
+        etiqueta_horizontal = "tiempo"
+        etiqueta_vertical = "concentracion"
+        titulo = "concentracion vs tiempo"
+        componente = "reactivo_limitate"
         try:
             # Limpiar la figura por completo
             self.matplotlib_widget.canvas.figure.clf()
             # Crear un nuevo conjunto de ejes
             self.matplotlib_widget.ax = self.matplotlib_widget.canvas.figure.subplots()
 
-            self.matplotlib_widget.funciones.graficar_datos_experimentales_iniciales(df_datos_cineticos_listos["tiempo"], df_datos_cineticos_listos["concentracion"],
-                                                etiqueta_horizontal, etiqueta_vertical, titulo, componente, grafico="MatplotlibWidget", ax=self.matplotlib_widget.ax, canvas=self.matplotlib_widget.canvas)
+            # Graficar los datos experimentales iniciales
+            self.matplotlib_widget.funciones.graficar_datos_experimentales_iniciales(
+                df_datos_cineticos_listos["tiempo"], 
+                df_datos_cineticos_listos["concentracion"],
+                etiqueta_horizontal, 
+                etiqueta_vertical, 
+                titulo, 
+                componente, 
+                grafico="MatplotlibWidget", 
+                ax=self.matplotlib_widget.ax, 
+                canvas=self.matplotlib_widget.canvas
+            )
+
             # Configurar los límites y las etiquetas de los ejes
             self.matplotlib_widget.ax.set_xlim([df_datos_cineticos_listos["tiempo"].min(), df_datos_cineticos_listos["tiempo"].max()])
             self.matplotlib_widget.ax.set_ylim([df_datos_cineticos_listos["concentracion"].min(), df_datos_cineticos_listos["concentracion"].max()])
@@ -303,8 +309,6 @@ class PanelDataAnalisis(QMainWindow):
             self.matplotlib_widget.canvas.draw()
         except KeyError as e:
             print(f"Error: {e}. La columna no existe en el DataFrame.")
-
-        # Llamar a manejador_seleccion_modelo
 
 
     def mostrar_metodos_ajustador(self):
@@ -354,11 +358,29 @@ class PanelDataAnalisis(QMainWindow):
                 resultado = metodo(dataframe, "tiempo", "concentracion", estimacion_inicial_k, estimacion_inicial_n)
 
             print(resultado)
+                        # Graficar utilizando el resultado obtenido
+
+            MetodoIntegralGraficador.graficar_modelo_salida_opcional(
+            dataframe,
+            "tiempo",
+            "concentracion",
+            resultado[0],  # Suponiendo que el primer valor retornado es k_ord_n_optimo
+            dataframe['concentracion'].iloc[0],  # Suponiendo que el segundo valor retornado es A_0_optimo
+            resultado[2],  # Suponiendo que el tercer valor retornado es n_optimo
+            data_producto=None,
+            columna_concentracion_producto=None,
+            grafico=None,
+            ax=None,
+            canvas=None
+            )
+            return resultado
             # Ahora, graficamos el modelo utilizando los resultados obtenidos
-          
+            
+
 
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Ocurrió un error al ejecutar el modelo: {str(e)}", QMessageBox.StandardButton.Ok)
+            return None
             
     def ejecutar_modelo(self):
         index = self.ajustar_modelo_box.currentIndex()
