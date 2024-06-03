@@ -337,16 +337,16 @@ class PanelDataAnalisis(QMainWindow):
             estimacion_inicial_n = self.estimacion_inicial_n_edit.text().strip()
 
             # Verificar si los valores son numéricos antes de convertirlos
-            if reactivo_limitante_inicial.isdigit() and estimacion_inicial_k.isdigit() and estimacion_inicial_n.isdigit():
+            try:
                 reactivo_limitante_inicial = float(reactivo_limitante_inicial)
                 estimacion_inicial_k = float(estimacion_inicial_k)
-                estimacion_inicial_n = float(estimacion_inicial_n)
-            else:
+                estimacion_inicial_n = float(estimacion_inicial_n)  # Asumimos que n es un entero
+            except ValueError:
                 QMessageBox.warning(self, "Error", "Por favor ingrese valores numéricos válidos.", QMessageBox.StandardButton.Ok)
                 return
 
             # Llamar al método con los parámetros para realizar el cálculo
-            resultado = metodo(dataframe, "tiempo", "concentracion", estimacion_inicial_k, estimacion_inicial_n,reactivo_limitante_inicial)
+            resultado = metodo(dataframe, "tiempo", "concentracion", estimacion_inicial_k, estimacion_inicial_n, reactivo_limitante_inicial)
             print(resultado)
 
         except Exception as e:
