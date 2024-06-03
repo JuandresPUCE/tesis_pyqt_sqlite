@@ -33,6 +33,7 @@ class PanelDataAnalisis(QMainWindow):
         self.ReaccionQuimicaManejador = ReaccionQuimicaManejador()
         #traer funciones
         self.funciones = Funciones()
+        self.modelos_metodo_integral = MetodoIntegralGraficador()
 
         # Inicializar la variable para almacenar el DataFrame
         self.df_datos_cineticos_listos = None
@@ -283,7 +284,7 @@ class PanelDataAnalisis(QMainWindow):
         etiqueta_horizontal="tiempo"
         etiqueta_vertical="concentracion"
         titulo="concentracion vs tiempo"
-        componente="reactivo_limitnate"
+        componente="reactivo_limitate"
         try:
             # Limpiar la figura por completo
             self.matplotlib_widget.canvas.figure.clf()
@@ -332,22 +333,29 @@ class PanelDataAnalisis(QMainWindow):
             metodo = getattr(MetodoIntegralAjustador, nombre_metodo)
 
             # Obtener los parámetros necesarios para el método
-            reactivo_limitante_inicial = self.reactivo_limitante_inicial_edit.text().strip()
+            #reactivo_limitante_inicial = self.reactivo_limitante_inicial_edit.text().strip()
             estimacion_inicial_k = self.estimacion_inicial_k_edit.text().strip()
             estimacion_inicial_n = self.estimacion_inicial_n_edit.text().strip()
 
             # Verificar si los valores son numéricos antes de convertirlos
             try:
-                reactivo_limitante_inicial = float(reactivo_limitante_inicial)
+                #reactivo_limitante_inicial = float(reactivo_limitante_inicial)
                 estimacion_inicial_k = float(estimacion_inicial_k)
                 estimacion_inicial_n = float(estimacion_inicial_n)  # Asumimos que n es un entero
             except ValueError:
                 QMessageBox.warning(self, "Error", "Por favor ingrese valores numéricos válidos.", QMessageBox.StandardButton.Ok)
                 return
 
-            # Llamar al método con los parámetros para realizar el cálculo
-            resultado = metodo(dataframe, "tiempo", "concentracion", estimacion_inicial_k, estimacion_inicial_n, reactivo_limitante_inicial)
+            # Llamar al método con los parámetros y el reactivo opcional
+            if self.reactivo_limitante_inicial_edit.text().strip():  # Si el campo no está vacío
+                reactivo_limitante_inicial = float(self.reactivo_limitante_inicial_edit.text().strip())
+                resultado = metodo(dataframe, "tiempo", "concentracion", estimacion_inicial_k, estimacion_inicial_n, reactivo_limitante_inicial)
+            else:
+                resultado = metodo(dataframe, "tiempo", "concentracion", estimacion_inicial_k, estimacion_inicial_n)
+
             print(resultado)
+            # Ahora, graficamos el modelo utilizando los resultados obtenidos
+          
 
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Ocurrió un error al ejecutar el modelo: {str(e)}", QMessageBox.StandardButton.Ok)
