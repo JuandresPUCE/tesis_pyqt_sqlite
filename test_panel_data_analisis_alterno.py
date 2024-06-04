@@ -369,10 +369,23 @@ class PanelDataAnalisis(QMainWindow):
             resultado[2],  # Suponiendo que el tercer valor retornado es n_optimo
             data_producto=None,
             columna_concentracion_producto=None,
-            grafico=None,
-            ax=None,
-            canvas=None
+
             )
+
+            MetodoIntegralGraficador.graficar_modelo_salida_opcional(
+            dataframe,
+            "tiempo",
+            "concentracion",
+            resultado[0],  # Suponiendo que el primer valor retornado es k_ord_n_optimo
+            dataframe['concentracion'].iloc[0],  # Suponiendo que el segundo valor retornado es A_0_optimo
+            resultado[2],  # Suponiendo que el tercer valor retornado es n_optimo
+            data_producto=None,
+            columna_concentracion_producto=None,
+            grafico="MatplotlibWidget", 
+            ax=self.matplotlib_widget.ax, 
+            canvas=self.matplotlib_widget.canvas
+            )
+            
             return resultado
             # Ahora, graficamos el modelo utilizando los resultados obtenidos
             

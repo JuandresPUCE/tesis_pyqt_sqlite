@@ -141,7 +141,7 @@ class MetodoIntegralGraficador:
             ax.plot(t_data_graf, A_funcion_n_orden, label='Modelo de n orden', color='green')
             ax.set_xlabel('tiempo')
             ax.set_ylabel('Concentracion ')
-            ax.set_title('Modelo de datos: A vs t')
+            ax.set_title('Modelo de datos: reactivo limitante vs tiempo')
             ax.legend()
             canvas.draw()  # Actualizar el lienzo con el nuevo gráfico
         else:
