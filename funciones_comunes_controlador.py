@@ -1,7 +1,8 @@
 from PyQt6.QtWidgets import *
 
 class MetodosComunesControlador:
-    def __init__(self):
+    def __init__(self, parent=None):
+        self.parent = parent
         self.mensaje = "Metodos comunes del controlador"
 
     def mostrar_mensaje(self):
@@ -41,5 +42,5 @@ class MetodosComunesControlador:
                 self.tabla.setItem(fila, 3, QTableWidgetItem(registro.detalle))
         else:
             self.tabla.setRowCount(0)
-            QMessageBox.information(self, "No hay registros", "No se encontraron registros en la base de datos.", QMessageBox.StandardButton.Ok)
+            QMessageBox.information(self.parent, "No hay registros", "No se encontraron registros en la base de datos.", QMessageBox.StandardButton.Ok)
         

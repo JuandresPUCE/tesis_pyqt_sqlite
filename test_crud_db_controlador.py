@@ -26,7 +26,8 @@ class PantallaCrud(QMainWindow):
         self.DatosCineticosManejador = DatosCineticosManejador()
         self.ReaccionQuimicaManejador = ReaccionQuimicaManejador()     
         # metodos comunes refactorizados
-        self.metodos_comunes = MetodosComunesControlador()
+        #self.metodos_comunes = MetodosComunesControlador()
+        self.metodos_comunes = MetodosComunesControlador(self)
 
         # Crear un atajo para la tecla F5
         shortcut = QShortcut(QKeySequence.StandardKey.Refresh, self)
@@ -61,30 +62,32 @@ class PantallaCrud(QMainWindow):
         # Initialize signal-slot connections
         self.init_signal_slot()
 
-        # Load initial data
-        #cargo los datos de la tabla de datos cinéticos
+        # Cargar datos iniciales
         self.buscar_dato()
 
         # Conectar la señal cellChanged para actualizar la base de datos cuando cambie una celda
         self.tabla_datos.cellChanged.connect(self.actualizar_valor_celda)
 
-        # elementos para registro de data experimental
-        #campos editables
+        # Elementos para registro de data experimental
         self.nombre_data_experimental = self.ui.nombre_data_rde_edit
         self.fecha_data_experimental = self.ui.fecha_rde_edit
         self.detalle_data_experimental = self.ui.detalle_rde_edit
-        #botones
+
+        # Botones
         self.agregar_rde_btn = self.ui.agregar_rde_btn
         self.actualizar_rde_btn = self.ui.actualizar_rde_btn
         self.seleccionar_rde_btn = self.ui.seleccionar_rde_btn
         self.buscar_rde_btn = self.ui.buscar_rde_btn
         self.limpiar_rde_btn = self.ui.limpiar_rde_btn
         self.borrar_rde_btn = self.ui.borrar_rde_btn
-        #tabla
+        # Tabla
         self.tabla_registro_data_experimental = self.ui.registro_data_experimental_tabla
-                #cargar los datos de la tabla de registro de data experimental
-        self.buscar_registros()
 
+  # Inicializar señales y ranuras para registro de data experimental
+        self.init_signal_slot_rde()
+
+        # Cargar los datos de la tabla de registro de data experimental
+        self.buscar_registros()
 
 
 
@@ -97,15 +100,14 @@ class PantallaCrud(QMainWindow):
         self.borrar_dc_btn.clicked.connect(self.borrar_dato)
         self.limpiar_dc_btn.clicked.connect(self.limpiar_formulario)
         self.buscar_dc_btn.clicked.connect(self.buscar_dato)
-        
-        # Registro de data experimental
-        #self.agregar_rde_btn.clicked.connect(self.agregar_data_experimental)
-        #self.actualizar_rde_btn.clicked.connect(self.actualizar_data_experimental)
-        #self.seleccionar_rde_btn.clicked.connect(self.seleccionar_data_experimental)
-        #self.borrar_rde_btn.clicked.connect(self.borrar_data_experimental)
-        #self.limpiar_rde_btn.clicked.connect(self.limpiar_formulario_data_experimental)
-        #self.buscar_rde_btn.clicked.connect(self.buscar_data_experimental)
 
+    def init_signal_slot_rde(self):
+        #self.agregar_rde_btn.clicked.connect(self.agregar_registro_data_experimental)
+        #self.actualizar_rde_btn.clicked.connect(self.actualizar_registro_data_experimental)
+        #self.seleccionar_rde_btn.clicked.connect(self.seleccionar_registro_data_experimental)
+        #self.borrar_rde_btn.clicked.connect(self.borrar_registro_data_experimental)
+        #self.limpiar_rde_btn.clicked.connect(self.limpiar_formulario_registro_data_experimental)
+        self.buscar_rde_btn.clicked.connect(self.buscar_registros)    
 
 
     def refrescar_datos_tabla(self):
