@@ -60,7 +60,7 @@ class PantallaCrud(QMainWindow):
         self.lista_botones = self.ui.funciones_frame.findChildren(QPushButton)
 
         # Initialize signal-slot connections
-        self.init_signal_slot()
+        self.init_control_botones_datos()
 
         # Cargar datos iniciales
         self.buscar_dato()
@@ -84,14 +84,14 @@ class PantallaCrud(QMainWindow):
         self.tabla_registro_data_experimental = self.ui.registro_data_experimental_tabla
 
   # Inicializar señales y ranuras para registro de data experimental
-        self.init_signal_slot_rde()
+        self.init_control_botones_experimental()
 
         # Cargar los datos de la tabla de registro de data experimental
         self.buscar_registros()
 
 
 
-    def init_signal_slot(self):
+    def init_control_botones_datos(self):
         # Conectar los botones a sus respectivas funciones
         # Datos cinéticos
         self.agregar_dc_btn.clicked.connect(self.agregar_dato)
@@ -101,12 +101,12 @@ class PantallaCrud(QMainWindow):
         self.limpiar_dc_btn.clicked.connect(self.limpiar_formulario)
         self.buscar_dc_btn.clicked.connect(self.buscar_dato)
 
-    def init_signal_slot_rde(self):
-        #self.agregar_rde_btn.clicked.connect(self.agregar_registro_data_experimental)
-        #self.actualizar_rde_btn.clicked.connect(self.actualizar_registro_data_experimental)
-        #self.seleccionar_rde_btn.clicked.connect(self.seleccionar_registro_data_experimental)
-        #self.borrar_rde_btn.clicked.connect(self.borrar_registro_data_experimental)
-        #self.limpiar_rde_btn.clicked.connect(self.limpiar_formulario_registro_data_experimental)
+    def init_control_botones_experimental(self):
+        self.agregar_rde_btn.clicked.connect(self.agregar_registro_data_experimental)
+        self.actualizar_rde_btn.clicked.connect(self.actualizar_registro_data_experimental)
+        self.seleccionar_rde_btn.clicked.connect(self.seleccionar_registro_data_experimental)
+        self.borrar_rde_btn.clicked.connect(self.borrar_registro_data_experimental)
+        self.limpiar_rde_btn.clicked.connect(self.limpiar_formulario_registro_data_experimental)
         self.buscar_rde_btn.clicked.connect(self.buscar_registros)    
 
 
@@ -155,6 +155,7 @@ class PantallaCrud(QMainWindow):
 
         # Intentar agregar el dato a la base de datos
         try:
+            #print("Intentando agregar dato:", dato)
             agregar_resultado = self.DatosCineticosManejador.agregar_dato(dato)
 
             if agregar_resultado:
@@ -162,12 +163,13 @@ class PantallaCrud(QMainWindow):
                 self.limpiar_formulario()
                 self.buscar_dato()  # Refrescar la tabla con los nuevos datos
             else:
-                QMessageBox.critical(self, "Error", "Hubo un problema al agregar los datos", QMessageBox.StandardButton.Ok)
+                QMessageBox.critical(self, "Error", "Hubo un problema al agregar los datos ", QMessageBox.StandardButton.Ok)
 
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Se produjo un error al agregar los datos: {e}", QMessageBox.StandardButton.Ok)
 
         self.boton_activado()
+
 
     def limpiar_formulario(self):
         # Limpiar formulario
@@ -235,7 +237,7 @@ class PantallaCrud(QMainWindow):
                 raise ValueError("Todos los campos de texto deben estar llenos")
 
             # Crear el objeto de datos actualizado
-            new_dato = {
+            nuevo_dato = {
                 "tiempo": tiempo,
                 "concentracion": concentracion,
                 "otra_propiedad": otra_propiedad,
@@ -248,7 +250,7 @@ class PantallaCrud(QMainWindow):
             }
 
             # Intentar actualizar el dato en la base de datos
-            actualizar_resultado = self.DatosCineticosManejador.actualizar_dato(id, new_dato)
+            actualizar_resultado = self.DatosCineticosManejador.actualizar_dato(id, nuevo_dato)
 
             if actualizar_resultado:
                 QMessageBox.information(self, "Información", "Datos actualizados correctamente", QMessageBox.StandardButton.Ok)
@@ -346,6 +348,127 @@ class PantallaCrud(QMainWindow):
     # Registro de data experimental
     def mostrar_registros(self, registros):
         self.metodos_comunes.mostrar_registros(self.tabla_registro_data_experimental, registros)
+
+    def agregar_registro_data_experimental(self):
+        self.boton_desactivado()
+
+        # Validar que todos los campos estén llenos
+        try:
+            nombre_data = self.nombre_data_experimental.text()
+            fecha = self.fecha_data_experimental.text()
+            detalle = self.detalle_data_experimental.text()
+
+            if not nombre_data or not fecha or not detalle:
+                raise ValueError("Todos los campos de texto deben estar llenos")
+
+        except ValueError as e:
+            QMessageBox.warning(self, "Advertencia", f"Datos inválidos o incompletos: {e}", QMessageBox.StandardButton.Ok)
+            self.boton_activado()
+            return
+
+        # Crear el objeto RegistroDataExperimental
+        registro = RegistroDataExperimental(
+            nombre_data=nombre_data,
+            fecha=fecha,
+            detalle=detalle,
+        )
+
+        # Intentar agregar el registro a la base de datos
+        try:
+            print("Intentando agregar registro:", registro)
+            agregar_resultado = self.RegistroDataExperimentalManejador.agregar_registro(registro)
+
+            if agregar_resultado:
+                QMessageBox.information(self, "Información", "Registro agregado correctamente", QMessageBox.StandardButton.Ok)
+                self.limpiar_formulario_registro_data_experimental()
+                self.buscar_registros()  # Refrescar la tabla con los nuevos datos
+            else:
+                QMessageBox.critical(self, "Error", "Hubo un problema al agregar el registro", QMessageBox.StandardButton.Ok)
+
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Se produjo un error al agregar el registro: {e}", QMessageBox.StandardButton.Ok)
+
+        self.boton_activado()
+
+    
+    def limpiar_formulario_registro_data_experimental(self):
+        self.nombre_data_experimental.clear()
+        self.fecha_data_experimental.clear()
+        self.detalle_data_experimental.clear()
+    
+    def seleccionar_registro_data_experimental(self):
+        seleccionar_fila = self.tabla_registro_data_experimental.currentRow()
+        if seleccionar_fila != -1:
+            id = self.tabla_registro_data_experimental.item(seleccionar_fila, 0).text().strip()
+            nombre_data = self.tabla_registro_data_experimental.item(seleccionar_fila, 1).text().strip()
+            fecha = self.tabla_registro_data_experimental.item(seleccionar_fila, 2).text().strip()
+            detalle = self.tabla_registro_data_experimental.item(seleccionar_fila, 3).text().strip()
+
+            self.nombre_data_experimental.setText(nombre_data)
+            self.fecha_data_experimental.setText(fecha)
+            self.detalle_data_experimental.setText(detalle)
+        else:
+            QMessageBox.information(self, "Información", "Seleccione una fila", QMessageBox.StandardButton.Ok)
+            return
+    def actualizar_registro_data_experimental(self):
+        self.boton_desactivado()
+        try:
+            # Obtener el ID del registro seleccionado
+            fila_seleccionada = self.tabla_registro_data_experimental.currentRow()
+            if fila_seleccionada == -1:
+                QMessageBox.warning(self, "Advertencia", "Seleccione una fila para actualizar", QMessageBox.StandardButton.Ok)
+                return
+
+            id = int(self.tabla_registro_data_experimental.item(fila_seleccionada, 0).text().strip())
+
+            # Validaciones
+            nombre_data = self.nombre_data_experimental.text()
+            fecha = self.fecha_data_experimental.text()
+            detalle = self.detalle_data_experimental.text()
+
+            if not nombre_data or not fecha or not detalle:
+                raise ValueError("Todos los campos de texto deben estar llenos")
+
+            # Crear el objeto de registro actualizado
+            nuevo_registro = {
+                "nombre_data": nombre_data,
+                "fecha": fecha,
+                "detalle": detalle,
+            }
+
+            # Intentar actualizar el registro en la base de datos
+            actualizar_resultado = self.RegistroDataExperimentalManejador.actualizar_registro(id, nuevo_registro)
+
+            if actualizar_resultado:
+                QMessageBox.information(self, "Información", "Registro actualizado correctamente", QMessageBox.StandardButton.Ok)
+                self.limpiar_formulario_registro_data_experimental()
+                self.buscar_registros()  # Refrescar la tabla con los nuevos datos
+            else:
+                QMessageBox.critical(self, "Error", "Hubo un problema al actualizar el registro", QMessageBox.StandardButton.Ok)
+
+        except ValueError as ve:
+            QMessageBox.warning(self, "Advertencia", f"Datos inválidos o incompletos: {ve}", QMessageBox.StandardButton.Ok)
+        
+        except Exception as e:
+            logging.error("Error al actualizar el registro: %s", str(e))
+            QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar el registro: {e}", QMessageBox.StandardButton.Ok)
+        
+        finally:
+            self.boton_activado()
+    
+    def borrar_registro_data_experimental(self):
+        fila_seleccionada = self.tabla_registro_data_experimental.currentRow()
+        if fila_seleccionada != -1:
+            opcion_seleccionada = QMessageBox.question(self, "Eliminar registro", "¿Estás seguro de eliminar el registro?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            if opcion_seleccionada == QMessageBox.StandardButton.Yes:
+                id = self.tabla_registro_data_experimental.item(fila_seleccionada, 0).text().strip()
+                borrar_resultado = self.RegistroDataExperimentalManejador.borrar_registro(id)
+                if borrar_resultado:
+                    QMessageBox.information(self, "Información", "Registro eliminado correctamente", QMessageBox.StandardButton.Ok)
+                    self.RegistroDataExperimentalManejador.consultar_registro()
+                    self.buscar_registros()
+                else:
+                    QMessageBox.information(self, "Información", "Hubo un problema al eliminar el registro", QMessageBox.StandardButton.Ok)
 
     def buscar_registros(self):
         filtros = {

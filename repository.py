@@ -3,6 +3,8 @@ from sqlalchemy.pool import QueuePool
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import *
+import logging
+from sqlalchemy.exc import SQLAlchemyError
 
 import os
 
@@ -30,8 +32,16 @@ class CondicionesInicialesManejador:
 
     def agregar_condicion(self, condicion):
         session = self.Session()
-        session.add(condicion)
-        session.commit()
+        try:
+            session.add(condicion)
+            session.commit()
+            return True
+        except SQLAlchemyError as e:
+            logging.error(f"Error de SQLAlchemy al agregar condición: {e}")
+            session.rollback()
+            return False
+        finally:
+            session.close()
     
     def consultar_condicion(self, filtros=None, formato=None):
         session = self.Session()
@@ -85,8 +95,16 @@ class DatosCineticosManejador:
 
     def agregar_dato(self, dato):
         session = self.Session()
-        session.add(dato)
-        session.commit()
+        try:
+            session.add(dato)
+            session.commit()
+            return True
+        except SQLAlchemyError as e:
+            logging.error(f"Error de SQLAlchemy al agregar dato: {e}")
+            session.rollback()
+            return False
+        finally:
+            session.close()
 
 
     def consultar_datos(self, filtros=None, formato=None):
@@ -147,8 +165,17 @@ class RegistroDataExperimentalManejador:
     
     def agregar_registro(self, registro):
         session = self.Session()
-        session.add(registro)
-        session.commit()
+        try:
+            session.add(registro)
+            session.commit()
+            return True
+        except SQLAlchemyError as e:
+            logging.error(f"Error de SQLAlchemy al agregar registro: {e}")
+            session.rollback()
+            return False
+        finally:
+            session.close()
+
        
     def consultar_registro(self, filtros=None, formato=None):
         session = self.Session()
@@ -206,11 +233,19 @@ class ReaccionQuimicaManejador:
     def __init__(self):
         self.engine = create_engine(f'sqlite:///{db_path}', poolclass=QueuePool, pool_size=20, max_overflow=0)
         self.Session = sessionmaker(bind=self.engine)
-    
+
     def agregar_reaccion(self, reaccion):
         session = self.Session()
-        session.add(reaccion)
-        session.commit()
+        try:
+            session.add(reaccion)
+            session.commit()
+            return True
+        except SQLAlchemyError as e:
+            logging.error(f"Error de SQLAlchemy al agregar reacción: {e}")
+            session.rollback()
+            return False
+        finally:
+            session.close()
     
     def consultar_reaccion(self, filtros=None, formato=None):
         session = self.Session()
