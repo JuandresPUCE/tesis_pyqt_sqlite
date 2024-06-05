@@ -92,27 +92,21 @@ class DatosCineticosManejador:
     def consultar_datos(self, filtros=None, formato=None):
         session = self.Session()
         query = session.query(DatosIngresadosCineticos)
-
-        # Aplicar filtros si se proporcionan
-        if filtros:
-            condiciones = []
-            for columna, valor in filtros.items():
-                if valor:
-                    #registro exacto
-                    condiciones.append(getattr(DatosIngresadosCineticos, columna) == valor)
-                    #registro con like similar
-                    #condiciones.append(getattr(DatosIngresadosCineticos, columna).like(f'%{valor}%'))
-
-            # Unir todas las condiciones con OR
-            if condiciones:
-                query = query.filter(or_(*condiciones))
-
-        # Ejecutar la consulta
-        if formato == 'pandas':
-            datos = query.all()
-        else:
-            datos = query.all()
-        return datos
+        if not filtros:
+            return query.all()
+        condiciones = []
+        for columna, valor in filtros.items():
+            if not valor:
+                continue
+            if formato == 'like':
+                # Registro con like similar
+                condiciones.append(getattr(DatosIngresadosCineticos, columna).like(f'%{valor}%'))
+            else:
+                # Registro exacto
+                condiciones.append(getattr(DatosIngresadosCineticos, columna) == valor)
+        if condiciones:
+            query = query.filter(or_(*condiciones))
+        return query.all()
     
     def consultar_conjunto_datos_por_nombre(self, nombre_data):
         session = self.Session()
@@ -164,18 +158,21 @@ class RegistroDataExperimentalManejador:
         if filtros:
             condiciones = []
             for columna, valor in filtros.items():
-                if valor:
+                if not valor:
+                    continue
+                if formato == 'like':
+                    # Registro con like similar
                     condiciones.append(getattr(RegistroDataExperimental, columna).like(f'%{valor}%'))
+                else:
+                    # Registro exacto
+                    condiciones.append(getattr(RegistroDataExperimental, columna) == valor)
 
             # Unir todas las condiciones con OR
             if condiciones:
                 query = query.filter(or_(*condiciones))
 
         # Ejecutar la consulta
-        if formato == 'pandas':
-            datos = query.all()
-        else:
-            datos = query.all()
+        datos = query.all()
         return datos
     
     def consultar_registro_por_nombre(self, nombre_data):

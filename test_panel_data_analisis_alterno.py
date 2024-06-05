@@ -23,6 +23,9 @@ from modelos_metodo_integral import *
 #otras ventanas
 from test_crud_db_controlador import PantallaCrud
 
+# metodos comunes
+from funciones_comunes_controlador import *
+
 
 class PanelDataAnalisis(QMainWindow):
     def __init__(self):
@@ -40,6 +43,9 @@ class PanelDataAnalisis(QMainWindow):
 
         # Inicializar la variable para almacenar el DataFrame
         self.df_datos_cineticos_listos = None
+        # metodos comunes refactorizados
+        self.metodos_comunes = MetodosComunesControlador()
+
 
         
 
@@ -191,25 +197,8 @@ class PanelDataAnalisis(QMainWindow):
         self.mostrar_datos_tabla(datos_resultados)
 
     def mostrar_datos_tabla(self, resultados):
-            self.datos_cineticos_tabla.clearContents()
-            self.datos_cineticos_tabla.setRowCount(0)
-            if resultados:
-                self.datos_cineticos_tabla.setRowCount(len(resultados))
-                self.datos_cineticos_tabla.setColumnCount(10)
-                for fila, dato in enumerate(resultados):
-                    self.datos_cineticos_tabla.setItem(fila, 0, QTableWidgetItem(str(dato.id)))
-                    self.datos_cineticos_tabla.setItem(fila, 1, QTableWidgetItem(str(dato.tiempo)))
-                    self.datos_cineticos_tabla.setItem(fila, 2, QTableWidgetItem(str(dato.concentracion)))
-                    self.datos_cineticos_tabla.setItem(fila, 3, QTableWidgetItem(str(dato.otra_propiedad)))
-                    self.datos_cineticos_tabla.setItem(fila, 4, QTableWidgetItem(str(dato.conversion_reactivo_limitante)))
-                    self.datos_cineticos_tabla.setItem(fila, 5, QTableWidgetItem(dato.tipo_especie))
-                    self.datos_cineticos_tabla.setItem(fila, 6, QTableWidgetItem(str(dato.id_condiciones_iniciales)))
-                    self.datos_cineticos_tabla.setItem(fila, 7, QTableWidgetItem(dato.nombre_data))
-                    self.datos_cineticos_tabla.setItem(fila, 8, QTableWidgetItem(dato.nombre_reaccion))
-                    self.datos_cineticos_tabla.setItem(fila, 9, QTableWidgetItem(dato.especie_quimica))
-            else:
-                QMessageBox.information(self, "Información", "No se encontraron datos", QMessageBox.StandardButton.Ok)
-    
+            self.metodos_comunes.mostrar_datos_tabla(self.datos_cineticos_tabla, resultados)
+            
     def mostrar_reaccion_tabla(self, resultados):
         tabla = self.reaccion_quimica_tabla
         tabla.clearContents()

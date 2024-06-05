@@ -11,18 +11,28 @@ import logging
 #importe ui de la ventana principal
 from crud_db_vista import Ui_MainWindow
 
+# metodos comunes
+from funciones_comunes_controlador import *
+
 class PantallaCrud(QMainWindow):
     def __init__(self):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        # Crear instancias de los manejadores de la base de datos
+        # manejadores de base
+        self.RegistroDataExperimentalManejador = RegistroDataExperimentalManejador()
+        self.CondicionesInicialesManejador = CondicionesInicialesManejador()
         self.DatosCineticosManejador = DatosCineticosManejador()
+        self.ReaccionQuimicaManejador = ReaccionQuimicaManejador()     
+        # metodos comunes refactorizados
+        self.metodos_comunes = MetodosComunesControlador()
 
         # Crear un atajo para la tecla F5
         shortcut = QShortcut(QKeySequence.StandardKey.Refresh, self)
-        shortcut.activated.connect(self.refrescar_datos_tabla)
-
+        shortcut.activated.connect(self.refrescar_datos_tabla)        
         
+        # elementos para datos cinéticos
 
         # UI elements
         self.tiempo = self.ui.tiempo_dc_edit
@@ -38,7 +48,7 @@ class PantallaCrud(QMainWindow):
         # Buttons
         self.agregar_dc_btn = self.ui.agregar_dc_btn
         self.actualizar_dc_btn = self.ui.actualizar_dc_btn
-        self.seleccionar_dc_btn = self.ui.selecionar_dc_btn
+        self.seleccionar_dc_btn = self.ui.seleccionar_dc_btn
         self.buscar_dc_btn = self.ui.buscar_dc_btn
         self.limpiar_dc_btn = self.ui.limpiar_dc_btn
         self.borrar_dc_btn = self.ui.borrar_dc_btn
@@ -52,18 +62,51 @@ class PantallaCrud(QMainWindow):
         self.init_signal_slot()
 
         # Load initial data
+        #cargo los datos de la tabla de datos cinéticos
         self.buscar_dato()
 
         # Conectar la señal cellChanged para actualizar la base de datos cuando cambie una celda
         self.tabla_datos.cellChanged.connect(self.actualizar_valor_celda)
 
+        # elementos para registro de data experimental
+        #campos editables
+        self.nombre_data_experimental = self.ui.nombre_data_rde_edit
+        self.fecha_data_experimental = self.ui.fecha_rde_edit
+        self.detalle_data_experimental = self.ui.detalle_rde_edit
+        #botones
+        self.agregar_rde_btn = self.ui.agregar_rde_btn
+        self.actualizar_rde_btn = self.ui.actualizar_rde_btn
+        self.seleccionar_rde_btn = self.ui.seleccionar_rde_btn
+        self.buscar_rde_btn = self.ui.buscar_rde_btn
+        self.limpiar_rde_btn = self.ui.limpiar_rde_btn
+        self.borrar_rde_btn = self.ui.borrar_rde_btn
+        #tabla
+        self.tabla_registro_data_experimental = self.ui.registro_data_experimental_tabla
+                #cargar los datos de la tabla de registro de data experimental
+        self.buscar_registros()
+
+
+
+
     def init_signal_slot(self):
+        # Conectar los botones a sus respectivas funciones
+        # Datos cinéticos
         self.agregar_dc_btn.clicked.connect(self.agregar_dato)
         self.actualizar_dc_btn.clicked.connect(self.actualizar_dato)
         self.seleccionar_dc_btn.clicked.connect(self.seleccionar_dato)
         self.borrar_dc_btn.clicked.connect(self.borrar_dato)
         self.limpiar_dc_btn.clicked.connect(self.limpiar_formulario)
         self.buscar_dc_btn.clicked.connect(self.buscar_dato)
+        
+        # Registro de data experimental
+        #self.agregar_rde_btn.clicked.connect(self.agregar_data_experimental)
+        #self.actualizar_rde_btn.clicked.connect(self.actualizar_data_experimental)
+        #self.seleccionar_rde_btn.clicked.connect(self.seleccionar_data_experimental)
+        #self.borrar_rde_btn.clicked.connect(self.borrar_data_experimental)
+        #self.limpiar_rde_btn.clicked.connect(self.limpiar_formulario_data_experimental)
+        #self.buscar_rde_btn.clicked.connect(self.buscar_data_experimental)
+
+
 
     def refrescar_datos_tabla(self):
         # Limpiar la tabla
@@ -137,18 +180,18 @@ class PantallaCrud(QMainWindow):
         self.especie_quimica.clear()
 
     def seleccionar_dato(self):
-        selecionar_fila = self.tabla_datos.currentRow()
-        if selecionar_fila != -1:
-            id = self.tabla_datos.item(selecionar_fila, 0).text().strip()
-            tiempo = self.tabla_datos.item(selecionar_fila, 1).text().strip()
-            concentracion = self.tabla_datos.item(selecionar_fila, 2).text().strip()
-            otra_propiedad = self.tabla_datos.item(selecionar_fila, 3).text().strip()
-            conversion_reactivo_limitante = self.tabla_datos.item(selecionar_fila, 4).text().strip()
-            tipo_especie = self.tabla_datos.item(selecionar_fila, 5).text().strip()
-            id_condiciones_iniciales = self.tabla_datos.item(selecionar_fila, 6).text().strip()
-            nombre_data = self.tabla_datos.item(selecionar_fila, 7).text().strip()
-            nombre_reaccion = self.tabla_datos.item(selecionar_fila, 8).text().strip()
-            especie_quimica = self.tabla_datos.item(selecionar_fila, 9).text().strip()
+        seleccionar_fila = self.tabla_datos.currentRow()
+        if seleccionar_fila != -1:
+            id = self.tabla_datos.item(seleccionar_fila, 0).text().strip()
+            tiempo = self.tabla_datos.item(seleccionar_fila, 1).text().strip()
+            concentracion = self.tabla_datos.item(seleccionar_fila, 2).text().strip()
+            otra_propiedad = self.tabla_datos.item(seleccionar_fila, 3).text().strip()
+            conversion_reactivo_limitante = self.tabla_datos.item(seleccionar_fila, 4).text().strip()
+            tipo_especie = self.tabla_datos.item(seleccionar_fila, 5).text().strip()
+            id_condiciones_iniciales = self.tabla_datos.item(seleccionar_fila, 6).text().strip()
+            nombre_data = self.tabla_datos.item(seleccionar_fila, 7).text().strip()
+            nombre_reaccion = self.tabla_datos.item(seleccionar_fila, 8).text().strip()
+            especie_quimica = self.tabla_datos.item(seleccionar_fila, 9).text().strip()
 
             self.tiempo.setText(tiempo)
             self.concentracion.setText(concentracion)
@@ -252,11 +295,9 @@ class PantallaCrud(QMainWindow):
             "especie_quimica": self.especie_quimica.text(),
         }
 
-        datos_resultados = self.DatosCineticosManejador.consultar_datos(filtros)
+        datos_resultados = self.DatosCineticosManejador.consultar_datos(filtros,"like")
         self.mostrar_datos_tabla(datos_resultados)
     
-
-
 
     def boton_desactivado(self):
         for button in self.lista_botones:
@@ -267,26 +308,7 @@ class PantallaCrud(QMainWindow):
             button.setDisabled(False)
 
     def mostrar_datos_tabla(self, resultados):
-        if resultados:
-            self.tabla_datos.setRowCount(len(resultados))
-            self.tabla_datos.setColumnCount(10)
-
-            for fila, dato in enumerate(resultados):
-                self.tabla_datos.setItem(fila, 0, QTableWidgetItem(str(dato.id)))
-                self.tabla_datos.setItem(fila, 1, QTableWidgetItem(str(dato.tiempo)))
-                self.tabla_datos.setItem(fila, 2, QTableWidgetItem(str(dato.concentracion)))
-                self.tabla_datos.setItem(fila, 3, QTableWidgetItem(str(dato.otra_propiedad)))
-                self.tabla_datos.setItem(fila, 4, QTableWidgetItem(str(dato.conversion_reactivo_limitante)))
-                self.tabla_datos.setItem(fila, 5, QTableWidgetItem(dato.tipo_especie))
-                self.tabla_datos.setItem(fila, 6, QTableWidgetItem(str(dato.id_condiciones_iniciales)))
-                self.tabla_datos.setItem(fila, 7, QTableWidgetItem(dato.nombre_data))
-                self.tabla_datos.setItem(fila, 8, QTableWidgetItem(dato.nombre_reaccion))
-                self.tabla_datos.setItem(fila, 9, QTableWidgetItem(dato.especie_quimica))
-        else:
-            self.tabla_datos.setRowCount(0)
-            QMessageBox.information(self, "Información", "No se encontraron datos", QMessageBox.StandardButton.Ok)
-    
-
+        self.metodos_comunes.mostrar_datos_tabla(self.tabla_datos, resultados)
 
     def actualizar_valor_celda(self, fila, columna):
         item = self.tabla_datos.item(fila, columna)
@@ -317,6 +339,20 @@ class PantallaCrud(QMainWindow):
                 print("La celda de nombre de datos está vacía")
         else:
             print("La celda está vacía o fuera de los límites de la tabla")
+
+    # funciones crud para registro de data experimental
+    # Registro de data experimental
+    def mostrar_registros(self, registros):
+        self.metodos_comunes.mostrar_registros(self.tabla_registro_data_experimental, registros)
+
+    def buscar_registros(self):
+        filtros = {
+            "nombre_data": self.nombre_data_experimental.text(),
+            "fecha": self.fecha_data_experimental.text(),
+            "detalle": self.detalle_data_experimental.text(),
+        }
+        registros = self.RegistroDataExperimentalManejador.consultar_registro(filtros, "like")
+        self.mostrar_registros(registros)    
 
 
 if __name__ == "__main__":
