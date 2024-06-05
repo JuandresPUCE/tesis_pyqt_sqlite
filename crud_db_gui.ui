@@ -57,7 +57,7 @@
           <attribute name="title">
            <string>Registro Data Experimental</string>
           </attribute>
-          <widget class="QFrame" name="funciones_frame_4">
+          <widget class="QFrame" name="funciones_frame_rde">
            <property name="geometry">
             <rect>
              <x>30</x>
@@ -479,7 +479,7 @@
             </item>
            </layout>
           </widget>
-          <widget class="QFrame" name="funciones_frame_2">
+          <widget class="QFrame" name="funciones_frame_ci">
            <property name="geometry">
             <rect>
              <x>30</x>
@@ -688,7 +688,7 @@
             </item>
            </layout>
           </widget>
-          <widget class="QFrame" name="funciones_frame">
+          <widget class="QFrame" name="funciones_frame_dc">
            <property name="geometry">
             <rect>
              <x>40</x>
@@ -1024,7 +1024,7 @@
             </item>
            </layout>
           </widget>
-          <widget class="QFrame" name="funciones_frame_3">
+          <widget class="QFrame" name="funciones_frame_rq">
            <property name="geometry">
             <rect>
              <x>30</x>

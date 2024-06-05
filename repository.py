@@ -76,17 +76,27 @@ class CondicionesInicialesManejador:
             session.commit()
             return True
         return False
-
+    
     def actualizar_condicion(self, id, new_condicion):
         session = self.Session()
-        condicion = session.query(CondicionesIniciales).filter(CondicionesIniciales.id == id).first()
-        if condicion:
-            for key, value in new_condicion.items():
-                setattr(condicion, key, value)
-            session.commit()
-            print(f"Condition with ID {id} updated successfully.")  # Debugging line
-        else:
-            print(f"No se encontró la condición con id {id}")
+        try:
+            condicion = session.query(CondicionesIniciales).filter(CondicionesIniciales.id == id).first()
+            if condicion:
+                for key, value in new_condicion.items():
+                    setattr(condicion, key, value)
+                session.commit()
+                return True
+            else:
+                logging.warning(f"No se encontró la condición con id {id}")
+                return False
+        except SQLAlchemyError as e:
+            logging.error(f"Error de SQLAlchemy al actualizar condición: {e}")
+            session.rollback()
+            return False
+        finally:
+            session.close()
+
+
 
 class DatosCineticosManejador:
     def __init__(self):
@@ -147,16 +157,22 @@ class DatosCineticosManejador:
 
     def actualizar_dato(self, id, new_dato):
         session = self.Session()
-        dato = session.query(DatosIngresadosCineticos).filter(DatosIngresadosCineticos.id == id).first()
-        if dato:
-            for key, value in new_dato.items():
-                setattr(dato, key, value)
-            session.commit()
-            #print(f"Condition with ID {id} updated successfully.")  # Linea para check en consola
-            return True
-        else:
-            #print(f"No se encontró la condición con id {id}")     # Linea para check en consola
+        try:
+            dato = session.query(DatosIngresadosCineticos).filter(DatosIngresadosCineticos.id == id).first()
+            if dato:
+                for key, value in new_dato.items():
+                    setattr(dato, key, value)
+                session.commit()
+                return True
+            else:
+                logging.warning(f"No se encontró el dato con id {id}")
+                return False
+        except SQLAlchemyError as e:
+            logging.error(f"Error de SQLAlchemy al actualizar dato: {e}")
+            session.rollback()
             return False
+        finally:
+            session.close()
 
 class RegistroDataExperimentalManejador:
     def __init__(self):
@@ -218,17 +234,23 @@ class RegistroDataExperimentalManejador:
     
     def actualizar_registro(self, id, new_registro):
         session = self.Session()
-        registro = session.query(RegistroDataExperimental).filter(RegistroDataExperimental.id == id).first()
-        if registro:
-            for key, value in new_registro.items():
-                setattr(registro, key, value)
-            session.commit()
-            #print(f"Condition with ID {id} updated successfully.")  # Linea para check en consola
-            return True
-        else:
-            #print(f"No se encontró la condición con id {id}")     # Linea para check en consola
+        try:
+            registro = session.query(RegistroDataExperimental).filter(RegistroDataExperimental.id == id).first()
+            if registro:
+                for key, value in new_registro.items():
+                    setattr(registro, key, value)
+                session.commit()
+                return True
+            else:
+                logging.warning(f"No se encontró el registro con id {id}")
+                return False
+        except SQLAlchemyError as e:
+            logging.error(f"Error de SQLAlchemy al actualizar registro: {e}")
+            session.rollback()
             return False
-        
+        finally:
+            session.close()
+
 class ReaccionQuimicaManejador:
     def __init__(self):
         self.engine = create_engine(f'sqlite:///{db_path}', poolclass=QueuePool, pool_size=20, max_overflow=0)
@@ -280,13 +302,19 @@ class ReaccionQuimicaManejador:
     
     def actualizar_reaccion(self, id, new_reaccion):
         session = self.Session()
-        reaccion = session.query(ReaccionQuimica).filter(ReaccionQuimica.id == id).first()
-        if reaccion:
-            for key, value in new_reaccion.items():
-                setattr(reaccion, key, value)
-            session.commit()
-            #print(f"Condition with ID {id} updated successfully.")  # Linea para check en consola
-            return True
-        else:
-            #print(f"No se encontró la condición con id {id}")     # Linea para check en consola
+        try:
+            reaccion = session.query(ReaccionQuimica).filter(ReaccionQuimica.id == id).first()
+            if reaccion:
+                for key, value in new_reaccion.items():
+                    setattr(reaccion, key, value)
+                session.commit()
+                return True
+            else:
+                logging.warning(f"No se encontró la reacción con id {id}")
+                return False
+        except SQLAlchemyError as e:
+            logging.error(f"Error de SQLAlchemy al actualizar reacción: {e}")
+            session.rollback()
             return False
+        finally:
+            session.close()

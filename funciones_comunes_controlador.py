@@ -43,4 +43,26 @@ class MetodosComunesControlador:
         else:
             self.tabla.setRowCount(0)
             QMessageBox.information(self.parent, "No hay registros", "No se encontraron registros en la base de datos.", QMessageBox.StandardButton.Ok)
-        
+
+    def mostrar_condiciones_iniciales(self, condiciones_iniciales_tabla, condiciones):
+        self.tabla = condiciones_iniciales_tabla
+        self.tabla.clearContents()
+        self.tabla.setRowCount(0)
+        if condiciones:
+            self.tabla.setRowCount(len(condiciones))
+            self.tabla.setColumnCount(10)
+
+            for fila, condicion in enumerate(condiciones):
+                self.tabla.setItem(fila, 0, QTableWidgetItem(str(condicion.id)))
+                self.tabla.setItem(fila, 1, QTableWidgetItem(str(condicion.temperatura)))
+                self.tabla.setItem(fila, 2, QTableWidgetItem(str(condicion.tiempo)))
+                self.tabla.setItem(fila, 3, QTableWidgetItem(str(condicion.presion_total)))
+                self.tabla.setItem(fila, 4, QTableWidgetItem(str(condicion.presion_parcial)))
+                self.tabla.setItem(fila, 5, QTableWidgetItem(str(condicion.fraccion_molar)))
+                self.tabla.setItem(fila, 6, QTableWidgetItem(condicion.especie_quimica))
+                self.tabla.setItem(fila, 7, QTableWidgetItem(condicion.tipo_especie))
+                self.tabla.setItem(fila, 8, QTableWidgetItem(condicion.detalle))
+                self.tabla.setItem(fila, 9, QTableWidgetItem(condicion.nombre_data))
+        else:
+            self.tabla.setRowCount(0)
+            QMessageBox.information(self.parent, "No hay registros", "No se encontraron registros en la base de datos.", QMessageBox.StandardButton.Ok)
