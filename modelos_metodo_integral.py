@@ -8,7 +8,10 @@ class MetodoIntegralModelos:
     def modelo_n_orden(t, k_ord_n, A_0, n):
         return ((A_0**(1-n))-(1-n)*k_ord_n * t)**(1/(1-n))
     
-    
+    @staticmethod
+    def modelo_cero_orden(t, k_ord_0, A_0):
+        return A_0-k_ord_0*t
+
     @staticmethod
     def modelo_primer_orden(t, k_ord_1, A_0):
         return A_0*np.exp(-k_ord_1*t)
@@ -103,8 +106,10 @@ class MetodoIntegralAjustador:
             modelo = MetodoIntegralModelos.modelo_primer_orden
         elif n == 2:
             modelo = MetodoIntegralModelos.modelo_segundo_orden
+        elif n == 0:
+            modelo = MetodoIntegralModelos.modelo_cero_orden
         else:
-            raise ValueError("Solo se admiten modelos de primer (n=1) y segundo (n=2) orden.")
+            raise ValueError("Solo se admiten modelos de primer (n=1), segundo (n=2) orden y orden cero (n=0).")
 
         # Ajustar el modelo a los datos experimentales para encontrar k_ord_n y A_0
         params, covariance = curve_fit(modelo, t_data, A_data, p0=[estimacion_inicial_k, estimacion_inicial_A0])

@@ -3,15 +3,13 @@ from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from PyQt6 import QtCore, QtWidgets
-from PyQt6.uic import loadUi
+from PyQt6.uic import *
 from models import *
 from repository import *
 import logging
 
 #importe ui de la ventana principal
-from crud_datos_cineticos_ui import Ui_MainWindow
-
-
+from crud_db_vista import Ui_MainWindow
 
 class PantallaCrud(QMainWindow):
     def __init__(self):
@@ -27,26 +25,26 @@ class PantallaCrud(QMainWindow):
         
 
         # UI elements
-        self.tiempo = self.ui.tiempo_edit
-        self.concentracion = self.ui.concentracion_edit
-        self.otra_propiedad = self.ui.otra_propiedad_edit
-        self.conversion_reactivo_limitante = self.ui.conversion_reactivo_limitante_edit
-        self.tipo_especie = self.ui.tipo_especie_edit
-        self.id_condiciones_iniciales = self.ui.id_condiciones_iniciales_edit
-        self.nombre_data = self.ui.nombre_data_edit
-        self.nombre_reaccion = self.ui.nombre_reaccion_edit
-        self.especie_quimica = self.ui.especie_quimica_edit
+        self.tiempo = self.ui.tiempo_dc_edit
+        self.concentracion = self.ui.concentracion_dc_edit
+        self.otra_propiedad = self.ui.otra_propiedad_dc_edit
+        self.conversion_reactivo_limitante = self.ui.conversion_reactivo_limitante_dc_edit
+        self.tipo_especie = self.ui.tipo_especie_dc_edit
+        self.id_condiciones_iniciales = self.ui.id_condiciones_iniciales_dc_edit
+        self.nombre_data = self.ui.nombre_data_dc_edit
+        self.nombre_reaccion = self.ui.nombre_reaccion_dc_edit
+        self.especie_quimica = self.ui.especie_quimica_dc_edit
 
         # Buttons
-        self.agregar_btn = self.ui.agregar_btn
-        self.actualizar_btn = self.ui.actualizar_btn
-        self.seleccionar_btn = self.ui.selecionar_btn
-        self.buscar_btn = self.ui.buscar_btn
-        self.limpiar_btn = self.ui.limpiar_btn
-        self.borrar_btn = self.ui.borrar_btn
+        self.agregar_dc_btn = self.ui.agregar_dc_btn
+        self.actualizar_dc_btn = self.ui.actualizar_dc_btn
+        self.seleccionar_dc_btn = self.ui.selecionar_dc_btn
+        self.buscar_dc_btn = self.ui.buscar_dc_btn
+        self.limpiar_dc_btn = self.ui.limpiar_dc_btn
+        self.borrar_dc_btn = self.ui.borrar_dc_btn
 
         # Table
-        self.tabla_datos = self.ui.tableWidget
+        self.tabla_datos = self.ui.datos_cineticos_tabla
         self.tabla_datos.setSortingEnabled(False)
         self.lista_botones = self.ui.funciones_frame.findChildren(QPushButton)
 
@@ -60,12 +58,12 @@ class PantallaCrud(QMainWindow):
         self.tabla_datos.cellChanged.connect(self.actualizar_valor_celda)
 
     def init_signal_slot(self):
-        self.agregar_btn.clicked.connect(self.agregar_dato)
-        self.actualizar_btn.clicked.connect(self.actualizar_dato)
-        self.seleccionar_btn.clicked.connect(self.seleccionar_dato)
-        self.borrar_btn.clicked.connect(self.borrar_dato)
-        self.limpiar_btn.clicked.connect(self.limpiar_formulario)
-        self.buscar_btn.clicked.connect(self.buscar_dato)
+        self.agregar_dc_btn.clicked.connect(self.agregar_dato)
+        self.actualizar_dc_btn.clicked.connect(self.actualizar_dato)
+        self.seleccionar_dc_btn.clicked.connect(self.seleccionar_dato)
+        self.borrar_dc_btn.clicked.connect(self.borrar_dato)
+        self.limpiar_dc_btn.clicked.connect(self.limpiar_formulario)
+        self.buscar_dc_btn.clicked.connect(self.buscar_dato)
 
     def refrescar_datos_tabla(self):
         # Limpiar la tabla

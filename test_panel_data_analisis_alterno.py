@@ -20,6 +20,9 @@ from repository import *
 from funciones import *
 from modelos_metodo_integral import *
 
+#otras ventanas
+from test_crud_db_controlador import PantallaCrud
+
 
 class PanelDataAnalisis(QMainWindow):
     def __init__(self):
@@ -38,6 +41,8 @@ class PanelDataAnalisis(QMainWindow):
         # Inicializar la variable para almacenar el DataFrame
         self.df_datos_cineticos_listos = None
 
+        
+
     #elementos gráficos
     
         # Inicializar elementos gráficos
@@ -46,6 +51,8 @@ class PanelDataAnalisis(QMainWindow):
         # Cargar datos iniciales
         self.buscar_registros()
         self.buscar_dato()
+
+        self.crud_db = PantallaCrud()
 
     def init_ui_elements(self):
         # Tabla de datos cineticos
@@ -92,8 +99,12 @@ class PanelDataAnalisis(QMainWindow):
         self.estimacion_inicial_n_edit = self.ui.estimacion_inicial_n_edit
 
         #boton de ejecutar modelo
-        self.ejecutar_modelo_button = self.ui.pushButton_2
+        self.ejecutar_modelo_button = self.ui.graficar_btn
         self.ejecutar_modelo_button.clicked.connect(self.ejecutar_modelo)
+
+        #botones CRUD
+        self.crud_1= self.ui.opcion_btn
+        self.crud_1.clicked.connect(self.abrir_crud_db)
 
 
 
@@ -176,8 +187,6 @@ class PanelDataAnalisis(QMainWindow):
 
     
     def buscar_dato(self):
-
-
         datos_resultados = self.DatosCineticosManejador.consultar_datos()
         self.mostrar_datos_tabla(datos_resultados)
 
@@ -357,8 +366,10 @@ class PanelDataAnalisis(QMainWindow):
             else:
                 resultado = metodo(dataframe, "tiempo", "concentracion", estimacion_inicial_k, estimacion_inicial_n)
 
+            QMessageBox.information(self, "Resultado", f"El modelo se ajustó. Resultado: {resultado}", QMessageBox.StandardButton.Ok)
             print(resultado)
-                        # Graficar utilizando el resultado obtenido
+            
+            # Graficar utilizando el resultado obtenido
 
             MetodoIntegralGraficador.graficar_modelo_salida_opcional(
             dataframe,
@@ -400,6 +411,9 @@ class PanelDataAnalisis(QMainWindow):
         #self.manejador_seleccion_modelo(index, self.df_datos_cineticos_listos)
         self.manejador_seleccion_modelo(index)
 
+    def abrir_crud_db(self):
+        self.crud_db.show()
+
 
 
         
@@ -432,7 +446,7 @@ class MatplotlibWidget(QWidget):
         self.ax.imshow(img)
         self.ax.axis('off')  # Ocultar los ejes
         self.canvas.draw()
- 
+
 
 
 if __name__ == "__main__":
