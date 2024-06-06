@@ -5,8 +5,8 @@ from PyQt6.QtCore import *
 from PyQt6 import QtCore, QtWidgets
 #from PyQt6.uic import loadUi
 from PyQt6.uic import *
-from models import *
-from repository import *
+from modelos import *
+from repositorios import *
 import pandas as pd
 import matplotlib.image as mpimg
 
@@ -15,7 +15,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
 from panel_data_analisis_alterno import Ui_MainWindow
-from repository import *
+from repositorios import *
 
 from funciones import *
 from modelos_metodo_integral import *
@@ -24,7 +24,7 @@ from modelos_metodo_integral import *
 from test_crud_db_controlador import PantallaCrud
 
 # metodos comunes
-from funciones_comunes_controlador import *
+from servicios import *
 
 
 class PanelDataAnalisis(QMainWindow):
@@ -44,7 +44,7 @@ class PanelDataAnalisis(QMainWindow):
         # Inicializar la variable para almacenar el DataFrame
         self.df_datos_cineticos_listos = None
         # metodos comunes refactorizados
-        self.metodos_comunes = MetodosComunesControlador()
+        self.metodos_comunes = Servicios()
 
 
         
@@ -181,10 +181,10 @@ class PanelDataAnalisis(QMainWindow):
                 self.tabla.setItem(fila, 3, QTableWidgetItem(str(condicion.presion_total)))
                 self.tabla.setItem(fila, 4, QTableWidgetItem(str(condicion.presion_parcial)))
                 self.tabla.setItem(fila, 5, QTableWidgetItem(str(condicion.fraccion_molar)))
-                self.tabla.setItem(fila, 6, QTableWidgetItem(condicion.especie_quimica))
-                self.tabla.setItem(fila, 7, QTableWidgetItem(condicion.tipo_especie))
-                self.tabla.setItem(fila, 8, QTableWidgetItem(condicion.detalle))
-                self.tabla.setItem(fila, 9, QTableWidgetItem(condicion.nombre_data))
+                self.tabla.setItem(fila, 6, QTableWidgetItem(str(condicion.especie_quimica)))
+                self.tabla.setItem(fila, 7, QTableWidgetItem(str(condicion.tipo_especie)))
+                self.tabla.setItem(fila, 8, QTableWidgetItem(str(condicion.detalle)))
+                self.tabla.setItem(fila, 9, QTableWidgetItem(str(condicion.nombre_data)))
         else:
             self.tabla.setRowCount(0)
             QMessageBox.information(self, "No hay condiciones iniciales", "No se encontraron condiciones iniciales en la base de datos.", QMessageBox.StandardButton.Ok)
@@ -196,29 +196,33 @@ class PanelDataAnalisis(QMainWindow):
         datos_resultados = self.DatosCineticosManejador.consultar_datos()
         self.mostrar_datos_tabla(datos_resultados)
 
+#manejar try except cuando la base de datos no tiene datos
     def mostrar_datos_tabla(self, resultados):
-        tabla = self.datos_cineticos_tabla
-        tabla.clearContents()
-        tabla.setRowCount(0)
-        if resultados:
-            tabla.setRowCount(len(resultados))
-            tabla.setColumnCount(10)
+        try:
+            tabla = self.datos_cineticos_tabla
+            tabla.clearContents()
+            tabla.setRowCount(0)
+            if resultados:
+                tabla.setRowCount(len(resultados))
+                tabla.setColumnCount(10)
 
-            for fila, dato in enumerate(resultados):
-                tabla.setItem(fila, 0, QTableWidgetItem(str(dato.id)))
-                tabla.setItem(fila, 1, QTableWidgetItem(str(dato.tiempo)))
-                tabla.setItem(fila, 2, QTableWidgetItem(str(dato.concentracion)))
-                tabla.setItem(fila, 3, QTableWidgetItem(str(dato.otra_propiedad)))
-                tabla.setItem(fila, 4, QTableWidgetItem(str(dato.conversion_reactivo_limitante)))
-                tabla.setItem(fila, 5, QTableWidgetItem(str(dato.tipo_especie)))
-                tabla.setItem(fila, 6, QTableWidgetItem(str(dato.id_condiciones_iniciales)))
-                tabla.setItem(fila, 7, QTableWidgetItem(str(dato.nombre_data)))
-                tabla.setItem(fila, 8, QTableWidgetItem(str(dato.nombre_reaccion)))
-                tabla.setItem(fila, 9, QTableWidgetItem(str(dato.especie_quimica)))
-        else:
-            self.tabla.setRowCount(0)
-            QMessageBox.information(self, "Información", "No se encontraron datos", QMessageBox.StandardButton.Ok)
-            
+                for fila, dato in enumerate(resultados):
+                    tabla.setItem(fila, 0, QTableWidgetItem(str(dato.id)))
+                    tabla.setItem(fila, 1, QTableWidgetItem(str(dato.tiempo)))
+                    tabla.setItem(fila, 2, QTableWidgetItem(str(dato.concentracion)))
+                    tabla.setItem(fila, 3, QTableWidgetItem(str(dato.otra_propiedad)))
+                    tabla.setItem(fila, 4, QTableWidgetItem(str(dato.conversion_reactivo_limitante)))
+                    tabla.setItem(fila, 5, QTableWidgetItem(str(dato.tipo_especie)))
+                    tabla.setItem(fila, 6, QTableWidgetItem(str(dato.id_condiciones_iniciales)))
+                    tabla.setItem(fila, 7, QTableWidgetItem(str(dato.nombre_data)))
+                    tabla.setItem(fila, 8, QTableWidgetItem(str(dato.nombre_reaccion)))
+                    tabla.setItem(fila, 9, QTableWidgetItem(str(dato.especie_quimica)))
+            else:
+                self.tabla.setRowCount(0)
+                QMessageBox.information(self, "Información", "No se encontraron datos", QMessageBox.StandardButton.Ok)
+        except AttributeError:
+            print("Error: El objeto 'PanelDataAnalisis' no tiene el atributo 'tabla'")
+
     def mostrar_reaccion_tabla(self, resultados):
         tabla = self.reaccion_quimica_tabla
         tabla.clearContents()

@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import *
 
-class MetodosComunesControlador:
+class Servicios:
     def __init__(self, parent=None):
         self.parent = parent
         self.mensaje = "Metodos comunes del controlador"

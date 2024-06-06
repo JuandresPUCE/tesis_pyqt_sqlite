@@ -7,18 +7,22 @@ from PyQt6.uic import *
 from modelos import *
 from repositorios import *
 import logging
+from datetime import datetime
 
 #importe ui de la ventana principal
-from crud_db_vista import Ui_MainWindow
+from flujo_datos_vista import Ui_MainWindow
+
 
 # metodos comunes
 from servicios import *
 
-class PantallaCrud(QMainWindow):
+class FlujoDatos(QMainWindow):
     def __init__(self):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+
+
         # Crear instancias de los manejadores de la base de datos
         self.manejadores_base()
 
@@ -49,6 +53,9 @@ class PantallaCrud(QMainWindow):
         self.tabla_registro_data_experimental.cellChanged.connect(self.actualizar_valor_celda_registro)
         self.tabla_condiciones_iniciales.cellChanged.connect(self.actualizar_valor_celda_ci)
         self.tabla_reaccion_quimica.cellChanged.connect(self.actualizar_valor_celda_reaccion)
+
+        #iniciar funciones diferentes a crud
+        self.establecer_fecha_sistema()
 
     def manejadores_base(self):
         
@@ -1064,9 +1071,22 @@ class PantallaCrud(QMainWindow):
         reaccion_quimica = self.ReaccionQuimicaManejador.consultar_reaccion(filtros, "like")
         self.mostrar_reaccion_quimica(reaccion_quimica)
 
+    # funciones especiales para datos
+    def establecer_fecha_sistema(self):
+        # Obtener la fecha actual del sistema
+        fecha_actual = datetime.now().date()
+
+        # Convertir la fecha a una cadena en el formato dd/mm/yyyy
+        fecha_str = fecha_actual.strftime("%d/%m/%Y")
+
+        # Establecer la fecha en fecha_rde_edit
+        self.ui.fecha_rde_edit.setText(fecha_str)
+
+        # Asignar fecha_rde_edit a fecha_data_experimental
+        self.fecha_data_experimental = self.ui.fecha_rde_edit
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = PantallaCrud()
+    window = FlujoDatos()
     window.show()
     sys.exit(app.exec())

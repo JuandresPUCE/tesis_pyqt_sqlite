@@ -8,7 +8,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 import os
 
-from models import *
+from modelos import *
 
 # Obtén la ruta del directorio actual
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -20,7 +20,12 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 #absolute
 #db_path = r"D:\candidatos_proyectof\tesis_tec\dataReactor\tesis_GUI_sqlite\tesis_pyqt_sqlite\data\data_reactor1.db"
 #realtive
-db_path = r"data\data_reactor1.db"
+#db_path = r"data\data_reactor1.db"
+db_path = r"data\data_reactor2.db"
+engine = create_engine(f'sqlite:///{db_path}')
+
+# Crear todas las tablas
+Base.metadata.create_all(engine)
 
 
 # crud SQLalchemy
@@ -44,29 +49,37 @@ class CondicionesInicialesManejador:
             session.close()
     
     def consultar_condicion(self, filtros=None, formato=None):
-        session = self.Session()
-        query = session.query(CondicionesIniciales)
+        try:
+            session = self.Session()
+            query = session.query(CondicionesIniciales)
 
-        # Aplicar filtros si se proporcionan
-        if filtros:
+            # Aplicar filtros si se proporcionan
+            if not filtros:
+                return query.all()
+            
             condiciones = []
             for columna, valor in filtros.items():
-                if valor:
-                    #registro exacto
+                if not valor:
+                    continue
+                if formato == 'like':
+                    # Registro con like similar
+                    condiciones.append(getattr(CondicionesIniciales, columna).like(f'%{valor}%'))
+                else:
+                    # Registro exacto
                     condiciones.append(getattr(CondicionesIniciales, columna) == valor)
-                    #registro con like similar
-                    #condiciones.append(getattr(CondicionesIniciales, columna).like(f'%{valor}%'))
-
-            # Unir todas las condiciones con OR
+            
             if condiciones:
                 query = query.filter(or_(*condiciones))
+            
+            return query.all()
+        except SQLAlchemyError as e:
+            logging.error(f"Error de SQLAlchemy al consultar condición: {e}")
+            print(f"Error al consultar datos: {e}")
+            return None
+        finally:
+            session.close()
 
-        # Ejecutar la consulta
-        if formato == 'pandas':
-            datos = query.all()
-        else:
-            datos = query.all()
-        return datos
+
 
     def borrar_condicion(self, id):
         session = self.Session()
@@ -118,24 +131,37 @@ class DatosCineticosManejador:
 
 
     def consultar_datos(self, filtros=None, formato=None):
-        session = self.Session()
-        query = session.query(DatosIngresadosCineticos)
-        if not filtros:
+        try:
+            session = self.Session()
+            query = session.query(DatosIngresadosCineticos)
+
+            if not filtros:
+                return query.all()
+
+            condiciones = []
+            for columna, valor in filtros.items():
+                if not valor:
+                    continue
+                if formato == 'like':
+                    # Registro con like similar
+                    condiciones.append(getattr(DatosIngresadosCineticos, columna).like(f'%{valor}%'))
+                else:
+                    # Registro exacto
+                    condiciones.append(getattr(DatosIngresadosCineticos, columna) == valor)
+
+            if condiciones:
+                query = query.filter(or_(*condiciones))
+
             return query.all()
-        condiciones = []
-        for columna, valor in filtros.items():
-            if not valor:
-                continue
-            if formato == 'like':
-                # Registro con like similar
-                condiciones.append(getattr(DatosIngresadosCineticos, columna).like(f'%{valor}%'))
-            else:
-                # Registro exacto
-                condiciones.append(getattr(DatosIngresadosCineticos, columna) == valor)
-        if condiciones:
-            query = query.filter(or_(*condiciones))
-        return query.all()
-    
+        
+        except Exception as e:
+            print(f"Error al consultar datos: {e}")
+            return None
+        
+        finally:
+            session.close()
+
+    # Consultar datos por nombre/si no se usa eliminar
     def consultar_conjunto_datos_por_nombre(self, nombre_data):
         session = self.Session()
         datos = session.query(DatosIngresadosCineticos).filter(DatosIngresadosCineticos.nombre_data == nombre_data)
@@ -147,13 +173,27 @@ class DatosCineticosManejador:
         return dato
 
     def borrar_dato(self, id):
-        session = self.Session()
-        dato = session.query(DatosIngresadosCineticos).filter(DatosIngresadosCineticos.id == id).first()
-        if dato:
-            session.delete(dato)
-            session.commit()
-            return True
-        return False
+        try:
+            session = self.Session()
+            # Buscar el dato por su ID
+            dato = session.query(DatosIngresadosCineticos).filter(DatosIngresadosCineticos.id == id).first()
+            
+            # Verificar si el dato existe antes de intentar borrarlo
+            if dato:
+                session.delete(dato)
+                session.commit()
+                return True
+            else:
+                # Si el dato no existe, devolver False
+                return False
+        except Exception as e:
+            # Manejar cualquier excepción que pueda ocurrir durante la operación de borrado
+            print(f"Error al borrar el dato: {e}")
+            session.rollback()  # Deshacer la operación de borrado
+            return False
+        finally:
+            session.close()  # Cerrar la sesión de la base de datos
+
 
     def actualizar_dato(self, id, new_dato):
         session = self.Session()
@@ -194,11 +234,15 @@ class RegistroDataExperimentalManejador:
 
        
     def consultar_registro(self, filtros=None, formato=None):
-        session = self.Session()
-        query = session.query(RegistroDataExperimental)
+        try:
+            session = self.Session()
+            query = session.query(RegistroDataExperimental)
 
-        # Aplicar filtros si se proporcionan
-        if filtros:
+            # Primera cláusula de guarda: Si no se proporcionan filtros, no es necesario aplicar ninguna condición adicional.
+            if not filtros:
+                return query.all()
+
+            # Aplicar filtros si se proporcionan
             condiciones = []
             for columna, valor in filtros.items():
                 if not valor:
@@ -210,13 +254,24 @@ class RegistroDataExperimentalManejador:
                     # Registro exacto
                     condiciones.append(getattr(RegistroDataExperimental, columna) == valor)
 
-            # Unir todas las condiciones con OR
-            if condiciones:
-                query = query.filter(or_(*condiciones))
+            # Segunda cláusula de guarda: Si no hay condiciones de filtro válidas definidas, no es necesario aplicar ninguna condición adicional.
+            if not condiciones:
+                return query.all()
 
-        # Ejecutar la consulta
-        datos = query.all()
-        return datos
+            # Unir todas las condiciones con OR
+            query = query.filter(or_(*condiciones))
+
+            # Ejecutar la consulta
+            datos = query.all()
+            return datos
+        except SQLAlchemyError as e:
+            # Manejar la excepción SQLAlchemyError
+            print("Error de SQLAlchemy:", e)
+            # Puedes lanzar una nueva excepción personalizada o retornar un valor predeterminado
+            return None
+        finally:
+            session.close()
+
     
     def consultar_registro_por_nombre(self, nombre_data):
         session = self.Session()
@@ -224,13 +279,26 @@ class RegistroDataExperimentalManejador:
         return datos
 
     def borrar_registro(self, id):
-        session = self.Session()
-        registro = session.query(RegistroDataExperimental).filter(RegistroDataExperimental.id == id).first()
-        if registro:
-            session.delete(registro)
-            session.commit()
-            return True
-        return False    
+        try:
+            session = self.Session()
+            # Buscar el registro por su ID
+            registro = session.query(RegistroDataExperimental).filter(RegistroDataExperimental.id == id).first()
+            
+            # Verificar si el registro existe antes de intentar borrarlo
+            if registro:
+                session.delete(registro)
+                session.commit()
+                return True
+            else:
+                # Si el registro no existe, devolver False
+                return False
+        except Exception as e:
+            # Manejar cualquier excepción que pueda ocurrir durante la operación de borrado
+            print(f"Error al borrar el registro: {e}")
+            session.rollback()  # Deshacer la operación de borrado
+            return False
+        finally:
+            session.close()  # Cerrar la sesión de la base de datos
     
     def actualizar_registro(self, id, new_registro):
         session = self.Session()
@@ -270,26 +338,38 @@ class ReaccionQuimicaManejador:
             session.close()
     
     def consultar_reaccion(self, filtros=None, formato=None):
-        session = self.Session()
-        query = session.query(ReaccionQuimica)
+        try:
+            session = self.Session()
+            query = session.query(ReaccionQuimica)
 
-        # Aplicar filtros si se proporcionan
-        if filtros:
+            # Primera cláusula de guarda: Si no se proporcionan filtros, no es necesario aplicar ninguna condición adicional.
+            if not filtros:
+                return query.all()
+
+            # Aplicar filtros si se proporcionan
             condiciones = []
             for columna, valor in filtros.items():
                 if valor:
                     condiciones.append(getattr(ReaccionQuimica, columna).like(f'%{valor}%'))
 
-            # Unir todas las condiciones con OR
-            if condiciones:
-                query = query.filter(or_(*condiciones))
+            # Segunda cláusula de guarda: Si no hay condiciones de filtro válidas definidas, no es necesario aplicar ninguna condición adicional.
+            if not condiciones:
+                return query.all()
 
-        # Ejecutar la consulta
-        if formato == 'pandas':
+            # Unir todas las condiciones con OR
+            query = query.filter(or_(*condiciones))
+
+            # Ejecutar la consulta
             datos = query.all()
-        else:
-            datos = query.all()
-        return datos
+            return datos
+        except SQLAlchemyError as e:
+            # Manejar la excepción SQLAlchemyError
+            print("Error de SQLAlchemy:", e)
+            # Puedes lanzar una nueva excepción personalizada o retornar un valor predeterminado
+            return None
+        finally:
+            session.close()
+
 
     def borrar_reaccion(self, id):
         session = self.Session()

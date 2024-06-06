@@ -4,12 +4,12 @@ from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from PyQt6 import QtCore, QtWidgets
 from PyQt6.uic import loadUi
-from models import *
-from repository import *
+from modelos import *
+from repositorios import *
 
 
 from panel_data_analisis import Ui_MainWindow
-from repository import *
+from repositorios import *
 
 
 
