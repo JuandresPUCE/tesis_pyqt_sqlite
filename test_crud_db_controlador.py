@@ -37,26 +37,31 @@ class PantallaCrud(QMainWindow):
         self.init_ui_elementos_dc()
         self.init_ui_elementos_rde()
         self.init_ui_elementos_ci()
+        self.init_ui_elementos_rq()
 
         # Inicializar conexiones de señales y ranuras
         self.init_control_botones_datos()
         self.init_control_botones_experimental()
         self.init_control_botones_ci()
+        self.init_control_botones_rq()
 
         # Cargar datos iniciales
         self.buscar_dato()
         self.buscar_registros()
         self.buscar_condiciones_iniciales()
+        self.buscar_reaccion_quimica()
 
         # Cargar datos iniciales
         self.buscar_dato()
         self.buscar_registros()
         self.buscar_condiciones_iniciales()
+        self.buscar_reaccion_quimica()
 
          # Conectar la señal cellChanged para actualizar la base de datos cuando cambie una celda
         self.tabla_datos.cellChanged.connect(self.actualizar_valor_celda_datos)
         self.tabla_registro_data_experimental.cellChanged.connect(self.actualizar_valor_celda_registro)
         self.tabla_condiciones_iniciales.cellChanged.connect(self.actualizar_valor_celda_ci)
+        self.tabla_reaccion_quimica.cellChanged.connect(self.actualizar_valor_celda_reaccion)
 
     def init_ui_elementos_dc(self):
         # Datos cinéticos
@@ -127,6 +132,29 @@ class PantallaCrud(QMainWindow):
         self.tabla_condiciones_iniciales = self.ui.condiciones_iniciales_tabla
         self.tabla_condiciones_iniciales.setSortingEnabled(False)
         self.lista_botones = self.ui.funciones_frame_ci.findChildren(QPushButton)
+    
+    def init_ui_elementos_rq(self):
+        # Reacción química
+        self.especie_quimica_rq = self.ui.especie_quimica_rq_edit
+        self.formula_rq = self.ui.formula_rq_edit
+        self.coeficiente_estequiometro_rq = self.ui.coeficiente_estequiometrico_rq_edit
+        self.detalle_rq = self.ui.detalle_rq_edit
+        self.tipo_especie_rq = self.ui.tipo_especie_rq_edit
+        self.nombre_reaccion_rq = self.ui.nombre_reaccion_rq_edit
+
+        # Botones de reacción química
+        self.agregar_rq_btn = self.ui.agregar_rq_btn
+        self.actualizar_rq_btn = self.ui.actualizar_rq_btn
+        self.seleccionar_rq_btn = self.ui.seleccionar_rq_btn
+        self.buscar_rq_btn = self.ui.buscar_rq_btn
+        self.limpiar_rq_btn = self.ui.limpiar_rq_btn
+        self.borrar_rq_btn = self.ui.borrar_rq_btn
+
+        # Tabla de reacción química
+        self.tabla_reaccion_quimica = self.ui.reaccion_quimica_tabla
+        self.tabla_reaccion_quimica.setSortingEnabled(False)
+        self.lista_botones = self.ui.funciones_frame_rq.findChildren(QPushButton)
+    
 
     def init_control_botones_datos(self):
         # Conectar los botones a sus respectivas funciones
@@ -152,7 +180,15 @@ class PantallaCrud(QMainWindow):
         self.seleccionar_ci_btn.clicked.connect(self.seleccionar_condiciones_iniciales)
         self.borrar_ci_btn.clicked.connect(self.borrar_condiciones_iniciales)
         self.limpiar_ci_btn.clicked.connect(self.limpiar_formulario_ci)
-        self.buscar_ci_btn.clicked.connect(self.buscar_condiciones_iniciales)    
+        self.buscar_ci_btn.clicked.connect(self.buscar_condiciones_iniciales)   
+
+    def init_control_botones_rq(self):
+        self.agregar_rq_btn.clicked.connect(self.agregar_reaccion_quimica)
+        self.actualizar_rq_btn.clicked.connect(self.actualizar_reaccion_quimica)
+        self.seleccionar_rq_btn.clicked.connect(self.seleccionar_reaccion_quimica)
+        self.borrar_rq_btn.clicked.connect(self.borrar_reaccion_quimica)
+        self.limpiar_rq_btn.clicked.connect(self.limpiar_formulario_rq)
+        self.buscar_rq_btn.clicked.connect(self.buscar_reaccion_quimica) 
 
 
     def refrescar_datos_tabla(self):
@@ -160,11 +196,13 @@ class PantallaCrud(QMainWindow):
         self.tabla_datos.clearContents()
         self.tabla_registro_data_experimental.clearContents()
         self.tabla_condiciones_iniciales.clearContents()
+        self.tabla_reaccion_quimica.clearContents()
                 
         # Buscar los datos nuevamente y mostrarlos en la tabla
         self.buscar_dato()
         self.buscar_registros()
         self.buscar_condiciones_iniciales()
+        self.buscar_reaccion_quimica()
 
     #metodos para desactivar y activar botones
     def boton_desactivado(self):
@@ -364,7 +402,25 @@ class PantallaCrud(QMainWindow):
     
 
     def mostrar_datos_tabla(self, resultados):
-        self.metodos_comunes.mostrar_datos_tabla(self.tabla_datos, resultados)
+        if resultados:
+            self.tabla_datos.setRowCount(len(resultados))
+            self.tabla_datos.setColumnCount(10)
+
+            for fila, dato in enumerate(resultados):
+                self.tabla_datos.setItem(fila, 0, QTableWidgetItem(str(dato.id)))
+                self.tabla_datos.setItem(fila, 1, QTableWidgetItem(str(dato.tiempo)))
+                self.tabla_datos.setItem(fila, 2, QTableWidgetItem(str(dato.concentracion)))
+                self.tabla_datos.setItem(fila, 3, QTableWidgetItem(str(dato.otra_propiedad)))
+                self.tabla_datos.setItem(fila, 4, QTableWidgetItem(str(dato.conversion_reactivo_limitante)))
+                self.tabla_datos.setItem(fila, 5, QTableWidgetItem(dato.tipo_especie))
+                self.tabla_datos.setItem(fila, 6, QTableWidgetItem(str(dato.id_condiciones_iniciales)))
+                self.tabla_datos.setItem(fila, 7, QTableWidgetItem(dato.nombre_data))
+                self.tabla_datos.setItem(fila, 8, QTableWidgetItem(dato.nombre_reaccion))
+                self.tabla_datos.setItem(fila, 9, QTableWidgetItem(dato.especie_quimica))
+        else:
+            self.tabla_datos.setRowCount(0)
+            QMessageBox.information(self, "Información", "No se encontraron datos", QMessageBox.StandardButton.Ok)
+
 
     def actualizar_valor_celda_datos(self, fila, columna):
         try:
@@ -810,7 +866,205 @@ class PantallaCrud(QMainWindow):
         }
         condiciones_iniciales = self.CondicionesInicialesManejador.consultar_condicion(filtros, "like")
         self.mostrar_condiciones_iniciales(condiciones_iniciales)
+    
+    # funciones crud para reaccion quimica
+    # Reacción química
+    def mostrar_reaccion_quimica(self, reaccion_quimica):
+        self.metodos_comunes.mostrar_reacciones(self.tabla_reaccion_quimica, reaccion_quimica)
+    
+    def agregar_reaccion_quimica(self):
+        self.boton_desactivado()
 
+        # Validar que todos los campos estén llenos
+        try:
+            especie_quimica = self.especie_quimica_rq.text()
+            formula = self.formula_rq.text()
+            coeficiente_estequiometrico = self.coeficiente_estequiometro_rq.text()
+            detalle = self.detalle_rq.text()
+            tipo_especie = self.tipo_especie_rq.text()
+            nombre_reaccion = self.nombre_reaccion_rq.text()
+
+            if not especie_quimica or not formula or not coeficiente_estequiometrico or not detalle or not tipo_especie or not nombre_reaccion:
+                raise ValueError("Todos los campos de texto deben estar llenos")
+        except ValueError as e:
+            QMessageBox.warning(self, "Advertencia", f"Datos inválidos o incompletos: {e}", QMessageBox.StandardButton.Ok)
+            self.boton_activado()
+            return
+        # Crear el objeto ReaccionQuimica
+        reaccion_quimica = ReaccionQuimica(
+            especie_quimica=especie_quimica,
+            formula=formula,
+            coeficiente_estequiometrico=coeficiente_estequiometrico,
+            detalle=detalle,
+            tipo_especie=tipo_especie,
+            nombre_reaccion=nombre_reaccion,
+        )
+
+        # Intentar agregar la reacción química a la base de datos
+        try:
+            print("Intentando agregar reacción química:", reaccion_quimica)
+            agregar_resultado = self.ReaccionQuimicaManejador.agregar_reaccion(reaccion_quimica)
+
+            if agregar_resultado:
+                QMessageBox.information(self, "Información", "Reacción química agregada correctamente", QMessageBox.StandardButton.Ok)
+                self.limpiar_formulario_rq()
+                self.buscar_reaccion_quimica()  # Refrescar la tabla con los nuevos datos
+            else:
+                QMessageBox.critical(self, "Error", "Hubo un problema al agregar la reacción química", QMessageBox.StandardButton.Ok)
+
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Se produjo un error al agregar la reacción química: {e}", QMessageBox.StandardButton.Ok)
+        
+        self.boton_activado()
+
+    def limpiar_formulario_rq(self):
+        self.especie_quimica_rq.clear()
+        self.formula_rq.clear()
+        self.coeficiente_estequiometro_rq.clear()
+        self.detalle_rq.clear()
+        self.tipo_especie_rq.clear()
+        self.nombre_reaccion_rq.clear()
+    
+    def seleccionar_reaccion_quimica(self):
+        seleccionar_fila = self.tabla_reaccion_quimica.currentRow()
+        if seleccionar_fila != -1:
+            id = self.tabla_reaccion_quimica.item(seleccionar_fila, 0).text().strip()
+            especie_quimica = self.tabla_reaccion_quimica.item(seleccionar_fila, 1).text().strip()
+            formula = self.tabla_reaccion_quimica.item(seleccionar_fila, 2).text().strip()
+            coeficiente_estequiometrico = self.tabla_reaccion_quimica.item(seleccionar_fila, 3).text().strip()
+            detalle = self.tabla_reaccion_quimica.item(seleccionar_fila, 4).text().strip()
+            tipo_especie = self.tabla_reaccion_quimica.item(seleccionar_fila, 5).text().strip()
+            nombre_reaccion = self.tabla_reaccion_quimica.item(seleccionar_fila, 6).text().strip()
+
+            self.especie_quimica_rq.setText(especie_quimica)
+            self.formula_rq.setText(formula)
+            self.coeficiente_estequiometro_rq.setText(coeficiente_estequiometrico)
+            self.detalle_rq.setText(detalle)
+            self.tipo_especie_rq.setText(tipo_especie)
+            self.nombre_reaccion_rq.setText(nombre_reaccion)
+        else:
+            QMessageBox.information(self, "Información", "Seleccione una fila", QMessageBox.StandardButton.Ok)
+            return
+    
+    def actualizar_reaccion_quimica(self):
+        self.boton_desactivado()
+        try:
+            # Obtener el ID de la reacción química seleccionada
+            fila_seleccionada = self.tabla_reaccion_quimica.currentRow()
+            if fila_seleccionada == -1:
+                QMessageBox.warning(self, "Advertencia", "Seleccione una fila para actualizar", QMessageBox.StandardButton.Ok)
+                return
+            id = int(self.tabla_reaccion_quimica.item(fila_seleccionada, 0).text().strip())
+
+            # Validaciones
+            especie_quimica = self.especie_quimica_rq.text()
+            formula = self.formula_rq.text()
+            coeficiente_estequiometrico = self.coeficiente_estequiometro_rq.text()
+            detalle = self.detalle_rq.text()
+            tipo_especie = self.tipo_especie_rq.text()
+            nombre_reaccion = self.nombre_reaccion_rq.text()
+
+            if not especie_quimica or not formula or not coeficiente_estequiometrico or not detalle or not tipo_especie or not nombre_reaccion:
+                raise ValueError("Todos los campos de texto deben estar llenos")
+        
+            # Crear el objeto de reacción química actualizada
+            nueva_reaccion_quimica = {
+                "especie_quimica": especie_quimica,
+                "formula": formula,
+                "coeficiente_estequiometrico": coeficiente_estequiometrico,
+                "detalle": detalle,
+                "tipo_especie": tipo_especie,
+                "nombre_reaccion": nombre_reaccion,
+            }
+
+            # Intentar actualizar la reacción química en la base de datos
+            actualizar_resultado = self.ReaccionQuimicaManejador.actualizar_reaccion(id, nueva_reaccion_quimica)
+
+            if actualizar_resultado:
+                QMessageBox.information(self, "Información", "Reacción química actualizada correctamente", QMessageBox.StandardButton.Ok)
+                self.limpiar_formulario_rq()
+                self.buscar_reaccion_quimica()
+            else:
+                QMessageBox.critical(self, "Error", "Hubo un problema al actualizar la reacción química", QMessageBox.StandardButton.Ok)
+
+        except ValueError as ve:
+            QMessageBox.warning(self, "Advertencia", f"Datos inválidos o incompletos: {ve}", QMessageBox.StandardButton.Ok)
+
+        except Exception as e:
+            logging.error("Error al actualizar la reacción química: %s", str(e))
+            QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar la reacción química: {e}", QMessageBox.StandardButton.Ok)
+
+        finally:
+            self.boton_activado()
+
+    def actualizar_valor_celda_reaccion(self, fila, columna):
+        try:
+            item = self.tabla_reaccion_quimica.item(fila, columna)
+            if item is None:
+                logging.warning("La celda está vacía o fuera de los límites de la tabla")
+                return
+            
+            nuevo_valor = item.text().strip()
+
+            if nuevo_valor == '':
+                logging.warning("Error: el valor ingresado está vacío.")
+                return
+            
+            # Verificar si la celda debe contener un número y convertirla
+            header_text = self.tabla_reaccion_quimica.horizontalHeaderItem(columna).text().lower()
+            if header_text in ['coeficiente_estequiometrico']:
+                try:
+                    nuevo_valor = float(nuevo_valor)
+                except ValueError:
+                    logging.error("Error: el valor ingresado no es un número válido.")
+                    return
+                
+            # Obtener el ID de la reacción química a actualizar
+            id_item = self.tabla_reaccion_quimica.item(fila, 0)
+            if id_item is None:
+                logging.warning("No se encontró el ID en la fila seleccionada")
+                return
+            
+            id = int(id_item.text().strip())
+
+            # Crear el diccionario de actualización
+            new_reaccion_quimica = {header_text: nuevo_valor}
+
+            # Intentar actualizar la reacción química en la base de datos
+            if self.ReaccionQuimicaManejador.actualizar_reaccion(id, new_reaccion_quimica):
+                logging.info(f"Reacción química con ID {id} actualizada correctamente")
+            else:
+                logging.error(f"No se pudo actualizar la reacción química con ID {id}")
+
+        except Exception as e:
+            logging.error(f"Error al actualizar el valor de la celda: {e}")
+            QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar el valor de la celda: {e}", QMessageBox.StandardButton.Ok)
+
+    def borrar_reaccion_quimica(self):
+        fila_seleccionada = self.tabla_reaccion_quimica.currentRow()
+        if fila_seleccionada != -1:
+            opcion_seleccionada = QMessageBox.question(self, "Eliminar reacción química", "¿Estás seguro de eliminar la reacción química?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            if opcion_seleccionada == QMessageBox.StandardButton.Yes:
+                id = self.tabla_reaccion_quimica.item(fila_seleccionada, 0).text().strip()
+                borrar_resultado = self.ReaccionQuimicaManejador.borrar_reaccion(id)
+                if borrar_resultado:
+                    QMessageBox.information(self, "Información", "Reacción química eliminada correctamente", QMessageBox.StandardButton.Ok)
+                    self.ReaccionQuimicaManejador.consultar_reaccion()
+                    self.buscar_reaccion_quimica()
+                else:
+                    QMessageBox.information(self, "Información", "Hubo un problema al eliminar la reacción química", QMessageBox.StandardButton.Ok)
+        
+    def buscar_reaccion_quimica(self):
+        filtros = {
+            "especie_quimica": self.especie_quimica_rq.text(),
+            "formula": self.formula_rq.text(),
+            "coeficiente_estequiometrico": self.coeficiente_estequiometro_rq.text(),
+            "detalle": self.detalle_rq.text(),
+            "tipo_especie": self.tipo_especie_rq.text(),
+            "nombre_reaccion": self.nombre_reaccion_rq.text(),
+        }
+        reaccion_quimica = self.ReaccionQuimicaManejador.consultar_reaccion(filtros, "like")
+        self.mostrar_reaccion_quimica(reaccion_quimica)
 
 
 if __name__ == "__main__":

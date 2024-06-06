@@ -197,7 +197,27 @@ class PanelDataAnalisis(QMainWindow):
         self.mostrar_datos_tabla(datos_resultados)
 
     def mostrar_datos_tabla(self, resultados):
-            self.metodos_comunes.mostrar_datos_tabla(self.datos_cineticos_tabla, resultados)
+        tabla = self.datos_cineticos_tabla
+        tabla.clearContents()
+        tabla.setRowCount(0)
+        if resultados:
+            tabla.setRowCount(len(resultados))
+            tabla.setColumnCount(10)
+
+            for fila, dato in enumerate(resultados):
+                tabla.setItem(fila, 0, QTableWidgetItem(str(dato.id)))
+                tabla.setItem(fila, 1, QTableWidgetItem(str(dato.tiempo)))
+                tabla.setItem(fila, 2, QTableWidgetItem(str(dato.concentracion)))
+                tabla.setItem(fila, 3, QTableWidgetItem(str(dato.otra_propiedad)))
+                tabla.setItem(fila, 4, QTableWidgetItem(str(dato.conversion_reactivo_limitante)))
+                tabla.setItem(fila, 5, QTableWidgetItem(str(dato.tipo_especie)))
+                tabla.setItem(fila, 6, QTableWidgetItem(str(dato.id_condiciones_iniciales)))
+                tabla.setItem(fila, 7, QTableWidgetItem(str(dato.nombre_data)))
+                tabla.setItem(fila, 8, QTableWidgetItem(str(dato.nombre_reaccion)))
+                tabla.setItem(fila, 9, QTableWidgetItem(str(dato.especie_quimica)))
+        else:
+            self.tabla.setRowCount(0)
+            QMessageBox.information(self, "Información", "No se encontraron datos", QMessageBox.StandardButton.Ok)
             
     def mostrar_reaccion_tabla(self, resultados):
         tabla = self.reaccion_quimica_tabla

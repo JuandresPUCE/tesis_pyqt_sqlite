@@ -21,13 +21,15 @@ class MetodosComunesControlador:
                     self.tabla.setItem(fila, 2, QTableWidgetItem(str(dato.concentracion)))
                     self.tabla.setItem(fila, 3, QTableWidgetItem(str(dato.otra_propiedad)))
                     self.tabla.setItem(fila, 4, QTableWidgetItem(str(dato.conversion_reactivo_limitante)))
-                    self.tabla.setItem(fila, 5, QTableWidgetItem(dato.tipo_especie))
+                    self.tabla.setItem(fila, 5, QTableWidgetItem(str(dato.tipo_especie)))
                     self.tabla.setItem(fila, 6, QTableWidgetItem(str(dato.id_condiciones_iniciales)))
-                    self.tabla.setItem(fila, 7, QTableWidgetItem(dato.nombre_data))
-                    self.tabla.setItem(fila, 8, QTableWidgetItem(dato.nombre_reaccion))
-                    self.tabla.setItem(fila, 9, QTableWidgetItem(dato.especie_quimica))
+                    self.tabla.setItem(fila, 7, QTableWidgetItem(str(dato.nombre_data)))
+                    self.tabla.setItem(fila, 8, QTableWidgetItem(str(dato.nombre_reaccion)))
+                    self.tabla.setItem(fila, 9, QTableWidgetItem(str(dato.especie_quimica)))
             else:
                 QMessageBox.information(self, "Información", "No se encontraron datos", QMessageBox.StandardButton.Ok)
+            
+            
     
     def mostrar_registros(self,registro_datos_tabla, registros):
         self.tabla = registro_datos_tabla
@@ -63,6 +65,26 @@ class MetodosComunesControlador:
                 self.tabla.setItem(fila, 7, QTableWidgetItem(condicion.tipo_especie))
                 self.tabla.setItem(fila, 8, QTableWidgetItem(condicion.detalle))
                 self.tabla.setItem(fila, 9, QTableWidgetItem(condicion.nombre_data))
+        else:
+            self.tabla.setRowCount(0)
+            QMessageBox.information(self.parent, "No hay registros", "No se encontraron registros en la base de datos.", QMessageBox.StandardButton.Ok)
+    
+    def mostrar_reacciones(self, reacciones_tabla, reacciones):
+        self.tabla = reacciones_tabla
+        self.tabla.clearContents()
+        self.tabla.setRowCount(0)
+        if reacciones:
+            self.tabla.setRowCount(len(reacciones))
+            self.tabla.setColumnCount(7)
+
+            for fila, reaccion in enumerate(reacciones):
+                self.tabla.setItem(fila, 0, QTableWidgetItem(str(reaccion.id)))
+                self.tabla.setItem(fila, 1, QTableWidgetItem(str(reaccion.especie_quimica)))
+                self.tabla.setItem(fila, 2, QTableWidgetItem(str(reaccion.formula)))
+                self.tabla.setItem(fila, 3, QTableWidgetItem(str(reaccion.coeficiente_estequiometrico)))
+                self.tabla.setItem(fila, 4, QTableWidgetItem(str(reaccion.detalle)))
+                self.tabla.setItem(fila, 5, QTableWidgetItem(str(reaccion.tipo_especie)))
+                self.tabla.setItem(fila, 6, QTableWidgetItem(str(reaccion.nombre_reaccion)))
         else:
             self.tabla.setRowCount(0)
             QMessageBox.information(self.parent, "No hay registros", "No se encontraron registros en la base de datos.", QMessageBox.StandardButton.Ok)
