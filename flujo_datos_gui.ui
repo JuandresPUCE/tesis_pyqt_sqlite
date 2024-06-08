@@ -14,1202 +14,488 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_10">
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <property name="spacing">
-       <number>0</number>
-      </property>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="QLabel" name="titulo_label">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>60</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>Flujo de datos</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QTabWidget" name="tabWidget">
-          <property name="currentIndex">
-           <number>0</number>
-          </property>
-          <widget class="QWidget" name="tab_rde">
-           <attribute name="title">
-            <string>Registro Data Experimental</string>
-           </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_3">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <item>
-             <layout class="QVBoxLayout" name="verticalLayout_2">
-              <item>
-               <spacer name="verticalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>18</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_9">
-                <item>
-                 <spacer name="horizontalSpacer_4">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>18</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item>
-                 <layout class="QGridLayout" name="gridLayout_13">
-                  <property name="spacing">
-                   <number>0</number>
-                  </property>
-                  <item row="0" column="0">
-                   <layout class="QHBoxLayout" name="horizontalLayout_6">
-                    <property name="spacing">
-                     <number>0</number>
-                    </property>
-                    <item>
-                     <widget class="QLabel" name="label_20">
-                      <property name="text">
-                       <string>nombre_data</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <spacer name="horizontalSpacer">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>40</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="nombre_data_rde_edit">
-                      <property name="text">
-                       <string/>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="0" column="1">
-                   <spacer name="horizontalSpacer_6">
-                    <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>18</width>
-                      <height>20</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                  <item row="0" column="2">
-                   <layout class="QHBoxLayout" name="horizontalLayout_7">
-                    <item>
-                     <widget class="QLabel" name="label_29">
-                      <property name="text">
-                       <string>detalle</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <spacer name="horizontalSpacer_2">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>40</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="detalle_rde_edit"/>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="0" column="3">
-                   <spacer name="horizontalSpacer_7">
-                    <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>18</width>
-                      <height>20</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                  <item row="0" column="4">
-                   <layout class="QHBoxLayout" name="horizontalLayout_8">
-                    <item>
-                     <widget class="QLabel" name="label_30">
-                      <property name="text">
-                       <string>fecha</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <spacer name="horizontalSpacer_3">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>40</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="fecha_rde_edit"/>
-                    </item>
-                   </layout>
-                  </item>
-                 </layout>
-                </item>
-                <item>
-                 <spacer name="horizontalSpacer_5">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>28</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <spacer name="verticalSpacer_2">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>18</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QFrame" name="funciones_frame_rde">
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_5">
+   <widget class="QPushButton" name="marcar_a0_btn">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>40</y>
+      <width>101</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Marcar A0</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>20</y>
+      <width>244</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_10">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label_21">
+       <property name="text">
+        <string>nombre_data</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_21">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="nombre_data_general_edit">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QPushButton" name="calcular_xa">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>10</y>
+      <width>101</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Calcular XA</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="marcar_coeficiente_reactivo_btn">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>40</y>
+      <width>131</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Coeficiente reactivo</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="marcar_coeficiente_producto_btn">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>10</y>
+      <width>131</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Coeficiente Producto</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="coeficiente_estequiometrico_producto_edit">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>10</y>
+      <width>41</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="coeficiente_estequiometrico_reactivo_edit">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>40</y>
+      <width>41</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="concentracion_reactivo_limitante_edit">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>40</y>
+      <width>41</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="marcar_producto0_btn">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>10</y>
+      <width>101</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Marcar Producto 0</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="concentracion_producto_edit">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>10</y>
+      <width>41</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>80</y>
+      <width>782</width>
+      <height>511</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="titulo_label">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>60</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Flujo de datos</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTabWidget" name="tabWidget">
+         <property name="currentIndex">
+          <number>3</number>
+         </property>
+         <widget class="QWidget" name="tab_rde">
+          <attribute name="title">
+           <string>Registro Data Experimental</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <item>
+              <spacer name="verticalSpacer">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>18</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_9">
+               <item>
+                <spacer name="horizontalSpacer_4">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>18</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <layout class="QGridLayout" name="gridLayout_13">
                  <property name="spacing">
                   <number>0</number>
                  </property>
-                 <property name="leftMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>0</number>
-                 </property>
-                 <item>
-                  <widget class="QPushButton" name="agregar_rde_btn">
-                   <property name="text">
-                    <string>Agregar</string>
+                 <item row="0" column="0">
+                  <layout class="QHBoxLayout" name="horizontalLayout_6">
+                   <property name="spacing">
+                    <number>0</number>
                    </property>
-                  </widget>
+                   <item>
+                    <widget class="QLabel" name="label_20">
+                     <property name="text">
+                      <string>nombre_data</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <spacer name="horizontalSpacer">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item>
+                    <widget class="QLineEdit" name="nombre_data_rde_edit">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
                  </item>
-                 <item>
-                  <widget class="QPushButton" name="actualizar_rde_btn">
-                   <property name="text">
-                    <string>Actualizar</string>
+                 <item row="0" column="1">
+                  <spacer name="horizontalSpacer_6">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
                    </property>
-                  </widget>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>18</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
                  </item>
-                 <item>
-                  <widget class="QPushButton" name="seleccionar_rde_btn">
-                   <property name="text">
-                    <string>Seleccionar</string>
-                   </property>
-                  </widget>
+                 <item row="0" column="2">
+                  <layout class="QHBoxLayout" name="horizontalLayout_7">
+                   <item>
+                    <widget class="QLabel" name="label_29">
+                     <property name="text">
+                      <string>detalle</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <spacer name="horizontalSpacer_2">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item>
+                    <widget class="QLineEdit" name="detalle_rde_edit"/>
+                   </item>
+                  </layout>
                  </item>
-                 <item>
-                  <widget class="QPushButton" name="buscar_rde_btn">
-                   <property name="text">
-                    <string>Buscar</string>
+                 <item row="0" column="3">
+                  <spacer name="horizontalSpacer_7">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
                    </property>
-                  </widget>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>18</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
                  </item>
-                 <item>
-                  <widget class="QPushButton" name="limpiar_rde_btn">
-                   <property name="text">
-                    <string>Limpiar</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="borrar_rde_btn">
-                   <property name="text">
-                    <string>Borrar</string>
-                   </property>
-                  </widget>
+                 <item row="0" column="4">
+                  <layout class="QHBoxLayout" name="horizontalLayout_8">
+                   <item>
+                    <widget class="QLabel" name="label_30">
+                     <property name="text">
+                      <string>fecha</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <spacer name="horizontalSpacer_3">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item>
+                    <widget class="QLineEdit" name="fecha_rde_edit"/>
+                   </item>
+                  </layout>
                  </item>
                 </layout>
-               </widget>
-              </item>
-              <item>
-               <spacer name="verticalSpacer_4">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>18</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <layout class="QVBoxLayout" name="verticalLayout_4">
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_5">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>28</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>18</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QFrame" name="funciones_frame_rde">
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout_5">
                 <property name="spacing">
                  <number>0</number>
                 </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
                 <item>
-                 <widget class="QTableWidget" name="registro_data_experimental_tabla">
-                  <property name="focusPolicy">
-                   <enum>Qt::NoFocus</enum>
+                 <widget class="QPushButton" name="agregar_rde_btn">
+                  <property name="text">
+                   <string>Agregar</string>
                   </property>
-                  <property name="frameShape">
-                   <enum>QFrame::Box</enum>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="actualizar_rde_btn">
+                  <property name="text">
+                   <string>Actualizar</string>
                   </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="seleccionar_rde_btn">
+                  <property name="text">
+                   <string>Seleccionar</string>
                   </property>
-                  <property name="showGrid">
-                   <bool>false</bool>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="buscar_rde_btn">
+                  <property name="text">
+                   <string>Buscar</string>
                   </property>
-                  <attribute name="horizontalHeaderMinimumSectionSize">
-                   <number>50</number>
-                  </attribute>
-                  <attribute name="horizontalHeaderDefaultSectionSize">
-                   <number>70</number>
-                  </attribute>
-                  <attribute name="horizontalHeaderStretchLastSection">
-                   <bool>true</bool>
-                  </attribute>
-                  <attribute name="verticalHeaderVisible">
-                   <bool>false</bool>
-                  </attribute>
-                  <column>
-                   <property name="text">
-                    <string>id</string>
-                   </property>
-                  </column>
-                  <column>
-                   <property name="text">
-                    <string>nombre data</string>
-                   </property>
-                  </column>
-                  <column>
-                   <property name="text">
-                    <string>fecha</string>
-                   </property>
-                  </column>
-                  <column>
-                   <property name="text">
-                    <string>detalle</string>
-                   </property>
-                  </column>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="limpiar_rde_btn">
+                  <property name="text">
+                   <string>Limpiar</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="borrar_rde_btn">
+                  <property name="text">
+                   <string>Borrar</string>
+                  </property>
                  </widget>
                 </item>
                </layout>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="tab_3">
-           <attribute name="title">
-            <string>Reacción Química</string>
-           </attribute>
-           <widget class="QWidget" name="gridLayoutWidget_3">
-            <property name="geometry">
-             <rect>
-              <x>20</x>
-              <y>250</y>
-              <width>731</width>
-              <height>221</height>
-             </rect>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_11">
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <item row="0" column="0">
-              <widget class="QTableWidget" name="reaccion_quimica_tabla">
-               <property name="focusPolicy">
-                <enum>Qt::NoFocus</enum>
-               </property>
-               <property name="showGrid">
-                <bool>false</bool>
-               </property>
-               <attribute name="horizontalHeaderMinimumSectionSize">
-                <number>50</number>
-               </attribute>
-               <attribute name="horizontalHeaderDefaultSectionSize">
-                <number>70</number>
-               </attribute>
-               <attribute name="horizontalHeaderStretchLastSection">
-                <bool>true</bool>
-               </attribute>
-               <attribute name="verticalHeaderVisible">
-                <bool>false</bool>
-               </attribute>
-               <column>
-                <property name="text">
-                 <string>id</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>especie_quimica</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>formula</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>coeficiente_estequiometrico</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>detalle</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>tipo_especie</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>nombre_reaccion</string>
-                </property>
-                <property name="font">
-                 <font>
-                  <kerning>true</kerning>
-                 </font>
-                </property>
-               </column>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QFrame" name="datos_frame_3">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>20</y>
-              <width>741</width>
-              <height>137</height>
-             </rect>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_12">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <item row="0" column="0">
-              <layout class="QGridLayout" name="gridLayout_14">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_23">
-                 <property name="text">
-                  <string>coeficiente_estequiometrico</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QLineEdit" name="coeficiente_estequiometrico_rq_edit"/>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_24">
-                 <property name="text">
-                  <string>tipo_especie</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QLineEdit" name="tipo_especie_rq_edit"/>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_25">
-                 <property name="text">
-                  <string>formula</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QLineEdit" name="formula_rq_edit"/>
-               </item>
-              </layout>
-             </item>
-             <item row="0" column="1">
-              <layout class="QGridLayout" name="gridLayout_15">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_26">
-                 <property name="text">
-                  <string>detalle</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QLineEdit" name="detalle_rq_edit"/>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_27">
-                 <property name="text">
-                  <string>nombre_reaccion</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QLineEdit" name="nombre_reaccion_rq_edit"/>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_28">
-                 <property name="text">
-                  <string>especie_quimica</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QLineEdit" name="especie_quimica_rq_edit"/>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QFrame" name="funciones_frame_rq">
-            <property name="geometry">
-             <rect>
-              <x>30</x>
-              <y>180</y>
-              <width>711</width>
-              <height>44</height>
-             </rect>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
-             <item>
-              <widget class="QPushButton" name="agregar_rq_btn">
-               <property name="text">
-                <string>Agregar</string>
-               </property>
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="actualizar_rq_btn">
-               <property name="text">
-                <string>Actualizar</string>
+              <spacer name="verticalSpacer_4">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
                </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="seleccionar_rq_btn">
-               <property name="text">
-                <string>Seleccionar</string>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>18</height>
+                </size>
                </property>
-              </widget>
+              </spacer>
              </item>
              <item>
-              <widget class="QPushButton" name="buscar_rq_btn">
-               <property name="text">
-                <string>Buscar</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="limpiar_rq_btn">
-               <property name="text">
-                <string>Limpiar</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="borrar_rq_btn">
-               <property name="text">
-                <string>Borrar</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </widget>
-          <widget class="QWidget" name="tab_2">
-           <attribute name="title">
-            <string>Condiciones Iniciales</string>
-           </attribute>
-           <widget class="QWidget" name="layoutWidget">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>60</y>
-              <width>751</width>
-              <height>461</height>
-             </rect>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_6">
-             <item>
-              <layout class="QVBoxLayout" name="verticalLayout_5">
-               <item>
-                <spacer name="verticalSpacer_9">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item>
-                <widget class="QFrame" name="datos_frame_2">
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
-                 </property>
-                 <layout class="QHBoxLayout" name="horizontalLayout_12">
-                  <item>
-                   <spacer name="horizontalSpacer_8">
-                    <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>40</width>
-                      <height>20</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                  <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_11">
-                    <property name="spacing">
-                     <number>0</number>
-                    </property>
-                    <item>
-                     <layout class="QVBoxLayout" name="verticalLayout_7">
-                      <property name="spacing">
-                       <number>0</number>
-                      </property>
-                      <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_3">
-                        <property name="spacing">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="label_12">
-                          <property name="text">
-                           <string>Temperatura</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <spacer name="horizontalSpacer_9">
-                          <property name="orientation">
-                           <enum>Qt::Horizontal</enum>
-                          </property>
-                          <property name="sizeHint" stdset="0">
-                           <size>
-                            <width>18</width>
-                            <height>20</height>
-                           </size>
-                          </property>
-                         </spacer>
-                        </item>
-                        <item>
-                         <widget class="QLineEdit" name="temperatura_ci_edit"/>
-                        </item>
-                       </layout>
-                      </item>
-                      <item>
-                       <spacer name="verticalSpacer_3">
-                        <property name="orientation">
-                         <enum>Qt::Vertical</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>20</width>
-                          <height>13</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                      <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_13">
-                        <property name="spacing">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="label_11">
-                          <property name="text">
-                           <string>Tiempo</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <spacer name="horizontalSpacer_10">
-                          <property name="orientation">
-                           <enum>Qt::Horizontal</enum>
-                          </property>
-                          <property name="sizeHint" stdset="0">
-                           <size>
-                            <width>18</width>
-                            <height>20</height>
-                           </size>
-                          </property>
-                         </spacer>
-                        </item>
-                        <item>
-                         <widget class="QLineEdit" name="tiempo_ci_edit"/>
-                        </item>
-                       </layout>
-                      </item>
-                      <item>
-                       <spacer name="verticalSpacer_6">
-                        <property name="orientation">
-                         <enum>Qt::Vertical</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>20</width>
-                          <height>13</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                      <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_14">
-                        <property name="spacing">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="label_14">
-                          <property name="text">
-                           <string>Presión total</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <spacer name="horizontalSpacer_11">
-                          <property name="orientation">
-                           <enum>Qt::Horizontal</enum>
-                          </property>
-                          <property name="sizeHint" stdset="0">
-                           <size>
-                            <width>18</width>
-                            <height>20</height>
-                           </size>
-                          </property>
-                         </spacer>
-                        </item>
-                        <item>
-                         <widget class="QLineEdit" name="presion_total_ci_edit"/>
-                        </item>
-                       </layout>
-                      </item>
-                     </layout>
-                    </item>
-                    <item>
-                     <spacer name="horizontalSpacer_12">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>18</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
-                    <item>
-                     <layout class="QVBoxLayout" name="verticalLayout_8">
-                      <property name="spacing">
-                       <number>0</number>
-                      </property>
-                      <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_15">
-                        <property name="spacing">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="label_15">
-                          <property name="text">
-                           <string>Presión parcial</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <spacer name="horizontalSpacer_13">
-                          <property name="orientation">
-                           <enum>Qt::Horizontal</enum>
-                          </property>
-                          <property name="sizeHint" stdset="0">
-                           <size>
-                            <width>18</width>
-                            <height>20</height>
-                           </size>
-                          </property>
-                         </spacer>
-                        </item>
-                        <item>
-                         <widget class="QLineEdit" name="presion_parcial_ci_edit"/>
-                        </item>
-                       </layout>
-                      </item>
-                      <item>
-                       <spacer name="verticalSpacer_7">
-                        <property name="orientation">
-                         <enum>Qt::Vertical</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>20</width>
-                          <height>13</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                      <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_16">
-                        <property name="spacing">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="label_16">
-                          <property name="text">
-                           <string>Fracción molar</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <spacer name="horizontalSpacer_14">
-                          <property name="orientation">
-                           <enum>Qt::Horizontal</enum>
-                          </property>
-                          <property name="sizeHint" stdset="0">
-                           <size>
-                            <width>18</width>
-                            <height>20</height>
-                           </size>
-                          </property>
-                         </spacer>
-                        </item>
-                        <item>
-                         <widget class="QLineEdit" name="fraccion_molar_ci_edit"/>
-                        </item>
-                       </layout>
-                      </item>
-                      <item>
-                       <spacer name="verticalSpacer_8">
-                        <property name="orientation">
-                         <enum>Qt::Vertical</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>20</width>
-                          <height>13</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                      <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_17">
-                        <property name="spacing">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="label_19">
-                          <property name="text">
-                           <string>Especie Química</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <spacer name="horizontalSpacer_15">
-                          <property name="orientation">
-                           <enum>Qt::Horizontal</enum>
-                          </property>
-                          <property name="sizeHint" stdset="0">
-                           <size>
-                            <width>18</width>
-                            <height>20</height>
-                           </size>
-                          </property>
-                         </spacer>
-                        </item>
-                        <item>
-                         <widget class="QLineEdit" name="especie_quimica_ci_edit"/>
-                        </item>
-                       </layout>
-                      </item>
-                     </layout>
-                    </item>
-                    <item>
-                     <spacer name="horizontalSpacer_16">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>18</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
-                    <item>
-                     <layout class="QVBoxLayout" name="verticalLayout_9">
-                      <property name="spacing">
-                       <number>0</number>
-                      </property>
-                      <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_18">
-                        <property name="spacing">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="label_18">
-                          <property name="text">
-                           <string>Tipo Especie</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <spacer name="horizontalSpacer_17">
-                          <property name="orientation">
-                           <enum>Qt::Horizontal</enum>
-                          </property>
-                          <property name="sizeHint" stdset="0">
-                           <size>
-                            <width>18</width>
-                            <height>20</height>
-                           </size>
-                          </property>
-                         </spacer>
-                        </item>
-                        <item>
-                         <widget class="QLineEdit" name="tipo_especie_ci_edit"/>
-                        </item>
-                       </layout>
-                      </item>
-                      <item>
-                       <spacer name="verticalSpacer_10">
-                        <property name="orientation">
-                         <enum>Qt::Vertical</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>20</width>
-                          <height>13</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                      <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_19">
-                        <property name="spacing">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="label_13">
-                          <property name="text">
-                           <string>Detalle</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <spacer name="horizontalSpacer_18">
-                          <property name="orientation">
-                           <enum>Qt::Horizontal</enum>
-                          </property>
-                          <property name="sizeHint" stdset="0">
-                           <size>
-                            <width>18</width>
-                            <height>20</height>
-                           </size>
-                          </property>
-                         </spacer>
-                        </item>
-                        <item>
-                         <widget class="QLineEdit" name="detalle_ci_edit"/>
-                        </item>
-                       </layout>
-                      </item>
-                      <item>
-                       <spacer name="verticalSpacer_11">
-                        <property name="orientation">
-                         <enum>Qt::Vertical</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>20</width>
-                          <height>13</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                      <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_20">
-                        <property name="spacing">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="label_17">
-                          <property name="text">
-                           <string>Nombre data</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <spacer name="horizontalSpacer_19">
-                          <property name="orientation">
-                           <enum>Qt::Horizontal</enum>
-                          </property>
-                          <property name="sizeHint" stdset="0">
-                           <size>
-                            <width>18</width>
-                            <height>20</height>
-                           </size>
-                          </property>
-                         </spacer>
-                        </item>
-                        <item>
-                         <widget class="QLineEdit" name="nombre_data_ci_edit"/>
-                        </item>
-                       </layout>
-                      </item>
-                     </layout>
-                    </item>
-                   </layout>
-                  </item>
-                  <item>
-                   <spacer name="horizontalSpacer_20">
-                    <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>40</width>
-                      <height>20</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <spacer name="verticalSpacer_12">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>18</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item>
-                <widget class="QFrame" name="funciones_frame_ci">
-                 <property name="frameShape">
-                  <enum>QFrame::StyledPanel</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Raised</enum>
-                 </property>
-                 <layout class="QHBoxLayout" name="horizontalLayout_21">
-                  <property name="spacing">
-                   <number>0</number>
-                  </property>
-                  <property name="leftMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="bottomMargin">
-                   <number>0</number>
-                  </property>
-                  <item>
-                   <widget class="QPushButton" name="agregar_ci_btn">
-                    <property name="text">
-                     <string>Agregar</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QPushButton" name="actualizar_ci_btn">
-                    <property name="text">
-                     <string>Actualizar</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QPushButton" name="seleccionar_ci_btn">
-                    <property name="text">
-                     <string>Seleccionar</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QPushButton" name="buscar_ci_btn">
-                    <property name="text">
-                     <string>Buscar</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QPushButton" name="limpiar_ci_btn">
-                    <property name="text">
-                     <string>Limpiar</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QPushButton" name="borrar_ci_btn">
-                    <property name="text">
-                     <string>Borrar</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <spacer name="verticalSpacer_13">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>18</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QVBoxLayout" name="verticalLayout_10">
+              <layout class="QVBoxLayout" name="verticalLayout_4">
                <property name="spacing">
                 <number>0</number>
                </property>
                <item>
-                <widget class="QTableWidget" name="condiciones_iniciales_tabla">
+                <widget class="QTableWidget" name="registro_data_experimental_tabla">
                  <property name="focusPolicy">
                   <enum>Qt::NoFocus</enum>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::Box</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
                  </property>
                  <property name="showGrid">
                   <bool>false</bool>
@@ -1233,37 +519,12 @@
                  </column>
                  <column>
                   <property name="text">
-                   <string>temperatura</string>
+                   <string>nombre data</string>
                   </property>
                  </column>
                  <column>
                   <property name="text">
-                   <string>tiempo</string>
-                  </property>
-                 </column>
-                 <column>
-                  <property name="text">
-                   <string>presion_total</string>
-                  </property>
-                 </column>
-                 <column>
-                  <property name="text">
-                   <string>presion_parcial</string>
-                  </property>
-                 </column>
-                 <column>
-                  <property name="text">
-                   <string>fraccion_molar</string>
-                  </property>
-                 </column>
-                 <column>
-                  <property name="text">
-                   <string>especie_quimica</string>
-                  </property>
-                 </column>
-                 <column>
-                  <property name="text">
-                   <string>tipo_especie</string>
+                   <string>fecha</string>
                   </property>
                  </column>
                  <column>
@@ -1271,321 +532,1298 @@
                    <string>detalle</string>
                   </property>
                  </column>
-                 <column>
-                  <property name="text">
-                   <string>nombre_data</string>
-                  </property>
-                 </column>
                 </widget>
                </item>
               </layout>
              </item>
             </layout>
-           </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="tab_3">
+          <attribute name="title">
+           <string>Reacción Química</string>
+          </attribute>
+          <widget class="QWidget" name="gridLayoutWidget_3">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>250</y>
+             <width>731</width>
+             <height>221</height>
+            </rect>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_11">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <item row="0" column="0">
+             <widget class="QTableWidget" name="reaccion_quimica_tabla">
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+              <property name="showGrid">
+               <bool>false</bool>
+              </property>
+              <attribute name="horizontalHeaderMinimumSectionSize">
+               <number>50</number>
+              </attribute>
+              <attribute name="horizontalHeaderDefaultSectionSize">
+               <number>70</number>
+              </attribute>
+              <attribute name="horizontalHeaderStretchLastSection">
+               <bool>true</bool>
+              </attribute>
+              <attribute name="verticalHeaderVisible">
+               <bool>false</bool>
+              </attribute>
+              <column>
+               <property name="text">
+                <string>id</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>especie_quimica</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>formula</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>coeficiente_estequiometrico</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>detalle</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>tipo_especie</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>nombre_reaccion</string>
+               </property>
+               <property name="font">
+                <font>
+                 <kerning>true</kerning>
+                </font>
+               </property>
+              </column>
+             </widget>
+            </item>
+           </layout>
           </widget>
-          <widget class="QWidget" name="tab">
-           <attribute name="title">
-            <string>Datos Cinéticos</string>
-           </attribute>
-           <widget class="QFrame" name="datos_frame">
-            <property name="geometry">
-             <rect>
-              <x>20</x>
-              <y>10</y>
-              <width>741</width>
-              <height>137</height>
-             </rect>
+          <widget class="QFrame" name="datos_frame_3">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>20</y>
+             <width>741</width>
+             <height>137</height>
+            </rect>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_12">
+            <property name="leftMargin">
+             <number>0</number>
             </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
+            <property name="topMargin">
+             <number>0</number>
             </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
+            <property name="rightMargin">
+             <number>0</number>
             </property>
-            <layout class="QGridLayout" name="gridLayout_4">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <item row="0" column="0">
-              <layout class="QGridLayout" name="gridLayout">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_2">
-                 <property name="text">
-                  <string>tiempo</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QLineEdit" name="tiempo_dc_edit"/>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_3">
-                 <property name="text">
-                  <string>concentracion</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QLineEdit" name="concentracion_dc_edit"/>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_4">
-                 <property name="text">
-                  <string>otra_propiedad</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QLineEdit" name="otra_propiedad_dc_edit"/>
-               </item>
-              </layout>
-             </item>
-             <item row="0" column="1">
-              <layout class="QGridLayout" name="gridLayout_2">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_6">
-                 <property name="text">
-                  <string>conversion_reactivo_limitante</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QLineEdit" name="conversion_reactivo_limitante_dc_edit"/>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_5">
-                 <property name="text">
-                  <string>tipo_especie</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QLineEdit" name="tipo_especie_dc_edit"/>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_7">
-                 <property name="text">
-                  <string>id_condiciones_iniciales</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QLineEdit" name="id_condiciones_iniciales_dc_edit"/>
-               </item>
-              </layout>
-             </item>
-             <item row="0" column="2">
-              <layout class="QGridLayout" name="gridLayout_3">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_8">
-                 <property name="text">
-                  <string>nombre_data</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QLineEdit" name="nombre_data_dc_edit"/>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_9">
-                 <property name="text">
-                  <string>nombre_reaccion</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QLineEdit" name="nombre_reaccion_dc_edit"/>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_10">
-                 <property name="text">
-                  <string>especie_quimica</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QLineEdit" name="especie_quimica_dc_edit"/>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QFrame" name="funciones_frame_dc">
-            <property name="geometry">
-             <rect>
-              <x>40</x>
-              <y>170</y>
-              <width>711</width>
-              <height>44</height>
-             </rect>
+            <property name="bottomMargin">
+             <number>0</number>
             </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
+            <property name="spacing">
+             <number>0</number>
             </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
-             <item>
-              <widget class="QPushButton" name="agregar_dc_btn">
-               <property name="text">
-                <string>Agregar</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="actualizar_dc_btn">
-               <property name="text">
-                <string>Actualizar</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="seleccionar_dc_btn">
-               <property name="text">
-                <string>Seleccionar</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="buscar_dc_btn">
-               <property name="text">
-                <string>Buscar</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="limpiar_dc_btn">
-               <property name="text">
-                <string>Limpiar</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="borrar_dc_btn">
-               <property name="text">
-                <string>Borrar</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-           <widget class="QWidget" name="gridLayoutWidget">
-            <property name="geometry">
-             <rect>
-              <x>30</x>
-              <y>240</y>
-              <width>731</width>
-              <height>221</height>
-             </rect>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_5">
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <item row="0" column="0">
-              <widget class="QTableWidget" name="datos_cineticos_tabla">
-               <property name="focusPolicy">
-                <enum>Qt::NoFocus</enum>
-               </property>
-               <property name="showGrid">
-                <bool>false</bool>
-               </property>
-               <attribute name="horizontalHeaderMinimumSectionSize">
-                <number>50</number>
-               </attribute>
-               <attribute name="horizontalHeaderDefaultSectionSize">
-                <number>70</number>
-               </attribute>
-               <attribute name="horizontalHeaderStretchLastSection">
-                <bool>true</bool>
-               </attribute>
-               <attribute name="verticalHeaderVisible">
-                <bool>false</bool>
-               </attribute>
-               <column>
-                <property name="text">
-                 <string>id</string>
+            <item row="0" column="0">
+             <layout class="QGridLayout" name="gridLayout_14">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="tipo_especie_rq_edit">
+                <property name="enabled">
+                 <bool>true</bool>
                 </property>
-               </column>
-               <column>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLineEdit" name="formula_rq_edit"/>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_23">
                 <property name="text">
-                 <string>tiempo</string>
+                 <string>coeficiente_estequiometrico</string>
                 </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>concentracion</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>otra_propiedad</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>conversion_reactivo_limitante</string>
-                </property>
-               </column>
-               <column>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_24">
                 <property name="text">
                  <string>tipo_especie</string>
                 </property>
-               </column>
-               <column>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_25">
                 <property name="text">
-                 <string>id_condiciones_iniciales</string>
+                 <string>formula</string>
                 </property>
-               </column>
-               <column>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="coeficiente_estequiometrico_rq_edit"/>
+              </item>
+             </layout>
+            </item>
+            <item row="0" column="1">
+             <layout class="QGridLayout" name="gridLayout_15">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_26">
                 <property name="text">
-                 <string>nombre_data</string>
+                 <string>detalle</string>
                 </property>
-               </column>
-               <column>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="detalle_rq_edit"/>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_27">
                 <property name="text">
                  <string>nombre_reaccion</string>
                 </property>
-               </column>
-               <column>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="nombre_reaccion_rq_edit"/>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_28">
                 <property name="text">
                  <string>especie_quimica</string>
                 </property>
-               </column>
-              </widget>
-             </item>
-            </layout>
-           </widget>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLineEdit" name="especie_quimica_rq_edit"/>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QFrame" name="funciones_frame_rq">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>200</y>
+             <width>711</width>
+             <height>44</height>
+            </rect>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QPushButton" name="agregar_rq_btn">
+              <property name="text">
+               <string>Agregar</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="actualizar_rq_btn">
+              <property name="text">
+               <string>Actualizar</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="seleccionar_rq_btn">
+              <property name="text">
+               <string>Seleccionar</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="buscar_rq_btn">
+              <property name="text">
+               <string>Buscar</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="limpiar_rq_btn">
+              <property name="text">
+               <string>Limpiar</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="borrar_rq_btn">
+              <property name="text">
+               <string>Borrar</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QComboBox" name="tipo_especie_rq_box">
+           <property name="geometry">
+            <rect>
+             <x>110</x>
+             <y>170</y>
+             <width>141</width>
+             <height>22</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_31">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>170</y>
+             <width>149</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>tipo_especie</string>
+           </property>
+          </widget>
+          <widget class="QComboBox" name="nombre_reaccion_rq_box">
+           <property name="geometry">
+            <rect>
+             <x>380</x>
+             <y>170</y>
+             <width>111</width>
+             <height>22</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_32">
+           <property name="geometry">
+            <rect>
+             <x>270</x>
+             <y>170</y>
+             <width>91</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>nombre_reaccion</string>
+           </property>
           </widget>
          </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </item>
-   </layout>
+         <widget class="QWidget" name="tab_2">
+          <attribute name="title">
+           <string>Condiciones Iniciales</string>
+          </attribute>
+          <widget class="QWidget" name="layoutWidget">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>60</y>
+             <width>751</width>
+             <height>461</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_6">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_5">
+              <item>
+               <spacer name="verticalSpacer_9">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QFrame" name="datos_frame_2">
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_12">
+                 <item>
+                  <spacer name="horizontalSpacer_8">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_11">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <layout class="QVBoxLayout" name="verticalLayout_7">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_3">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QLabel" name="label_12">
+                         <property name="text">
+                          <string>Temperatura</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <spacer name="horizontalSpacer_9">
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>18</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="temperatura_ci_edit"/>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <spacer name="verticalSpacer_3">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>13</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_13">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QLabel" name="label_11">
+                         <property name="text">
+                          <string>Tiempo</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <spacer name="horizontalSpacer_10">
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>18</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="tiempo_ci_edit"/>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <spacer name="verticalSpacer_6">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>13</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_14">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QLabel" name="label_14">
+                         <property name="text">
+                          <string>Presión total</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <spacer name="horizontalSpacer_11">
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>18</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="presion_total_ci_edit"/>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <spacer name="horizontalSpacer_12">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>18</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item>
+                    <layout class="QVBoxLayout" name="verticalLayout_8">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_15">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QLabel" name="label_15">
+                         <property name="text">
+                          <string>Presión parcial</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <spacer name="horizontalSpacer_13">
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>18</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="presion_parcial_ci_edit"/>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <spacer name="verticalSpacer_7">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>13</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_16">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QLabel" name="label_16">
+                         <property name="text">
+                          <string>Fracción molar</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <spacer name="horizontalSpacer_14">
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>18</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="fraccion_molar_ci_edit"/>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <spacer name="verticalSpacer_8">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>13</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_17">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QLabel" name="label_19">
+                         <property name="text">
+                          <string>Especie Química</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <spacer name="horizontalSpacer_15">
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>18</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="especie_quimica_ci_edit"/>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <spacer name="horizontalSpacer_16">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>18</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item>
+                    <layout class="QVBoxLayout" name="verticalLayout_9">
+                     <property name="spacing">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_18">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QLabel" name="label_18">
+                         <property name="text">
+                          <string>Tipo Especie</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <spacer name="horizontalSpacer_17">
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>18</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="tipo_especie_ci_edit"/>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <spacer name="verticalSpacer_10">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>13</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_19">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QLabel" name="label_13">
+                         <property name="text">
+                          <string>Detalle</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <spacer name="horizontalSpacer_18">
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>18</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="detalle_ci_edit"/>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <spacer name="verticalSpacer_11">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>13</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_20">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QLabel" name="label_17">
+                         <property name="text">
+                          <string>Nombre data</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <spacer name="horizontalSpacer_19">
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>18</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="nombre_data_ci_edit"/>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_20">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_12">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>18</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QFrame" name="funciones_frame_ci">
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_21">
+                 <property name="spacing">
+                  <number>0</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QPushButton" name="agregar_ci_btn">
+                   <property name="text">
+                    <string>Agregar</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="actualizar_ci_btn">
+                   <property name="text">
+                    <string>Actualizar</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="seleccionar_ci_btn">
+                   <property name="text">
+                    <string>Seleccionar</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="buscar_ci_btn">
+                   <property name="text">
+                    <string>Buscar</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="limpiar_ci_btn">
+                   <property name="text">
+                    <string>Limpiar</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="borrar_ci_btn">
+                   <property name="text">
+                    <string>Borrar</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_13">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>18</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_10">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QTableWidget" name="condiciones_iniciales_tabla">
+                <property name="focusPolicy">
+                 <enum>Qt::NoFocus</enum>
+                </property>
+                <property name="showGrid">
+                 <bool>false</bool>
+                </property>
+                <attribute name="horizontalHeaderMinimumSectionSize">
+                 <number>50</number>
+                </attribute>
+                <attribute name="horizontalHeaderDefaultSectionSize">
+                 <number>70</number>
+                </attribute>
+                <attribute name="horizontalHeaderStretchLastSection">
+                 <bool>true</bool>
+                </attribute>
+                <attribute name="verticalHeaderVisible">
+                 <bool>false</bool>
+                </attribute>
+                <column>
+                 <property name="text">
+                  <string>id</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>temperatura</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>tiempo</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>presion_total</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>presion_parcial</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>fraccion_molar</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>especie_quimica</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>tipo_especie</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>detalle</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>nombre_data</string>
+                 </property>
+                </column>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="tab">
+          <attribute name="title">
+           <string>Datos Cinéticos</string>
+          </attribute>
+          <widget class="QFrame" name="datos_frame">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>10</y>
+             <width>741</width>
+             <height>137</height>
+            </rect>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_4">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <item row="0" column="0">
+             <layout class="QGridLayout" name="gridLayout">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_2">
+                <property name="text">
+                 <string>tiempo</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="tiempo_dc_edit"/>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_3">
+                <property name="text">
+                 <string>concentracion</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="concentracion_dc_edit"/>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_4">
+                <property name="text">
+                 <string>otra_propiedad</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLineEdit" name="otra_propiedad_dc_edit"/>
+              </item>
+             </layout>
+            </item>
+            <item row="0" column="1">
+             <layout class="QGridLayout" name="gridLayout_2">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_6">
+                <property name="text">
+                 <string>conversion_reactivo_limitante</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="conversion_reactivo_limitante_dc_edit"/>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_5">
+                <property name="text">
+                 <string>tipo_especie</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="tipo_especie_dc_edit"/>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_7">
+                <property name="text">
+                 <string>id_condiciones_iniciales</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLineEdit" name="id_condiciones_iniciales_dc_edit"/>
+              </item>
+             </layout>
+            </item>
+            <item row="0" column="2">
+             <layout class="QGridLayout" name="gridLayout_3">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_8">
+                <property name="text">
+                 <string>nombre_data</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="nombre_data_dc_edit"/>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_9">
+                <property name="text">
+                 <string>nombre_reaccion</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="nombre_reaccion_dc_edit"/>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_10">
+                <property name="text">
+                 <string>especie_quimica</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLineEdit" name="especie_quimica_dc_edit"/>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QFrame" name="funciones_frame_dc">
+           <property name="geometry">
+            <rect>
+             <x>40</x>
+             <y>170</y>
+             <width>711</width>
+             <height>44</height>
+            </rect>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QPushButton" name="agregar_dc_btn">
+              <property name="text">
+               <string>Agregar</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="actualizar_dc_btn">
+              <property name="text">
+               <string>Actualizar</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="seleccionar_dc_btn">
+              <property name="text">
+               <string>Seleccionar</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="buscar_dc_btn">
+              <property name="text">
+               <string>Buscar</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="limpiar_dc_btn">
+              <property name="text">
+               <string>Limpiar</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="borrar_dc_btn">
+              <property name="text">
+               <string>Borrar</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="gridLayoutWidget">
+           <property name="geometry">
+            <rect>
+             <x>30</x>
+             <y>240</y>
+             <width>731</width>
+             <height>221</height>
+            </rect>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_5">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <item row="0" column="0">
+             <widget class="QTableWidget" name="datos_cineticos_tabla">
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+              <property name="showGrid">
+               <bool>false</bool>
+              </property>
+              <attribute name="horizontalHeaderMinimumSectionSize">
+               <number>50</number>
+              </attribute>
+              <attribute name="horizontalHeaderDefaultSectionSize">
+               <number>70</number>
+              </attribute>
+              <attribute name="horizontalHeaderStretchLastSection">
+               <bool>true</bool>
+              </attribute>
+              <attribute name="verticalHeaderVisible">
+               <bool>false</bool>
+              </attribute>
+              <column>
+               <property name="text">
+                <string>id</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>tiempo</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>concentracion</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>otra_propiedad</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>conversion_reactivo_limitante</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>tipo_especie</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>id_condiciones_iniciales</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>nombre_data</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>nombre_reaccion</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>especie_quimica</string>
+               </property>
+              </column>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>50</y>
+      <width>241</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_22">
+     <item>
+      <widget class="QLabel" name="label_33">
+       <property name="text">
+        <string>nombre_reaccion</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_22">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="nombre_reaccion_general_edit"/>
+     </item>
+    </layout>
+   </widget>
   </widget>
  </widget>
  <resources/>

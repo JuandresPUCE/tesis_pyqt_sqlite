@@ -8,9 +8,14 @@ from modelos import *
 from repositorios import *
 import logging
 from datetime import datetime
+import json
+import os
+import pandas as pd
+current_dir = os.path.dirname(os.path.abspath(__file__))
 
 #importe ui de la ventana principal
 from flujo_datos_vista import Ui_MainWindow
+from funciones import *
 
 
 # metodos comunes
@@ -57,6 +62,11 @@ class FlujoDatos(QMainWindow):
         #iniciar funciones diferentes a crud
         self.establecer_fecha_sistema()
 
+        json_tipo_especie = r"data\tipo_especie.json"
+
+        self.cargar_datos_json(json_tipo_especie)
+
+
     def manejadores_base(self):
         
         # manejadores de base
@@ -67,6 +77,7 @@ class FlujoDatos(QMainWindow):
 
         #self.metodos_comunes = MetodosComunesControlador()
         self.metodos_comunes = Servicios(self)
+        self.funciones=Funciones()
 
     def init_ui_elementos_dc(self):
         # Datos cinéticos
@@ -76,8 +87,13 @@ class FlujoDatos(QMainWindow):
         self.conversion_reactivo_limitante = self.ui.conversion_reactivo_limitante_dc_edit
         self.tipo_especie = self.ui.tipo_especie_dc_edit
         self.id_condiciones_iniciales = self.ui.id_condiciones_iniciales_dc_edit
-        self.nombre_data = self.ui.nombre_data_dc_edit
-        self.nombre_reaccion = self.ui.nombre_reaccion_dc_edit
+        #nombre_data_general_edit
+        self.nombre_data = self.ui.nombre_data_general_edit
+        #nombre_reaccion_dc_edit
+        #self.nombre_data = self.ui.nombre_data_dc_edit
+        #nombre_reaccion_dc_edit
+        #self.nombre_reaccion = self.ui.nombre_reaccion_dc_edit
+        self.nombre_reaccion = self.ui.nombre_reaccion_general_edit
         self.especie_quimica = self.ui.especie_quimica_dc_edit
 
         # Botones de datos cinéticos
@@ -93,9 +109,26 @@ class FlujoDatos(QMainWindow):
         self.tabla_datos.setSortingEnabled(False)
         self.lista_botones = self.ui.funciones_frame_dc.findChildren(QPushButton)
 
+        #objetos test
+        self.calculo1=self.ui.marcar_a0_btn
+        self.calculo0=self.ui.marcar_producto0_btn
+        self.calculo2=self.ui.marcar_coeficiente_producto_btn
+        self.calculo3=self.ui.marcar_coeficiente_reactivo_btn
+        self.calculo4=self.ui.calcular_xa
+
+        self.coeficiente_estequiometro_producto = self.ui.coeficiente_estequiometrico_producto_edit
+        self.coeficiente_estequiometro_reactivo = self.ui.coeficiente_estequiometrico_reactivo_edit
+        self.concentracion_inicial_reactivo_limitante = self.ui.concentracion_reactivo_limitante_edit
+        self.concentracion_inicial_producto = self.ui.concentracion_producto_edit
+
+
+
     def init_ui_elementos_rde(self):
         # Datos experimentales
-        self.nombre_data_experimental = self.ui.nombre_data_rde_edit
+        #nombre_data_rde_edit
+        #self.nombre_data_experimental = self.ui.nombre_data_rde_edit
+        #nombre_data_general_edit
+        self.nombre_data_experimental = self.ui.nombre_data_general_edit
         self.fecha_data_experimental = self.ui.fecha_rde_edit
         self.detalle_data_experimental = self.ui.detalle_rde_edit
 
@@ -122,7 +155,11 @@ class FlujoDatos(QMainWindow):
         self.especie_quimica_ci = self.ui.especie_quimica_ci_edit
         self.tipo_especie_ci = self.ui.tipo_especie_ci_edit
         self.detalle_ci = self.ui.detalle_ci_edit
-        self.nombre_data_ci = self.ui.nombre_data_ci_edit
+        #nombre_data_ci_edit
+        #self.nombre_data_ci = self.ui.nombre_data_ci_edit
+        #nombre_data
+        self.nombre_data_ci = self.ui.nombre_data_general_edit
+        
 
 
         # Botones de condiciones iniciales
@@ -145,7 +182,10 @@ class FlujoDatos(QMainWindow):
         self.coeficiente_estequiometro_rq = self.ui.coeficiente_estequiometrico_rq_edit
         self.detalle_rq = self.ui.detalle_rq_edit
         self.tipo_especie_rq = self.ui.tipo_especie_rq_edit
-        self.nombre_reaccion_rq = self.ui.nombre_reaccion_rq_edit
+        #nombre_data_general_edit
+        self.nombre_reaccion_rq = self.ui.nombre_reaccion_general_edit
+        #nombre_reaccion_rq_edit
+        #self.nombre_reaccion_rq = self.ui.nombre_reaccion_rq_edit
 
         # Botones de reacción química
         self.agregar_rq_btn = self.ui.agregar_rq_btn
@@ -159,6 +199,11 @@ class FlujoDatos(QMainWindow):
         self.tabla_reaccion_quimica = self.ui.reaccion_quimica_tabla
         self.tabla_reaccion_quimica.setSortingEnabled(False)
         self.lista_botones = self.ui.funciones_frame_rq.findChildren(QPushButton)
+
+        #combo box
+        self.tipo_especie_rq_box=self.ui.tipo_especie_rq_box
+        self.tipo_especie_rq_box.currentIndexChanged.connect(self.actualizar_lineedit)
+
     
 
     def init_control_botones_datos(self):
@@ -170,6 +215,12 @@ class FlujoDatos(QMainWindow):
         self.borrar_dc_btn.clicked.connect(self.borrar_dato)
         self.limpiar_dc_btn.clicked.connect(self.limpiar_formulario)
         self.buscar_dc_btn.clicked.connect(self.buscar_dato)
+
+        self.calculo0.clicked.connect(self.marcar_quimico_inicial)
+        self.calculo1.clicked.connect(self.marcar_quimico_inicial)
+        self.calculo2.clicked.connect(self.marcar_coeficiente)
+        self.calculo3.clicked.connect(self.marcar_coeficiente)
+        self.calculo4.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_producto)
 
     def init_control_botones_experimental(self):
         self.agregar_rde_btn.clicked.connect(self.agregar_registro_data_experimental)
@@ -1084,6 +1135,124 @@ class FlujoDatos(QMainWindow):
 
         # Asignar fecha_rde_edit a fecha_data_experimental
         self.fecha_data_experimental = self.ui.fecha_rde_edit
+
+    def mostrar_tipo_especie(self, catalogo):
+        self.tipo_especie_rq_box.clear()
+        self.tipo_especie_rq_box.addItem("Seleccione una opción", -1)
+        if catalogo:
+            for item in catalogo:
+                self.tipo_especie_rq_box.addItem(item["Descripcion"], item["ID"])
+        else:
+            QMessageBox.information(self, "No hay datos", "No se encontraron datos en el archivo JSON.", QMessageBox.StandardButton.Ok)
+
+    def cargar_datos_json(self, archivo):
+        try:
+            with open(archivo, 'r') as f:
+                data = json.load(f)
+                self.mostrar_tipo_especie(data.get("Tipo_especie_catalogo", []))
+        except FileNotFoundError:
+            QMessageBox.critical(self, "Error", f"No se encontró el archivo {archivo}", QMessageBox.StandardButton.Ok)
+        except json.JSONDecodeError:
+            QMessageBox.critical(self, "Error", f"Error al leer el archivo {archivo}", QMessageBox.StandardButton.Ok)
+    
+    def actualizar_lineedit(self):
+        current_text = self.tipo_especie_rq_box.currentText()
+        if current_text != "Seleccione una opción":
+            self.tipo_especie_rq.setText(current_text)
+        else:
+            self.tipo_especie_rq.clear()
+
+    
+    def marcar_quimico_inicial(self):
+        # Definir los filtros para la consulta
+
+        seleccionar_fila = self.tabla_datos.currentRow()
+        if seleccionar_fila != -1:
+            id = self.tabla_datos.item(seleccionar_fila, 0).text().strip()
+            tiempo = self.tabla_datos.item(seleccionar_fila, 1).text().strip()
+            concentracion = self.tabla_datos.item(seleccionar_fila, 2).text().strip()
+            otra_propiedad = self.tabla_datos.item(seleccionar_fila, 3).text().strip()
+            conversion_reactivo_limitante = self.tabla_datos.item(seleccionar_fila, 4).text().strip()
+            tipo_especie = self.tabla_datos.item(seleccionar_fila, 5).text().strip()
+            id_condiciones_iniciales = self.tabla_datos.item(seleccionar_fila, 6).text().strip()
+            nombre_data = self.tabla_datos.item(seleccionar_fila, 7).text().strip()
+            nombre_reaccion = self.tabla_datos.item(seleccionar_fila, 8).text().strip()
+            especie_quimica = self.tabla_datos.item(seleccionar_fila, 9).text().strip()
+
+            if tipo_especie == "producto":
+                self.concentracion_inicial_producto.setText(concentracion)
+            else:
+                self.concentracion_inicial_reactivo_limitante.setText(concentracion)
+
+        else:
+            QMessageBox.information(self, "Información", "Seleccione una fila", QMessageBox.StandardButton.Ok)
+            return
+        
+        seleccion_quimico_inicial = {
+            "tiempo": [self.tiempo.text()],
+            "concentracion": [self.concentracion.text()],
+            "otra_propiedad": [self.otra_propiedad.text()],
+            "conversion_reactivo_limitante": [self.conversion_reactivo_limitante.text()],
+            "tipo_especie": [self.tipo_especie.text()],
+            "id_condiciones_iniciales": [self.id_condiciones_iniciales.text()],
+            "nombre_data": [self.nombre_data.text()],
+            "nombre_reaccion": [self.nombre_reaccion.text()],
+            "especie_quimica": [self.especie_quimica.text()],
+        }
+
+        self.seleccion_quimico_inicial = pd.DataFrame.from_dict(seleccion_quimico_inicial)
+        print(self.seleccion_quimico_inicial)
+        return self.seleccion_quimico_inicial
+    
+    def marcar_coeficiente(self):
+        seleccionar_fila = self.tabla_reaccion_quimica.currentRow()
+        if seleccionar_fila != -1:
+            id = self.tabla_reaccion_quimica.item(seleccionar_fila, 0).text().strip()
+            especie_quimica = self.tabla_reaccion_quimica.item(seleccionar_fila, 1).text().strip()
+            formula = self.tabla_reaccion_quimica.item(seleccionar_fila, 2).text().strip()
+            coeficiente_estequiometrico = self.tabla_reaccion_quimica.item(seleccionar_fila, 3).text().strip()
+            detalle = self.tabla_reaccion_quimica.item(seleccionar_fila, 4).text().strip()
+            tipo_especie = self.tabla_reaccion_quimica.item(seleccionar_fila, 5).text().strip()
+            nombre_reaccion = self.tabla_reaccion_quimica.item(seleccionar_fila, 6).text().strip()
+
+            if tipo_especie == "producto":
+                self.coeficiente_estequiometro_producto.setText(coeficiente_estequiometrico)
+            else:
+                self.coeficiente_estequiometro_reactivo.setText(coeficiente_estequiometrico)
+        else:
+            QMessageBox.information(self, "Información", "Seleccione una fila", QMessageBox.StandardButton.Ok)
+            return
+        
+        seleccion_reaccion_quimica = {
+            "especie_quimica": [self.especie_quimica_rq.text()],
+            "formula": [self.formula_rq.text()],
+            "coeficiente_estequiometrico": [self.coeficiente_estequiometro_rq.text()],
+            "detalle": [self.detalle_rq.text()],
+            "tipo_especie": [self.tipo_especie_rq.text()],
+            "nombre_reaccion": [self.nombre_reaccion_rq.text()],
+        }
+
+        print(seleccion_reaccion_quimica)
+
+
+    def calcular_conversion_reactivo_limitante_dado_producto(self):
+        funciones=Funciones()
+        concentracion = float(self.concentracion.text())
+        concentracion_inicial_producto = float(self.concentracion_inicial_producto.text())
+        concentracion_inicial_reactivo_limitante = float(self.concentracion_inicial_reactivo_limitante.text())
+        coeficiente_estequiometro_producto = float(self.coeficiente_estequiometro_producto.text())
+        coeficiente_estequiometro_reactivo = float(self.coeficiente_estequiometro_reactivo.text())
+        xa=funciones.conversion_reactivo_limitante_dado_producto(concentracion, concentracion_inicial_producto, concentracion_inicial_reactivo_limitante, coeficiente_estequiometro_producto, coeficiente_estequiometro_reactivo)
+        print(xa)
+        self.conversion_reactivo_limitante.setText(str(xa))
+
+
+
+
+
+    #calcular despues
+    def calculo_delta_n(self):
+        pass
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

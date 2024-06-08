@@ -400,25 +400,7 @@ class PantallaCrud(QMainWindow):
     
 
     def mostrar_datos_tabla(self, resultados):
-        if resultados:
-            self.tabla_datos.setRowCount(len(resultados))
-            self.tabla_datos.setColumnCount(10)
-
-            for fila, dato in enumerate(resultados):
-                self.tabla_datos.setItem(fila, 0, QTableWidgetItem(str(dato.id)))
-                self.tabla_datos.setItem(fila, 1, QTableWidgetItem(str(dato.tiempo)))
-                self.tabla_datos.setItem(fila, 2, QTableWidgetItem(str(dato.concentracion)))
-                self.tabla_datos.setItem(fila, 3, QTableWidgetItem(str(dato.otra_propiedad)))
-                self.tabla_datos.setItem(fila, 4, QTableWidgetItem(str(dato.conversion_reactivo_limitante)))
-                self.tabla_datos.setItem(fila, 5, QTableWidgetItem(dato.tipo_especie))
-                self.tabla_datos.setItem(fila, 6, QTableWidgetItem(str(dato.id_condiciones_iniciales)))
-                self.tabla_datos.setItem(fila, 7, QTableWidgetItem(dato.nombre_data))
-                self.tabla_datos.setItem(fila, 8, QTableWidgetItem(dato.nombre_reaccion))
-                self.tabla_datos.setItem(fila, 9, QTableWidgetItem(dato.especie_quimica))
-        else:
-            self.tabla_datos.setRowCount(0)
-            QMessageBox.information(self, "Información", "No se encontraron datos", QMessageBox.StandardButton.Ok)
-
+        self.metodos_comunes.mostrar_datos_tabla(self.tabla_datos, resultados)
 
     def actualizar_valor_celda_datos(self, fila, columna):
         try:

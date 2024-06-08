@@ -1,0 +1,9 @@
+{
+    "Tipo_especie_catalogo": [
+        {"ID": 1, "Descripcion": "reactivo_limitante"},
+        {"ID": 2, "Descripcion": "reactivo"},
+        {"ID": 3, "Descripcion": "producto"},
+        {"ID": 4, "Descripcion": "inerte"},
+        {"ID": 5, "Descripcion": "catalizador"}
+    ]
+}

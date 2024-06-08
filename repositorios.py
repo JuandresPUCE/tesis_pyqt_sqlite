@@ -142,12 +142,13 @@ class DatosCineticosManejador:
             for columna, valor in filtros.items():
                 if not valor:
                     continue
-                if formato == 'like':
-                    # Registro con like similar
-                    condiciones.append(getattr(DatosIngresadosCineticos, columna).like(f'%{valor}%'))
-                else:
+                if not formato == 'like':
                     # Registro exacto
                     condiciones.append(getattr(DatosIngresadosCineticos, columna) == valor)
+
+                else:
+                    # Registro exacto
+                    condiciones.append(getattr(DatosIngresadosCineticos, columna).like(f'%{valor}%'))
 
             if condiciones:
                 query = query.filter(or_(*condiciones))

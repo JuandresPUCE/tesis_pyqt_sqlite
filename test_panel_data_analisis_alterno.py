@@ -169,26 +169,8 @@ class PanelDataAnalisis(QMainWindow):
         self.mostrar_condiciones_iniciales_tabla(condiciones)
 
     def mostrar_condiciones_iniciales_tabla(self, condiciones):
-        self.tabla = self.condiciones_iniciales_tabla
-        if condiciones:
-            self.tabla.setRowCount(len(condiciones))
-            self.tabla.setColumnCount(10)
-
-            for fila, condicion in enumerate(condiciones):
-                self.tabla.setItem(fila, 0, QTableWidgetItem(str(condicion.id)))
-                self.tabla.setItem(fila, 1, QTableWidgetItem(str(condicion.temperatura)))
-                self.tabla.setItem(fila, 2, QTableWidgetItem(str(condicion.tiempo)))
-                self.tabla.setItem(fila, 3, QTableWidgetItem(str(condicion.presion_total)))
-                self.tabla.setItem(fila, 4, QTableWidgetItem(str(condicion.presion_parcial)))
-                self.tabla.setItem(fila, 5, QTableWidgetItem(str(condicion.fraccion_molar)))
-                self.tabla.setItem(fila, 6, QTableWidgetItem(str(condicion.especie_quimica)))
-                self.tabla.setItem(fila, 7, QTableWidgetItem(str(condicion.tipo_especie)))
-                self.tabla.setItem(fila, 8, QTableWidgetItem(str(condicion.detalle)))
-                self.tabla.setItem(fila, 9, QTableWidgetItem(str(condicion.nombre_data)))
-        else:
-            self.tabla.setRowCount(0)
-            QMessageBox.information(self, "No hay condiciones iniciales", "No se encontraron condiciones iniciales en la base de datos.", QMessageBox.StandardButton.Ok)
-
+        condiciones = self.obtener_condiciones()
+        self.metodos_comunes.mostrar_condiciones_iniciales(self.condiciones_iniciales_tabla, condiciones)
 # organizar en otra clase
 
     
@@ -196,50 +178,22 @@ class PanelDataAnalisis(QMainWindow):
         datos_resultados = self.DatosCineticosManejador.consultar_datos()
         self.mostrar_datos_tabla(datos_resultados)
 
-#manejar try except cuando la base de datos no tiene datos
+#manejar try except cuando la base de datos no tiene datos, regresar version no refactorizada
     def mostrar_datos_tabla(self, resultados):
         try:
             tabla = self.datos_cineticos_tabla
             tabla.clearContents()
-            tabla.setRowCount(0)
-            if resultados:
-                tabla.setRowCount(len(resultados))
-                tabla.setColumnCount(10)
-
-                for fila, dato in enumerate(resultados):
-                    tabla.setItem(fila, 0, QTableWidgetItem(str(dato.id)))
-                    tabla.setItem(fila, 1, QTableWidgetItem(str(dato.tiempo)))
-                    tabla.setItem(fila, 2, QTableWidgetItem(str(dato.concentracion)))
-                    tabla.setItem(fila, 3, QTableWidgetItem(str(dato.otra_propiedad)))
-                    tabla.setItem(fila, 4, QTableWidgetItem(str(dato.conversion_reactivo_limitante)))
-                    tabla.setItem(fila, 5, QTableWidgetItem(str(dato.tipo_especie)))
-                    tabla.setItem(fila, 6, QTableWidgetItem(str(dato.id_condiciones_iniciales)))
-                    tabla.setItem(fila, 7, QTableWidgetItem(str(dato.nombre_data)))
-                    tabla.setItem(fila, 8, QTableWidgetItem(str(dato.nombre_reaccion)))
-                    tabla.setItem(fila, 9, QTableWidgetItem(str(dato.especie_quimica)))
-            else:
-                self.tabla.setRowCount(0)
-                QMessageBox.information(self, "Información", "No se encontraron datos", QMessageBox.StandardButton.Ok)
-        except AttributeError:
-            print("Error: El objeto 'PanelDataAnalisis' no tiene el atributo 'tabla'")
-
+            self.metodos_comunes.mostrar_datos_tabla(self.datos_cineticos_tabla, resultados)
+        except ValueError as ve:
+                QMessageBox.information(None, "Información", "No se encontraron datos", QMessageBox.StandardButton.Ok)
+        except Exception as e:
+            QMessageBox.critical(None, "Error", f"Error inesperado al mostrar datos: {e}", QMessageBox.StandardButton.Ok)
+                 
     def mostrar_reaccion_tabla(self, resultados):
         tabla = self.reaccion_quimica_tabla
         tabla.clearContents()
-        tabla.setRowCount(0)
-        if resultados:
-            tabla.setRowCount(len(resultados))
-            tabla.setColumnCount(7)
-            for fila, dato in enumerate(resultados):
-                tabla.setItem(fila, 0, QTableWidgetItem(str(dato.id)))
-                tabla.setItem(fila, 1, QTableWidgetItem(str(dato.especie_quimica)))
-                tabla.setItem(fila, 2, QTableWidgetItem(str(dato.formula)))
-                tabla.setItem(fila, 3, QTableWidgetItem(str(dato.coeficiente_estequiometrico)))
-                tabla.setItem(fila, 4, QTableWidgetItem(str(dato.detalle)))
-                tabla.setItem(fila, 5, QTableWidgetItem(str(dato.tipo_especie)))
-                tabla.setItem(fila, 6, QTableWidgetItem(str(dato.nombre_reaccion)))
-        else:
-            QMessageBox.information(self, "Información", "No se encontraron datos", QMessageBox.StandardButton.Ok)
+        self.metodos_comunes.mostrar_reacciones(self.reaccion_quimica_tabla, resultados)
+
 
     def actualizar_datos_cineticos(self):
             nombre_data = self.registro_datos_box.currentText()

@@ -117,6 +117,29 @@ class Funciones:
         """
         return Producto_0 + (coeficiente_producto / a) * (A0 * XA)
     
+    def conversion_reactivo_limitante_dado_producto(self,concentracion_producto,concentracion_inicial_producto,concentracion_inicial_reactivo_limitante, coeficiente_producto, coeficiente_reactivo_limitante ):
+        """
+        Calcula la conversión del reactivo limitante en función de la concentración del producto.
+
+        Esta función calcula la conversión del reactivo limitante en función de la concentración
+        del producto, utilizando la concentración del producto, la concentración inicial del producto,
+        la concentración inicial del reactivo limitante, el coeficiente estequiométrico del producto y
+        el coeficiente estequiométrico del reactivo limitante.
+
+        Args:
+            concentracion_producto (float): Concentración del producto.
+            concentracion_inicial_producto (float): Concentración inicial del producto.
+            concentracion_inicial_reactivo_limitante (float): Concentración inicial del reactivo limitante.
+            coeficiente_producto (int): Coeficiente estequiométrico del producto.
+            coeficiente_reactivo_limitante (int): Coeficiente estequiométrico del reactivo limitante.
+
+        Returns:
+            float: La conversión del reactivo limitante en función de la concentración del producto.
+        """
+        return (concentracion_producto - concentracion_inicial_producto) / ((coeficiente_producto / coeficiente_reactivo_limitante) * concentracion_inicial_reactivo_limitante)
+
+        
+    
     def calcular_delta_n(self,coeficientes_productos, coeficientes_reactivos):
         """
         Calcula el cambio en el número de moles de gas en una reacción química.
