@@ -180,10 +180,14 @@ class PanelDataAnalisis(QMainWindow):
     def filtrar_datos(self):
         self.filtro_datos_box.clear()
         self.filtro_datos_box.addItem("Todos")
-        filtros = self.DatosCineticosManejador.consultar_datos()
-        if filtros:
-            for filtro in filtros:
-                self.filtro_datos_box.addItem(filtro.tipo_especie)
+        
+        datos_cineticos = self.DatosCineticosManejador.consultar_datos()
+        
+        if datos_cineticos:
+            tipos_especie = set(registro.tipo_especie for registro in datos_cineticos)
+            
+            for tipo_especie in tipos_especie:
+                self.filtro_datos_box.addItem(tipo_especie)
         else:
             QMessageBox.information(self, "No hay datos", "No se encontraron datos en la base de datos.", QMessageBox.StandardButton.Ok)
 
@@ -223,6 +227,7 @@ class PanelDataAnalisis(QMainWindow):
     def imprimir_registro_seleccionado(self):
         self.actualizar_datos_cineticos()
         nombre_data = self.registro_datos_box.currentText()
+        tipo_especie = self.filtro_datos_box.currentText()
 
         if not nombre_data:
             return
@@ -234,7 +239,13 @@ class PanelDataAnalisis(QMainWindow):
         df_condiciones_iniciales = pd.DataFrame.from_records([condicion.__dict__ for condicion in condiciones])
         print("Condiciones iniciales:", df_condiciones_iniciales)
 
+        # Consultar datos cinéticos filtrando por nombre_data
         datos_cineticos = self.DatosCineticosManejador.consultar_datos(filtros=filtros)
+
+        # Filtrar datos cinéticos por tipo_especie si se selecciona uno específico
+        if tipo_especie != "Todos":
+            datos_cineticos = [dato for dato in datos_cineticos if dato.tipo_especie == tipo_especie]
+
         # Convertir los datos a un DataFrame de pandas
         df_datos_cineticos_listos = pd.DataFrame.from_records([dato.__dict__ for dato in datos_cineticos])
         print("Datos cinéticos listos:", df_datos_cineticos_listos)
