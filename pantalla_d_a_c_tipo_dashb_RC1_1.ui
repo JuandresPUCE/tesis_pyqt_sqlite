@@ -161,28 +161,6 @@
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_3">
              <item>
-              <widget class="QFrame" name="frame_5">
-               <property name="frameShape">
-                <enum>QFrame::StyledPanel</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
-               </property>
-               <layout class="QVBoxLayout" name="verticalLayout_8">
-                <item>
-                 <widget class="QLabel" name="registro_datos_label">
-                  <property name="text">
-                   <string>Registro datos</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QComboBox" name="registro_datos_box"/>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item>
               <widget class="QFrame" name="frame_6">
                <property name="frameShape">
                 <enum>QFrame::StyledPanel</enum>
@@ -192,14 +170,40 @@
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_9">
                 <item>
-                 <widget class="QLabel" name="condiciones_iniciales_label">
-                  <property name="text">
-                   <string>Condiciones Iniciales</string>
+                 <widget class="QGroupBox" name="groupBox">
+                  <property name="title">
+                   <string>Registro datos</string>
                   </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_8">
+                   <item>
+                    <widget class="QComboBox" name="registro_datos_box"/>
+                   </item>
+                  </layout>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="condiciones_iniciales_box"/>
+                 <widget class="QGroupBox" name="groupBox_2">
+                  <property name="title">
+                   <string>Condiciones Iniciales</string>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_12">
+                   <item>
+                    <widget class="QComboBox" name="condiciones_iniciales_box"/>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QGroupBox" name="groupBox_3">
+                  <property name="title">
+                   <string>Filtro</string>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_13">
+                   <item>
+                    <widget class="QComboBox" name="filtro_datos_box"/>
+                   </item>
+                  </layout>
+                 </widget>
                 </item>
                </layout>
               </widget>
@@ -279,7 +283,7 @@
           <item>
            <widget class="QTabWidget" name="tabWidget">
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="tab">
              <attribute name="title">

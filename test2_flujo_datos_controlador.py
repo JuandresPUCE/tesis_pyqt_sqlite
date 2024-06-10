@@ -115,6 +115,7 @@ class FlujoDatos(QMainWindow):
         self.calculo2=self.ui.marcar_coeficiente_producto_btn
         self.calculo3=self.ui.marcar_coeficiente_reactivo_btn
         self.calculo4=self.ui.calcular_xa
+        self.calculo5=self.ui.calcular_a
 
         self.coeficiente_estequiometro_producto = self.ui.coeficiente_estequiometrico_producto_edit
         self.coeficiente_estequiometro_reactivo = self.ui.coeficiente_estequiometrico_reactivo_edit
@@ -221,6 +222,7 @@ class FlujoDatos(QMainWindow):
         self.calculo2.clicked.connect(self.marcar_coeficiente)
         self.calculo3.clicked.connect(self.marcar_coeficiente)
         self.calculo4.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_producto)
+        self.calculo5.clicked.connect(self.calcular_concentracion_reactivo_limitante_dado_conversion)
 
     def init_control_botones_experimental(self):
         self.agregar_rde_btn.clicked.connect(self.agregar_registro_data_experimental)
@@ -1245,6 +1247,15 @@ class FlujoDatos(QMainWindow):
         xa=funciones.conversion_reactivo_limitante_dado_producto(concentracion, concentracion_inicial_producto, concentracion_inicial_reactivo_limitante, coeficiente_estequiometro_producto, coeficiente_estequiometro_reactivo)
         print(xa)
         self.conversion_reactivo_limitante.setText(str(xa))
+
+    def calcular_concentracion_reactivo_limitante_dado_conversion(self):
+        funciones=Funciones()
+        concentracion_inicial_reactivo_limitante = float(self.concentracion_inicial_reactivo_limitante.text())
+        conversion_reactivo_limitante =float(self.conversion_reactivo_limitante.text())
+        A=funciones.concentracion_reactivo_funcion_conversion(concentracion_inicial_reactivo_limitante,conversion_reactivo_limitante)
+        print(A)
+        self.concentracion.setText(str(A))
+
 
 
 

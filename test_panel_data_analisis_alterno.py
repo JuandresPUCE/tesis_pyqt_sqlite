@@ -26,7 +26,6 @@ from test_crud_db_controlador import PantallaCrud
 # metodos comunes
 from servicios import *
 
-
 class PanelDataAnalisis(QMainWindow):
     def __init__(self):
         super(PanelDataAnalisis, self).__init__()
@@ -46,9 +45,6 @@ class PanelDataAnalisis(QMainWindow):
         # metodos comunes refactorizados
         self.metodos_comunes = Servicios()
 
-
-        
-
     #elementos gráficos
     
         # Inicializar elementos gráficos
@@ -57,7 +53,6 @@ class PanelDataAnalisis(QMainWindow):
         # Cargar datos iniciales
         self.buscar_registros()
         self.buscar_dato()
-
         self.crud_db = PantallaCrud()
 
     def init_ui_elements(self):
@@ -83,6 +78,12 @@ class PanelDataAnalisis(QMainWindow):
         self.condiciones_iniciales_box = self.ui.condiciones_iniciales_box
         self.condiciones_iniciales_box.currentIndexChanged.connect(self.actualizar_datos_cineticos)
         self.condiciones_iniciales_box.currentIndexChanged.connect(self.mostrar_condiciones_iniciales_en_tabla)
+
+        #combo box filtro datos experimentales
+        self.filtro_datos_box = self.ui.filtro_datos_box
+        #self.filtro_datos_box.addItem("Todos")  # Añadir "Todos" al iniciar
+        self.filtrar_datos()
+        
         
         # Crear un widget para el gráfico de Matplotlib
         self.matplotlib_widget = MatplotlibWidget(self)
@@ -112,9 +113,6 @@ class PanelDataAnalisis(QMainWindow):
         self.crud_1= self.ui.opcion_btn
         self.crud_1.clicked.connect(self.abrir_crud_db)
 
-
-
-
     #funciones de consulta de registros    
 
     def buscar_registros(self):       
@@ -130,7 +128,7 @@ class PanelDataAnalisis(QMainWindow):
             self.actualizar_condiciones_iniciales()  # Update conditions for the first item
         else:
             QMessageBox.information(self, "No hay registros", "No se encontraron registros en la base de datos.", QMessageBox.StandardButton.Ok)
-            
+
     def actualizar_condiciones_iniciales(self):
         nombre_data = self.registro_datos_box.currentText()
         if nombre_data == "Todos":
@@ -169,7 +167,7 @@ class PanelDataAnalisis(QMainWindow):
         self.mostrar_condiciones_iniciales_tabla(condiciones)
 
     def mostrar_condiciones_iniciales_tabla(self, condiciones):
-        condiciones = self.obtener_condiciones()
+
         self.metodos_comunes.mostrar_condiciones_iniciales(self.condiciones_iniciales_tabla, condiciones)
 # organizar en otra clase
 
@@ -177,6 +175,20 @@ class PanelDataAnalisis(QMainWindow):
     def buscar_dato(self):
         datos_resultados = self.DatosCineticosManejador.consultar_datos()
         self.mostrar_datos_tabla(datos_resultados)
+
+    
+    def filtrar_datos(self):
+        self.filtro_datos_box.clear()
+        self.filtro_datos_box.addItem("Todos")
+        filtros = self.DatosCineticosManejador.consultar_datos()
+        if filtros:
+            for filtro in filtros:
+                self.filtro_datos_box.addItem(filtro.tipo_especie)
+        else:
+            QMessageBox.information(self, "No hay datos", "No se encontraron datos en la base de datos.", QMessageBox.StandardButton.Ok)
+
+
+
 
 #manejar try except cuando la base de datos no tiene datos, regresar version no refactorizada
     def mostrar_datos_tabla(self, resultados):
@@ -380,10 +392,7 @@ class PanelDataAnalisis(QMainWindow):
 
     def abrir_crud_db(self):
         self.crud_db.show()
-
-
-
-        
+       
         
 class MatplotlibWidget(QWidget):
     def __init__(self, parent=None):
@@ -413,7 +422,6 @@ class MatplotlibWidget(QWidget):
         self.ax.imshow(img)
         self.ax.axis('off')  # Ocultar los ejes
         self.canvas.draw()
-
 
 
 if __name__ == "__main__":

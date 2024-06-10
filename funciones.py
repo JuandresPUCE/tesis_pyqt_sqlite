@@ -13,13 +13,7 @@ class Funciones:
         return datos_tabulados
     
         
-    # es A o CA en funcion de la conversion
-
-    def concentracion_producto_principal(concentracion_inicial_producto_principal,conversion_producto_principal):
-        return concentracion_inicial_producto_principal*(1-conversion_producto_principal)
-    
-    
-    #documentados
+   #documentados
 
     def graficar_datos_experimentales_iniciales(self, datos_eje_horizontal, datos_eje_vertical,
                                                 etiqueta_horizontal, etiqueta_vertical, titulo, componente, grafico=None, ax=None, canvas=None):
@@ -60,7 +54,21 @@ class Funciones:
             plt.show()
     
     
+    def concentracion_reactivo_funcion_conversion(self,concentracion_inicial_reactivo,conversion_reactivo):
+        """
+        Calcula la concentración del reactivo en función de la conversión de la reacción.
 
+        Esta función calcula la concentración del reactivo en función de la conversión
+
+        Args:
+            concentracion_inicial_reactivo (float): Concentración inicial del reactivo.
+            conversion_reactivo (float): Conversión del reactivo de 0 a 1 en tanto por uno.
+        
+        Returns:
+            float: La concentración del reactivo en función de la conversión.
+        """
+            
+        return concentracion_inicial_reactivo*(1-conversion_reactivo)
 
     def concentracion_producto_principal(self,A0, XA):
         """

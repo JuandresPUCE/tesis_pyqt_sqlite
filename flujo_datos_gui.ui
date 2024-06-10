@@ -17,7 +17,7 @@
    <widget class="QPushButton" name="marcar_a0_btn">
     <property name="geometry">
      <rect>
-      <x>300</x>
+      <x>260</x>
       <y>40</y>
       <width>101</width>
       <height>24</height>
@@ -30,8 +30,8 @@
    <widget class="QWidget" name="layoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>20</y>
+      <x>10</x>
+      <y>10</y>
       <width>244</width>
       <height>23</height>
      </rect>
@@ -72,7 +72,7 @@
    <widget class="QPushButton" name="calcular_xa">
     <property name="geometry">
      <rect>
-      <x>670</x>
+      <x>620</x>
       <y>10</y>
       <width>101</width>
       <height>24</height>
@@ -85,7 +85,7 @@
    <widget class="QPushButton" name="marcar_coeficiente_reactivo_btn">
     <property name="geometry">
      <rect>
-      <x>460</x>
+      <x>430</x>
       <y>40</y>
       <width>131</width>
       <height>24</height>
@@ -98,7 +98,7 @@
    <widget class="QPushButton" name="marcar_coeficiente_producto_btn">
     <property name="geometry">
      <rect>
-      <x>460</x>
+      <x>430</x>
       <y>10</y>
       <width>131</width>
       <height>24</height>
@@ -111,7 +111,7 @@
    <widget class="QLineEdit" name="coeficiente_estequiometrico_producto_edit">
     <property name="geometry">
      <rect>
-      <x>600</x>
+      <x>570</x>
       <y>10</y>
       <width>41</width>
       <height>21</height>
@@ -121,7 +121,7 @@
    <widget class="QLineEdit" name="coeficiente_estequiometrico_reactivo_edit">
     <property name="geometry">
      <rect>
-      <x>600</x>
+      <x>570</x>
       <y>40</y>
       <width>41</width>
       <height>21</height>
@@ -131,7 +131,7 @@
    <widget class="QLineEdit" name="concentracion_reactivo_limitante_edit">
     <property name="geometry">
      <rect>
-      <x>410</x>
+      <x>380</x>
       <y>40</y>
       <width>41</width>
       <height>21</height>
@@ -141,9 +141,9 @@
    <widget class="QPushButton" name="marcar_producto0_btn">
     <property name="geometry">
      <rect>
-      <x>300</x>
+      <x>260</x>
       <y>10</y>
-      <width>101</width>
+      <width>111</width>
       <height>24</height>
      </rect>
     </property>
@@ -154,14 +154,14 @@
    <widget class="QLineEdit" name="concentracion_producto_edit">
     <property name="geometry">
      <rect>
-      <x>410</x>
+      <x>380</x>
       <y>10</y>
       <width>41</width>
       <height>21</height>
      </rect>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>9</x>
@@ -1789,11 +1789,11 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>50</y>
+      <x>10</x>
+      <y>40</y>
       <width>241</width>
       <height>23</height>
      </rect>
@@ -1823,6 +1823,39 @@
       <widget class="QLineEdit" name="nombre_reaccion_general_edit"/>
      </item>
     </layout>
+   </widget>
+   <widget class="QLineEdit" name="conversion_reactivo_limitante_dc_edit_2">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>10</y>
+      <width>61</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="calcular_a">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>40</y>
+      <width>101</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Calcular A</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="concentracion_reactivo_limitante_calculo">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>40</y>
+      <width>61</width>
+      <height>21</height>
+     </rect>
+    </property>
    </widget>
   </widget>
  </widget>
