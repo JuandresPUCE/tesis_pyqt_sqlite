@@ -205,6 +205,18 @@
                   </layout>
                  </widget>
                 </item>
+                <item>
+                 <widget class="QGroupBox" name="groupBox_4">
+                  <property name="title">
+                   <string>Especie Quimica</string>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_16">
+                   <item>
+                    <widget class="QComboBox" name="filtro_datos_box_2"/>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
                </layout>
               </widget>
              </item>
@@ -228,16 +240,16 @@
                   <number>0</number>
                  </property>
                  <item>
-                  <widget class="QPushButton" name="opcion_btn">
+                  <widget class="QPushButton" name="ingreso_datos_btn">
                    <property name="text">
-                    <string>Opciones_1</string>
+                    <string>Ingreso de datos</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="opcion_btn_2">
+                  <widget class="QPushButton" name="panel_datos_btn">
                    <property name="text">
-                    <string>Opciones_2</string>
+                    <string>Panel de datos</string>
                    </property>
                   </widget>
                  </item>

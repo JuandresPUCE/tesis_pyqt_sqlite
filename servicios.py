@@ -1,4 +1,5 @@
 from PyQt6.QtWidgets import *
+import json
 
 class Servicios:
     def __init__(self, parent=None):
@@ -118,3 +119,18 @@ class Servicios:
         except Exception as e:
             print(f"Error inesperado: {e}")
             QMessageBox.critical(self.parent, "Error", f"Error inesperado al mostrar reacciones: {e}", QMessageBox.StandardButton.Ok)
+
+    #funciones refactorizadas
+    def desplegar_datos_combo_box(self, combo_box, elementos,mensaje_error):
+        try:
+            combo_box.clear()
+            combo_box.addItem("Todos")
+            if elementos:
+                for elemento in elementos:
+                    combo_box.addItem(str(elemento.nombre_data), str(elemento.id))
+            else:
+                QMessageBox.information(self.parent, "No hay elementos", mensaje_error, QMessageBox.StandardButton.Ok)
+        except Exception as e:
+            #print(f"Error inesperado: {e}")
+            QMessageBox.critical(self.parent, "Error", f"Error inesperado al mostrar elementos: {e}", QMessageBox.StandardButton.Ok)
+

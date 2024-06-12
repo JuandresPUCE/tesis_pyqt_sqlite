@@ -22,6 +22,7 @@ from modelos_metodo_integral import *
 
 #otras ventanas
 from test_crud_db_controlador import PantallaCrud
+from test2_flujo_datos_controlador import FlujoDatos
 
 # metodos comunes
 from servicios import *
@@ -54,6 +55,10 @@ class PanelDataAnalisis(QMainWindow):
         self.buscar_registros()
         self.buscar_dato()
         self.crud_db = PantallaCrud()
+        self.flujo_datos = FlujoDatos()
+        self.init_panel_menu()
+
+
 
     def init_ui_elements(self):
         # Tabla de datos cineticos
@@ -83,7 +88,9 @@ class PanelDataAnalisis(QMainWindow):
         self.filtro_datos_box = self.ui.filtro_datos_box
         #self.filtro_datos_box.addItem("Todos")  # Añadir "Todos" al iniciar
         self.filtrar_datos()
-        
+        #combo box filtro datos experimentales por especie quimica
+        self.filtro_datos_box_2 = self.ui.filtro_datos_box_2
+        self.filtrar_especie_quimica()
         
         # Crear un widget para el gráfico de Matplotlib
         self.matplotlib_widget = MatplotlibWidget(self)
@@ -109,25 +116,33 @@ class PanelDataAnalisis(QMainWindow):
         self.ejecutar_modelo_button = self.ui.graficar_btn
         self.ejecutar_modelo_button.clicked.connect(self.ejecutar_modelo)
 
-        #botones CRUD
-        self.crud_1= self.ui.opcion_btn
+        #boton CRUD
+        self.crud_1= self.ui.panel_datos_btn
         self.crud_1.clicked.connect(self.abrir_crud_db)
 
-    #funciones de consulta de registros    
+        #boton ingreso de datos
+        self.ingreso_datos_btn = self.ui.ingreso_datos_btn
+        self.ingreso_datos_btn.clicked.connect(self.abrir_ingreso_datos)
 
+    # funciones de la barra de menu
+    def init_panel_menu(self):
+        self.menu_bar = self.ui.menu_btn
+        self.menu_derecho = self.ui.menu_derecho
+        self.menu_bar.clicked.connect(self.modificar_menu)
+
+    def modificar_menu(self):
+        if self.menu_derecho.isVisible():
+            self.menu_derecho.hide()
+        else:
+            self.menu_derecho.show()
+    #funciones de consulta de registros
     def buscar_registros(self):       
         registros = self.RegistroDataExperimentalManejador.consultar_registro()
         self.mostrar_registros(registros)
         
     def mostrar_registros(self, registros):
-        self.registro_datos_box.clear()
-        self.registro_datos_box.addItem("Todos")
-        if registros:
-            for registro in registros:
-                self.registro_datos_box.addItem(registro.nombre_data, registro.id)
-            self.actualizar_condiciones_iniciales()  # Update conditions for the first item
-        else:
-            QMessageBox.information(self, "No hay registros", "No se encontraron registros en la base de datos.", QMessageBox.StandardButton.Ok)
+        self.mensaje_error = "No se encontraron registros en la base de datos."
+        self.metodos_comunes.desplegar_datos_combo_box(self.registro_datos_box,registros,self.mensaje_error)
 
     def actualizar_condiciones_iniciales(self):
         nombre_data = self.registro_datos_box.currentText()
@@ -144,14 +159,9 @@ class PanelDataAnalisis(QMainWindow):
         condiciones = self.CondicionesInicialesManejador.consultar_condicion()
         self.mostrar_condiciones_iniciales(condiciones) 
 
-    def mostrar_condiciones_iniciales(self, condiciones):
-        self.condiciones_iniciales_box.clear()
-        self.condiciones_iniciales_box.addItem("Todos")
-        if condiciones:
-            for condicion in condiciones:
-                self.condiciones_iniciales_box.addItem(condicion.nombre_data, condicion.id)
-        else:
-            QMessageBox.information(self, "No hay condiciones iniciales", "No se encontraron condiciones iniciales en la base de datos.", QMessageBox.StandardButton.Ok)
+    def mostrar_condiciones_iniciales(self,condiciones):
+        self.mensaje_error = "No se encontraron condiciones iniciales en la base de datos."
+        self.metodos_comunes.desplegar_datos_combo_box(self.condiciones_iniciales_box,condiciones,self.mensaje_error)
     
     def mostrar_condiciones_iniciales_en_tabla(self):
         nombre_data = self.registro_datos_box.currentText()
@@ -191,7 +201,19 @@ class PanelDataAnalisis(QMainWindow):
         else:
             QMessageBox.information(self, "No hay datos", "No se encontraron datos en la base de datos.", QMessageBox.StandardButton.Ok)
 
+    def filtrar_especie_quimica(self):
+        self.filtro_datos_box_2.clear()
+        self.filtro_datos_box_2.addItem("Todos")
 
+        datos_cineticos = self.DatosCineticosManejador.consultar_datos()
+
+        if datos_cineticos:
+            especie_quimica = set(registro.especie_quimica for registro in datos_cineticos)
+            
+            for especie in especie_quimica:
+                self.filtro_datos_box_2.addItem(especie)
+        else:
+            QMessageBox.information(self, "No hay datos", "No se encontraron datos en la base de datos.", QMessageBox.StandardButton.Ok)
 
 
 #manejar try except cuando la base de datos no tiene datos, regresar version no refactorizada
@@ -228,6 +250,8 @@ class PanelDataAnalisis(QMainWindow):
         self.actualizar_datos_cineticos()
         nombre_data = self.registro_datos_box.currentText()
         tipo_especie = self.filtro_datos_box.currentText()
+        especie_quimica = self.filtro_datos_box_2.currentText()
+
 
         if not nombre_data:
             return
@@ -245,6 +269,10 @@ class PanelDataAnalisis(QMainWindow):
         # Filtrar datos cinéticos por tipo_especie si se selecciona uno específico
         if tipo_especie != "Todos":
             datos_cineticos = [dato for dato in datos_cineticos if dato.tipo_especie == tipo_especie]
+        
+        # Filtrar datos cinéticos por especie_quimica si se selecciona una específica
+        if especie_quimica != "Todos":
+            datos_cineticos = [dato for dato in datos_cineticos if dato.especie_quimica == especie_quimica]
 
         # Convertir los datos a un DataFrame de pandas
         df_datos_cineticos_listos = pd.DataFrame.from_records([dato.__dict__ for dato in datos_cineticos])
@@ -309,7 +337,6 @@ class PanelDataAnalisis(QMainWindow):
         except KeyError as e:
             print(f"Error: {e}. La columna no existe en el DataFrame.")
 
-
     def mostrar_metodos_ajustador(self):
         self.ajustar_modelo_box.clear()
         self.ajustar_modelo_box.addItem("Modelos cinéticos")
@@ -318,7 +345,6 @@ class PanelDataAnalisis(QMainWindow):
             self.ajustar_modelo_box.addItem(metodo)
 
     # Maneja la selección del modelo de ajuste
-        # Maneja la selección del modelo de ajuste
     def manejador_seleccion_modelo(self, index):
         if index == 0:  # Si se selecciona "Modelos cinéticos", no computa
             return
@@ -403,6 +429,9 @@ class PanelDataAnalisis(QMainWindow):
 
     def abrir_crud_db(self):
         self.crud_db.show()
+    
+    def abrir_ingreso_datos(self):
+        self.flujo_datos.show()
        
         
 class MatplotlibWidget(QWidget):

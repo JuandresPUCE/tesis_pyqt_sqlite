@@ -161,8 +161,6 @@ class FlujoDatos(QMainWindow):
         #nombre_data
         self.nombre_data_ci = self.ui.nombre_data_general_edit
         
-
-
         # Botones de condiciones iniciales
         self.agregar_ci_btn = self.ui.agregar_ci_btn
         self.actualizar_ci_btn = self.ui.actualizar_ci_btn
@@ -203,9 +201,7 @@ class FlujoDatos(QMainWindow):
 
         #combo box
         self.tipo_especie_rq_box=self.ui.tipo_especie_rq_box
-        self.tipo_especie_rq_box.currentIndexChanged.connect(self.actualizar_lineedit)
-
-    
+        self.tipo_especie_rq_box.currentIndexChanged.connect(self.actualizar_lineedit) 
 
     def init_control_botones_datos(self):
         # Conectar los botones a sus respectivas funciones
@@ -247,7 +243,6 @@ class FlujoDatos(QMainWindow):
         self.borrar_rq_btn.clicked.connect(self.borrar_reaccion_quimica)
         self.limpiar_rq_btn.clicked.connect(self.limpiar_formulario_rq)
         self.buscar_rq_btn.clicked.connect(self.buscar_reaccion_quimica) 
-
 
     def refrescar_datos_tabla(self):
         # Limpiar la tabla
@@ -325,7 +320,6 @@ class FlujoDatos(QMainWindow):
             QMessageBox.critical(self, "Error", f"Se produjo un error al agregar los datos: {e}", QMessageBox.StandardButton.Ok)
 
         self.boton_activado()
-
 
     def limpiar_formulario(self):
         # Limpiar formulario
@@ -424,7 +418,6 @@ class FlujoDatos(QMainWindow):
         
         finally:
             self.boton_activado()
-
 
     def borrar_dato(self):
         fila_seleccionada = self.tabla_datos.currentRow()
@@ -569,7 +562,6 @@ class FlujoDatos(QMainWindow):
             QMessageBox.critical(self, "Error", f"Se produjo un error al agregar el registro: {e}", QMessageBox.StandardButton.Ok)
 
         self.boton_activado()
-
     
     def limpiar_formulario_registro_data_experimental(self):
         self.nombre_data_experimental.clear()

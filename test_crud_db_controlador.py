@@ -129,6 +129,13 @@ class PantallaCrud(QMainWindow):
         # Tabla de condiciones iniciales
         self.tabla_condiciones_iniciales = self.ui.condiciones_iniciales_tabla
         self.tabla_condiciones_iniciales.setSortingEnabled(False)
+        self.tabla_condiciones_iniciales.setColumnWidth(0, 10)  # Establece el ancho de la primera columna a 100
+        self.tabla_condiciones_iniciales.setColumnWidth(1, 10)  # Establece el ancho de la primera columna a 100
+        #self.tabla_condiciones_iniciales.resizeColumnToContents(1)
+
+        self.tabla_condiciones_iniciales.resizeColumnToContents(3)
+        self.tabla_condiciones_iniciales.resizeColumnToContents(4)
+        
         self.lista_botones = self.ui.funciones_frame_ci.findChildren(QPushButton)
     
     def init_ui_elementos_rq(self):
