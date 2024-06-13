@@ -109,7 +109,7 @@ class FlujoDatos(QMainWindow):
         self.tabla_datos.setSortingEnabled(False)
         self.lista_botones = self.ui.funciones_frame_dc.findChildren(QPushButton)
 
-        #objetos test
+        #objetos test dc
         self.calculo1=self.ui.marcar_a0_btn
         self.calculo0=self.ui.marcar_producto0_btn
         self.calculo2=self.ui.marcar_coeficiente_producto_btn
@@ -205,6 +205,18 @@ class FlujoDatos(QMainWindow):
         self.tipo_especie_rq_box=self.ui.tipo_especie_rq_box
         self.tipo_especie_rq_box.currentIndexChanged.connect(self.actualizar_lineedit) 
 
+        #objetos test rq
+
+        #box en calculos rq
+        self.nombre_reaccion_rq_box=self.ui.nombre_reaccion_rq_box
+        self.filtrar_reaccion_quimica()
+        
+        #self.especie_quimica_rq_box.currentIndexChanged.connect(self.)
+        
+        self.calcular_delta_n = self.ui.delta_n_btn
+
+        self.delta_n_rq = self.ui.delta_n_edit
+
     def init_control_botones_datos(self):
         # Conectar los botones a sus respectivas funciones
         # Datos cinéticos
@@ -246,6 +258,9 @@ class FlujoDatos(QMainWindow):
         self.borrar_rq_btn.clicked.connect(self.borrar_reaccion_quimica)
         self.limpiar_rq_btn.clicked.connect(self.limpiar_formulario_rq)
         self.buscar_rq_btn.clicked.connect(self.buscar_reaccion_quimica) 
+
+        #calculos reaccion quimica
+        self.calcular_delta_n.clicked.connect(self.calculo_delta_n)
 
     def refrescar_datos_tabla(self):
         # Limpiar la tabla
@@ -1262,10 +1277,37 @@ class FlujoDatos(QMainWindow):
         print(producto)
         self.concentracion.setText(str(producto))
         self.concentracion_producto_calculo.setText(str(producto))
+    
+    def filtrar_reaccion_quimica(self):
+        self.nombre_reaccion_rq_box.clear()
+        self.nombre_reaccion_rq_box.addItem("Seleccione una opción", -1)
 
-    #calcular despues
+        reaccion_quimica = self.ReaccionQuimicaManejador.consultar_reaccion()
+
+        if reaccion_quimica:
+            nombre_reaccion = set(registro.nombre_reaccion for registro in reaccion_quimica)
+            for item in nombre_reaccion:
+                self.nombre_reaccion_rq_box.addItem(item)
+        else:
+            QMessageBox.information(self, "No hay datos", "No se encontraron datos en la base de datos.", QMessageBox.StandardButton.Ok)
+
+
+        #calcular despues
     def calculo_delta_n(self):
-        pass
+        funciones = Funciones()
+        nombre_reaccion_seleccionada = self.nombre_reaccion_rq_box.currentText()
+        # Consultar los datos de la reacción química seleccionada
+        filtros = {"nombre_reaccion": nombre_reaccion_seleccionada}
+        reaccion_quimica = self.ReaccionQuimicaManejador.consultar_reaccion(filtros)
+        
+        if reaccion_quimica:
+            # Convertir los datos de la reacción química a un DataFrame de pandas
+            df_reaccion_quimica = pd.DataFrame.from_records([r.__dict__ for r in reaccion_quimica])
+            print(df_reaccion_quimica)
+            coeficientes_productos = df_reaccion_quimica[df_reaccion_quimica["tipo_especie"] == "producto"]["coeficiente_estequiometrico"].tolist()
+            coeficientes_reactivos = df_reaccion_quimica[(df_reaccion_quimica["tipo_especie"] == "reactivo_limitante") | (df_reaccion_quimica["tipo_especie"] == "reactivo")]["coeficiente_estequiometrico"].tolist()
+            delta_n = funciones.calcular_delta_n(coeficientes_productos, coeficientes_reactivos)
+            print(delta_n)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

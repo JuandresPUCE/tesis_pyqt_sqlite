@@ -25,7 +25,7 @@ class CondicionesIniciales(Base):
     nombre_data = Column(String)
 
     def __str__(self):
-        return f"ID: {self.id}, Temperatura: {self.temperatura}, Tiempo: {self.tiempo}, Presión Total: {self.presion_total}, Presión Parcial: {self.presion_parcial}, Fracción Molar: {self.fraccion_molar}, Especie Química: {self.especie_quimica}, Tipo de Especie: {self.tipo_especie}, Detalle: {self.detalle}, Nombre de Data: {self.nombre_data}"
+        return f"id: {self.id}, temperatura: {self.temperatura}, tiempo: {self.tiempo}, presion_total: {self.presion_total}, presion_parcial: {self.presion_parcial}, fraccion_molar: {self.fraccion_molar}, especie_quimica: {self.especie_quimica}, tipo_especie: {self.tipo_especie}, detalle: {self.detalle}, nombre_data: {self.nombre_data}"
 
 
 # modelo datos cineticos ingresados
@@ -44,8 +44,9 @@ class DatosIngresadosCineticos(Base):
     especie_quimica = Column(String)
 
     def __str__(self):
-        return f"ID: {self.id}, Tiempo: {self.tiempo}, Concentración: {self.concentracion}, Otra Propiedad: {self.otra_propiedad}, Conversión Reactivo Limitante: {self.conversion_reactivo_limitante}, Tipo de Especie: {self.tipo_especie}, ID Condiciones Iniciales: {self.id_condiciones_iniciales}, Nombre de Data: {self.nombre_data}, Nombre de Reacción: {self.nombre_reaccion}, Especie Química: {self.especie_quimica}"
+       return f"id: {self.id}, tiempo: {self.tiempo}, concentracion: {self.concentracion}, otra_propiedad: {self.otra_propiedad}, conversion_reactivo_limitante: {self.conversion_reactivo_limitante}, tipo_especie: {self.tipo_especie}, id_condiciones_iniciales: {self.id_condiciones_iniciales}, nombre_data: {self.nombre_data}, nombre_reaccion: {self.nombre_reaccion}, especie_quimica: {self.especie_quimica}"
 
+#   modelo de registro de data experimental
 class RegistroDataExperimental(Base):
     __tablename__ = "registro_data_experimental"
 
@@ -55,8 +56,9 @@ class RegistroDataExperimental(Base):
     detalle = Column(String)
 
     def __str__(self):
-        return f"ID: {self.id}, Nombre Data: {self.nombre_data}, Fecha: {self.fecha}, Detalle: {self.detalle}"
+        return f"id: {self.id}, nombre_data: {self.nombre_data}, fecha: {self.fecha}, detalle: {self.detalle}"
 
+#   modelo de registro de reaccion química
 class ReaccionQuimica(Base):
     __tablename__ = "reaccion_quimica"
 
@@ -69,5 +71,29 @@ class ReaccionQuimica(Base):
     nombre_reaccion = Column(String)
 
     def __str__(self):
-        return f"ID: {self.id}, Especie Química: {self.especie_quimica}, Fórmula: {self.formula}, Coeficiente Estequiométrico: {self.coeficiente_estequiometrico}, Detalle: {self.detalle}, Tipo de Especie: {self.tipo_especie}, Nombre de Reacción: {self.nombre_reaccion}"
+        return f"id: {self.id}, especie_quimica: {self.especie_quimica}, formula: {self.formula}, coeficiente_estequiometrico: {self.coeficiente_estequiometrico}, detalle: {self.detalle}, tipo_especie: {self.tipo_especie}, nombre_reaccion: {self.nombre_reaccion}"
 
+# modelo de datos de salida
+class DatosSalida(Base):
+    __tablename__ = "datos_salida"
+
+    id = Column(Integer, primary_key=True)
+    nombre_data_salida = Column(String)
+    fecha = Column(String)
+    id_nombre_data = Column(Integer)
+    id_condiciones_iniciales = Column(Integer)
+    nombre_data = Column(String)
+    nombre_reaccion = Column(String)
+    delta_n_reaccion = Column(Float)
+    epsilon_reactivo_limitante = Column(Float)
+    tipo_especie = Column(String)
+    especie_quimica = Column(String)
+    constante_cinetica = Column(Float)
+    orden_reaccion = Column(Float)
+    modelo_cinetico = Column(String)
+    tipo_calculo = Column(String)
+    energia_activacion = Column(Float)
+    detalles = Column(String)
+
+    def __str__(self):
+        return f"id: {self.id}, nombre_data_salida: {self.nombre_data_salida}, fecha: {self.fecha}, id_nombre_data: {self.id_nombre_data}, id_condiciones_iniciales: {self.id_condiciones_iniciales}, nombre_data: {self.nombre_data}, nombre_reaccion: {self.nombre_reaccion}, delta_n_reaccion: {self.delta_n_reaccion}, epsilon_reactivo_limitante: {self.epsilon_reactivo_limitante},tipo_especie: {self.tipo_especie}, especie_quimica: {self.especie_quimica}, constante_cinetica: {self.constante_cinetica}, orden_reaccion: {self.orden_reaccion}, modelo_cinetico: {self.modelo_cinetico}, tipo_calculo: {self.tipo_calculo}, energia_activacion: {self.energia_activacion}, detalles: {self.detalles}"

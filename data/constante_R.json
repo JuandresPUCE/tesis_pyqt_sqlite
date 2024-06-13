@@ -1,0 +1,8 @@
+{
+    "constante_R_gases": [
+    {"ID": 1, "valor": 8.314, "unidades": "J/(mol K)", "detalle": "J/(mol K)"},
+    {"ID": 2, "valor": 0.0821, "unidades": "atm L/(mol K)", "detalle": "atm L/(mol K)"},
+    {"ID": 3, "valor": 1.987, "unidades": "cal/(mol K)", "detalle": "cal/(mol K)"},
+    {"ID": 4, "valor": 10.73, "unidades": "psia*ft3/(lbmol R)", "detalle": "psia*ft3/(lbmol R)"}
+]
+}
