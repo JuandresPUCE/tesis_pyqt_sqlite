@@ -59,7 +59,7 @@ class Ui_MainWindow(object):
         self.concentracion_producto_edit.setGeometry(QtCore.QRect(380, 10, 41, 21))
         self.concentracion_producto_edit.setObjectName("concentracion_producto_edit")
         self.layoutWidget = QtWidgets.QWidget(parent=self.centralwidget)
-        self.layoutWidget.setGeometry(QtCore.QRect(9, 80, 782, 511))
+        self.layoutWidget.setGeometry(QtCore.QRect(9, 100, 782, 491))
         self.layoutWidget.setObjectName("layoutWidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.layoutWidget)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
@@ -832,6 +832,12 @@ class Ui_MainWindow(object):
         self.concentracion_reactivo_limitante_calculo = QtWidgets.QLineEdit(parent=self.centralwidget)
         self.concentracion_reactivo_limitante_calculo.setGeometry(QtCore.QRect(730, 40, 61, 21))
         self.concentracion_reactivo_limitante_calculo.setObjectName("concentracion_reactivo_limitante_calculo")
+        self.calcular_producto = QtWidgets.QPushButton(parent=self.centralwidget)
+        self.calcular_producto.setGeometry(QtCore.QRect(620, 70, 101, 24))
+        self.calcular_producto.setObjectName("calcular_producto")
+        self.concentracion_producto_calculo_edit = QtWidgets.QLineEdit(parent=self.centralwidget)
+        self.concentracion_producto_calculo_edit.setGeometry(QtCore.QRect(730, 70, 61, 21))
+        self.concentracion_producto_calculo_edit.setObjectName("concentracion_producto_calculo_edit")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -967,6 +973,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Datos Cinéticos"))
         self.label_33.setText(_translate("MainWindow", "nombre_reaccion"))
         self.calcular_a.setText(_translate("MainWindow", "Calcular A"))
+        self.calcular_producto.setText(_translate("MainWindow", "Calcular Producto"))
 
 
 if __name__ == "__main__":

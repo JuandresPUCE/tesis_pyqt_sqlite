@@ -116,11 +116,13 @@ class FlujoDatos(QMainWindow):
         self.calculo3=self.ui.marcar_coeficiente_reactivo_btn
         self.calculo4=self.ui.calcular_xa
         self.calculo5=self.ui.calcular_a
+        self.calculo6=self.ui.calcular_producto
 
         self.coeficiente_estequiometro_producto = self.ui.coeficiente_estequiometrico_producto_edit
         self.coeficiente_estequiometro_reactivo = self.ui.coeficiente_estequiometrico_reactivo_edit
         self.concentracion_inicial_reactivo_limitante = self.ui.concentracion_reactivo_limitante_edit
         self.concentracion_inicial_producto = self.ui.concentracion_producto_edit
+        self.concentracion_producto_calculo = self.ui.concentracion_producto_calculo_edit
 
 
 
@@ -219,6 +221,7 @@ class FlujoDatos(QMainWindow):
         self.calculo3.clicked.connect(self.marcar_coeficiente)
         self.calculo4.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_producto)
         self.calculo5.clicked.connect(self.calcular_concentracion_reactivo_limitante_dado_conversion)
+        self.calculo6.clicked.connect(self.calcular_concentracion_producto_dado_conversion)
 
     def init_control_botones_experimental(self):
         self.agregar_rde_btn.clicked.connect(self.agregar_registro_data_experimental)
@@ -1248,10 +1251,17 @@ class FlujoDatos(QMainWindow):
         print(A)
         self.concentracion.setText(str(A))
 
-
-
-
-
+    def calcular_concentracion_producto_dado_conversion(self):
+        funciones=Funciones()
+        concentracion_inicial_producto = float(self.concentracion_inicial_producto.text())
+        concentracion_inicial_reactivo_limitante = float(self.concentracion_inicial_reactivo_limitante.text())
+        conversion_reactivo_limitante = float(self.conversion_reactivo_limitante.text())
+        coeficiente_estequiometro_producto = float(self.coeficiente_estequiometro_producto.text())
+        coeficiente_estequiometro_reactivo = float(self.coeficiente_estequiometro_reactivo.text())
+        producto=funciones.concentracion_Producto(concentracion_inicial_producto,coeficiente_estequiometro_producto,coeficiente_estequiometro_reactivo,conversion_reactivo_limitante,concentracion_inicial_reactivo_limitante,)
+        print(producto)
+        self.concentracion.setText(str(producto))
+        self.concentracion_producto_calculo.setText(str(producto))
 
     #calcular despues
     def calculo_delta_n(self):

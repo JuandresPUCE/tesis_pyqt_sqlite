@@ -4,6 +4,7 @@
         {"ID": 2, "Descripcion": "reactivo"},
         {"ID": 3, "Descripcion": "producto"},
         {"ID": 4, "Descripcion": "inerte"},
-        {"ID": 5, "Descripcion": "catalizador"}
+        {"ID": 5, "Descripcion": "catalizador"},
+        {"ID": 6, "Descripcion": "otro"}
     ]
 }
