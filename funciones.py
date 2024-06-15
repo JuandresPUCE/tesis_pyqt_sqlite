@@ -266,3 +266,24 @@ class Funciones:
             self.canvas.draw()
 
 # revisar R https://cruzfierro.com/formularios/R.pdf
+
+    def gas_conversion_componente_principal_epsilon_a(self,presion_total, presion_total_inicial,epsilon_a):
+        #viene de la ec Presion_total = presion_total_inicial *(1+epsion_a*conversion_A)
+        
+        conversion_A = ((presion_total/presion_total_inicial) - 1)/epsilon_a
+        
+        return conversion_A
+    
+    def propiedad_conversion_componente_principal_epsilon_a(self,propiedad, propiedad_inicial,epsilon_a):
+        #viene de la ec Presion_total = presion_total_inicial *(1+epsion_a*conversion_A)
+        
+        conversion_A = ((propiedad/propiedad_inicial) - 1)/epsilon_a
+        
+        return conversion_A
+    
+    def propiedad_conversion_componente_principal(self,propiedad, propiedad_inicial):
+        #viene de la ec Presion_total = presion_total_inicial *(1+epsion_a*conversion_A)
+        
+        conversion_A = ((propiedad/propiedad_inicial) - 1)
+        
+        return conversion_A

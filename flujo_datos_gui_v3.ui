@@ -39,7 +39,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="datos_globales_tab">
        <attribute name="title">
@@ -147,7 +147,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab">
+      <widget class="QWidget" name="calculos_rq">
        <attribute name="title">
         <string>Calculos Reaccion Química</string>
        </attribute>
@@ -195,6 +195,47 @@
           <width>91</width>
           <height>21</height>
          </rect>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="calculos_ci">
+       <attribute name="title">
+        <string>Cálculos Condiciones Iniciales</string>
+       </attribute>
+       <widget class="QPushButton" name="epsilon_a_btn">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>60</y>
+          <width>161</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>epsilon reactivo limitante</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="epsilon_reactivo_limitante_calculo">
+        <property name="geometry">
+         <rect>
+          <x>180</x>
+          <y>60</y>
+          <width>130</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="marcar_ci_btn">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>171</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>marcar condiciones iniciales A</string>
         </property>
        </widget>
       </widget>
@@ -488,6 +529,70 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="calculos_cd_g">
+       <attribute name="title">
+        <string>Concentración Gases</string>
+       </attribute>
+       <widget class="QPushButton" name="conversion_gas_epsilon_a">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>60</y>
+          <width>151</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Presion a Conversion</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="concentracion_irl_btn">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>0</y>
+          <width>141</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>concentracion inicial RL</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="conversion_reactivo_limitante_dc_edit_3">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>60</y>
+          <width>130</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="otra_propiedad_inicial_edit">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>30</y>
+          <width>130</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="marcar_propiedad_inicial_btn">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>30</y>
+          <width>151</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Marcar propiedad inicial</string>
+        </property>
+       </widget>
+      </widget>
      </widget>
     </item>
     <item>
@@ -514,7 +619,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget_2">
         <property name="currentIndex">
-         <number>1</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="rde_tab">
          <attribute name="title">

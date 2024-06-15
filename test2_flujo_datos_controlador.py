@@ -117,12 +117,17 @@ class FlujoDatos(QMainWindow):
         self.calculo4=self.ui.calcular_xa
         self.calculo5=self.ui.calcular_a
         self.calculo6=self.ui.calcular_producto
+        self.calculo7=self.ui.conversion_gas_epsilon_a
 
         self.coeficiente_estequiometro_producto = self.ui.coeficiente_estequiometrico_producto_edit
         self.coeficiente_estequiometro_reactivo = self.ui.coeficiente_estequiometrico_reactivo_edit
         self.concentracion_inicial_reactivo_limitante = self.ui.concentracion_reactivo_limitante_edit
         self.concentracion_inicial_producto = self.ui.concentracion_producto_edit
         self.concentracion_producto_calculo = self.ui.concentracion_producto_calculo_edit
+        self.concentracion_reactivo_limitante_calculo = self.ui.concentracion_reactivo_limitante_calculo
+        self.conversion_reactivo_limitante_calculo = self.ui.conversion_reactivo_limitante_dc_edit_2
+        self.otra_propiedad_inicial = self.ui.otra_propiedad_inicial_edit
+        self.conversion_reactivo_limitante_gas = self.ui.conversion_reactivo_limitante_dc_edit_3
 
 
 
@@ -175,6 +180,12 @@ class FlujoDatos(QMainWindow):
         self.tabla_condiciones_iniciales = self.ui.condiciones_iniciales_tabla
         self.tabla_condiciones_iniciales.setSortingEnabled(False)
         self.lista_botones = self.ui.funciones_frame_ci.findChildren(QPushButton)
+
+        #botones
+        self.marcar_ci_btn = self.ui.marcar_ci_btn
+        self.epsilon_a_btn = self.ui.epsilon_a_btn
+        self.epsilon_reactivo_limitante_calculo = self.ui.epsilon_reactivo_limitante_calculo
+
     
     def init_ui_elementos_rq(self):
         # Reacción química
@@ -234,6 +245,7 @@ class FlujoDatos(QMainWindow):
         self.calculo4.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_producto)
         self.calculo5.clicked.connect(self.calcular_concentracion_reactivo_limitante_dado_conversion)
         self.calculo6.clicked.connect(self.calcular_concentracion_producto_dado_conversion)
+        self.calculo7.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_epsilon_a_presion)
 
     def init_control_botones_experimental(self):
         self.agregar_rde_btn.clicked.connect(self.agregar_registro_data_experimental)
@@ -250,6 +262,9 @@ class FlujoDatos(QMainWindow):
         self.borrar_ci_btn.clicked.connect(self.borrar_condiciones_iniciales)
         self.limpiar_ci_btn.clicked.connect(self.limpiar_formulario_ci)
         self.buscar_ci_btn.clicked.connect(self.buscar_condiciones_iniciales)   
+        self.marcar_ci_btn.clicked.connect(self.marcar_condiciones_iniciales)
+    
+        self.epsilon_a_btn.clicked.connect(self.calcular_epsilon_reactivo_limitante)
 
     def init_control_botones_rq(self):
         self.agregar_rq_btn.clicked.connect(self.agregar_reaccion_quimica)
@@ -1247,6 +1262,8 @@ class FlujoDatos(QMainWindow):
         print(seleccion_reaccion_quimica)
 
 
+
+        #calcula la conversion de XA con respecto al la concentracion del producto 
     def calcular_conversion_reactivo_limitante_dado_producto(self):
         funciones=Funciones()
         concentracion = float(self.concentracion.text())
@@ -1257,7 +1274,10 @@ class FlujoDatos(QMainWindow):
         xa=funciones.conversion_reactivo_limitante_dado_producto(concentracion, concentracion_inicial_producto, concentracion_inicial_reactivo_limitante, coeficiente_estequiometro_producto, coeficiente_estequiometro_reactivo)
         print(xa)
         self.conversion_reactivo_limitante.setText(str(xa))
+        self.conversion_reactivo_limitante_calculo.setText(str(xa))
+        
 
+    #calcula A con Xa y la Concentracion inicial
     def calcular_concentracion_reactivo_limitante_dado_conversion(self):
         funciones=Funciones()
         concentracion_inicial_reactivo_limitante = float(self.concentracion_inicial_reactivo_limitante.text())
@@ -1265,6 +1285,7 @@ class FlujoDatos(QMainWindow):
         A=funciones.concentracion_reactivo_funcion_conversion(concentracion_inicial_reactivo_limitante,conversion_reactivo_limitante)
         print(A)
         self.concentracion.setText(str(A))
+        self.concentracion_reactivo_limitante_calculo.setText(str(A))
 
     def calcular_concentracion_producto_dado_conversion(self):
         funciones=Funciones()
@@ -1308,6 +1329,42 @@ class FlujoDatos(QMainWindow):
             coeficientes_reactivos = df_reaccion_quimica[(df_reaccion_quimica["tipo_especie"] == "reactivo_limitante") | (df_reaccion_quimica["tipo_especie"] == "reactivo")]["coeficiente_estequiometrico"].tolist()
             delta_n = funciones.calcular_delta_n(coeficientes_productos, coeficientes_reactivos)
             print(delta_n)
+            self.delta_n_rq.setText(str(delta_n))
+
+    def marcar_condiciones_iniciales(self):
+        seleccionar_fila = self.tabla_condiciones_iniciales.currentRow()
+        if seleccionar_fila != -1:
+            id = self.tabla_condiciones_iniciales.item(seleccionar_fila, 0).text().strip()
+            temperatura = self.tabla_condiciones_iniciales.item(seleccionar_fila, 1).text().strip()
+            tiempo = self.tabla_condiciones_iniciales.item(seleccionar_fila, 2).text().strip()
+            presion_total = self.tabla_condiciones_iniciales.item(seleccionar_fila, 3).text().strip()
+            presion_parcial = self.tabla_condiciones_iniciales.item(seleccionar_fila, 4).text().strip()
+            fraccion_molar = self.tabla_condiciones_iniciales.item(seleccionar_fila, 5).text().strip()
+            especie_quimica = self.tabla_condiciones_iniciales.item(seleccionar_fila, 6).text().strip()
+            tipo_especie = self.tabla_condiciones_iniciales.item(seleccionar_fila, 7).text().strip()
+            detalle = self.tabla_condiciones_iniciales.item(seleccionar_fila, 8).text().strip()
+            nombre_data = self.tabla_condiciones_iniciales.item(seleccionar_fila, 9).text().strip()
+
+    def calcular_epsilon_reactivo_limitante(self):
+        funciones = Funciones()
+        fraccion_molar_inicial = float(self.fraccion_molar_ci.text())
+        delta_n = float(self.delta_n_rq.text())
+        coeficiente_estequiometrico_reactivo = float(self.coeficiente_estequiometro_reactivo.text())
+        epsilon_a=funciones.calcular_epsilon_A(fraccion_molar_inicial, delta_n, coeficiente_estequiometrico_reactivo)
+
+        self.epsilon_reactivo_limitante_calculo.setText(str(epsilon_a))
+    
+    def calcular_conversion_reactivo_limitante_dado_epsilon_a_presion(self):
+        funciones = Funciones()
+        otra_propiedad_inicial = float(self.otra_propiedad_inicial.text())
+        otra_propiedad = float(self.otra_propiedad.text())
+        epsilon_a = float(self.epsilon_reactivo_limitante_calculo.text())
+        gas_conversion_componente_principal = funciones.gas_conversion_componente_principal_epsilon_a(otra_propiedad, otra_propiedad_inicial, epsilon_a)
+
+        self.conversion_reactivo_limitante_gas.setText(str(gas_conversion_componente_principal))
+    
+
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
