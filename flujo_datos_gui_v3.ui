@@ -549,8 +549,8 @@
        <widget class="QPushButton" name="concentracion_irl_btn">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>0</y>
+          <x>320</x>
+          <y>30</y>
           <width>141</width>
           <height>24</height>
          </rect>
@@ -592,6 +592,16 @@
          <string>Marcar propiedad inicial</string>
         </property>
        </widget>
+       <widget class="QLineEdit" name="concentracion_reactivo_limitante_calculo_2">
+        <property name="geometry">
+         <rect>
+          <x>480</x>
+          <y>30</y>
+          <width>132</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
       </widget>
      </widget>
     </item>
@@ -619,7 +629,7 @@
       <item>
        <widget class="QTabWidget" name="tabWidget_2">
         <property name="currentIndex">
-         <number>3</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="rde_tab">
          <attribute name="title">

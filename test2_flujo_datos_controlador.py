@@ -118,6 +118,7 @@ class FlujoDatos(QMainWindow):
         self.calculo5=self.ui.calcular_a
         self.calculo6=self.ui.calcular_producto
         self.calculo7=self.ui.conversion_gas_epsilon_a
+        self.calculo8=self.ui.concentracion_irl_btn
 
         self.coeficiente_estequiometro_producto = self.ui.coeficiente_estequiometrico_producto_edit
         self.coeficiente_estequiometro_reactivo = self.ui.coeficiente_estequiometrico_reactivo_edit
@@ -185,6 +186,7 @@ class FlujoDatos(QMainWindow):
         self.marcar_ci_btn = self.ui.marcar_ci_btn
         self.epsilon_a_btn = self.ui.epsilon_a_btn
         self.epsilon_reactivo_limitante_calculo = self.ui.epsilon_reactivo_limitante_calculo
+        self.concentracion_irl_btn=self.ui.concentracion_irl_btn
 
     
     def init_ui_elementos_rq(self):
@@ -246,6 +248,8 @@ class FlujoDatos(QMainWindow):
         self.calculo5.clicked.connect(self.calcular_concentracion_reactivo_limitante_dado_conversion)
         self.calculo6.clicked.connect(self.calcular_concentracion_producto_dado_conversion)
         self.calculo7.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_epsilon_a_presion)
+        self.calculo8.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_concentracion_gas)
+        
 
     def init_control_botones_experimental(self):
         self.agregar_rde_btn.clicked.connect(self.agregar_registro_data_experimental)
@@ -1362,6 +1366,22 @@ class FlujoDatos(QMainWindow):
         gas_conversion_componente_principal = funciones.gas_conversion_componente_principal_epsilon_a(otra_propiedad, otra_propiedad_inicial, epsilon_a)
 
         self.conversion_reactivo_limitante_gas.setText(str(gas_conversion_componente_principal))
+
+    def calcular_conversion_reactivo_limitante_dado_concentracion_gas(self):
+        funciones = Funciones()
+        temperatura = float(self.temperatura_ci.text())
+
+        presion_total = float(self.presion_total_ci.text())
+        fraccion_molar = float(self.fraccion_molar_ci.text())
+        #escojer R
+        concentracion_gas = funciones.gas_concentracion_componente(1, fraccion_molar, presion_total,0.0821,temperatura, 'K')
+        print(concentracion_gas)
+
+
+        
+
+
+
     
 
 
