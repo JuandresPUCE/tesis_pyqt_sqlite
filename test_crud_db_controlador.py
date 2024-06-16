@@ -376,19 +376,10 @@ class PantallaCrud(QMainWindow):
     def borrar_dato(self):
         fila_seleccionada = self.tabla_datos.currentRow()
         if fila_seleccionada != -1:
-            opcion_seleccionada = QMessageBox.question(self, "Eliminar dato", "¿Estás seguro de eliminar el dato?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-            if opcion_seleccionada == QMessageBox.StandardButton.Yes:
-                id = self.tabla_datos.item(fila_seleccionada, 0).text().strip()
-                borrar_resultado = self.DatosCineticosManejador.borrar_dato(id)
-                if borrar_resultado:
-                    
-                    QMessageBox.information(self, "Información", "Dato eliminado correctamente", QMessageBox.StandardButton.Ok)
-                    self.DatosCineticosManejador.consultar_datos()
-                    self.refrescar_datos_tabla() 
-                    self.buscar_dato()
-                else:
-                    QMessageBox.information(self, "Información", "Hubo un problema al eliminar el dato", QMessageBox.StandardButton.Ok)
-
+            id = self.tabla_datos.item(fila_seleccionada, 0).text().strip()
+            borrar_resultado = self.DatosCineticosManejador.borrar_dato(id)
+            self.metodos_comunes.borrar_elemento(self.tabla_datos, borrar_resultado, "¿Estás seguro de eliminar el dato?", "Dato eliminado correctamente", "Hubo un problema al eliminar el dato", self.DatosCineticosManejador.consultar_datos, self.refrescar_datos_tabla, self.buscar_dato)
+                
     def buscar_dato(self):
         filtros = {
             "tiempo": self.tiempo.text(),
@@ -612,17 +603,18 @@ class PantallaCrud(QMainWindow):
     def borrar_registro_data_experimental(self):
         fila_seleccionada = self.tabla_registro_data_experimental.currentRow()
         if fila_seleccionada != -1:
-            opcion_seleccionada = QMessageBox.question(self, "Eliminar registro", "¿Estás seguro de eliminar el registro?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-            if opcion_seleccionada == QMessageBox.StandardButton.Yes:
-                id = self.tabla_registro_data_experimental.item(fila_seleccionada, 0).text().strip()
-                borrar_resultado = self.RegistroDataExperimentalManejador.borrar_registro(id)
-                if borrar_resultado:
-                    QMessageBox.information(self, "Información", "Registro eliminado correctamente", QMessageBox.StandardButton.Ok)
-                    self.RegistroDataExperimentalManejador.consultar_registro()
-                    self.buscar_registros()
-                else:
-                    QMessageBox.information(self, "Información", "Hubo un problema al eliminar el registro", QMessageBox.StandardButton.Ok)
-
+            id = self.tabla_registro_data_experimental.item(fila_seleccionada, 0).text().strip()
+            borrar_resultado = self.RegistroDataExperimentalManejador.borrar_registro(id)
+            self.metodos_comunes.borrar_elemento(
+                self.tabla_registro_data_experimental, 
+                borrar_resultado, 
+                "¿Estás seguro de eliminar el registro?", 
+                "Registro eliminado correctamente", 
+                "Hubo un problema al eliminar el registro", 
+                self.RegistroDataExperimentalManejador.consultar_registro, 
+                self.refrescar_datos_tabla, 
+                self.buscar_registros
+            )
     def buscar_registros(self):
         filtros = {
             "nombre_data": self.nombre_data_experimental.text(),
@@ -828,17 +820,18 @@ class PantallaCrud(QMainWindow):
     def borrar_condiciones_iniciales(self):
         fila_seleccionada = self.tabla_condiciones_iniciales.currentRow()
         if fila_seleccionada != -1:
-            opcion_seleccionada = QMessageBox.question(self, "Eliminar condiciones iniciales", "¿Estás seguro de eliminar las condiciones iniciales?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-            if opcion_seleccionada == QMessageBox.StandardButton.Yes:
-                id = self.tabla_condiciones_iniciales.item(fila_seleccionada, 0).text().strip()
-                borrar_resultado = self.CondicionesInicialesManejador.borrar_condicion(id)
-                if borrar_resultado:
-                    QMessageBox.information(self, "Información", "Condiciones iniciales eliminadas correctamente", QMessageBox.StandardButton.Ok)
-                    self.CondicionesInicialesManejador.consultar_condicion()
-                    self.buscar_condiciones_iniciales()
-                else:
-                    QMessageBox.information(self, "Información", "Hubo un problema al eliminar las condiciones iniciales", QMessageBox.StandardButton.Ok)
-    
+            id = self.tabla_condiciones_iniciales.item(fila_seleccionada, 0).text().strip()
+            borrar_resultado = self.CondicionesInicialesManejador.borrar_condicion(id)
+            self.metodos_comunes.borrar_elemento(
+                self.tabla_condiciones_iniciales, 
+                borrar_resultado, 
+                "¿Estás seguro de eliminar las condiciones iniciales?", 
+                "Condiciones iniciales eliminadas correctamente", 
+                "Hubo un problema al eliminar las condiciones iniciales", 
+                self.CondicionesInicialesManejador.consultar_condicion, 
+                self.refrescar_datos_tabla, 
+                self.buscar_condiciones_iniciales
+            )
     def buscar_condiciones_iniciales(self):
         filtros = {
             "temperatura": self.temperatura_ci.text(),
@@ -1030,17 +1023,18 @@ class PantallaCrud(QMainWindow):
     def borrar_reaccion_quimica(self):
         fila_seleccionada = self.tabla_reaccion_quimica.currentRow()
         if fila_seleccionada != -1:
-            opcion_seleccionada = QMessageBox.question(self, "Eliminar reacción química", "¿Estás seguro de eliminar la reacción química?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-            if opcion_seleccionada == QMessageBox.StandardButton.Yes:
-                id = self.tabla_reaccion_quimica.item(fila_seleccionada, 0).text().strip()
-                borrar_resultado = self.ReaccionQuimicaManejador.borrar_reaccion(id)
-                if borrar_resultado:
-                    QMessageBox.information(self, "Información", "Reacción química eliminada correctamente", QMessageBox.StandardButton.Ok)
-                    self.ReaccionQuimicaManejador.consultar_reaccion()
-                    self.buscar_reaccion_quimica()
-                else:
-                    QMessageBox.information(self, "Información", "Hubo un problema al eliminar la reacción química", QMessageBox.StandardButton.Ok)
-        
+            id = self.tabla_reaccion_quimica.item(fila_seleccionada, 0).text().strip()
+            borrar_resultado = self.ReaccionQuimicaManejador.borrar_reaccion(id)
+            self.metodos_comunes.borrar_elemento(
+                self.tabla_reaccion_quimica, 
+                borrar_resultado, 
+                "¿Estás seguro de eliminar la reacción química?", 
+                "Reacción química eliminada correctamente", 
+                "Hubo un problema al eliminar la reacción química", 
+                self.ReaccionQuimicaManejador.consultar_reaccion, 
+                self.refrescar_datos_tabla, 
+                self.buscar_reaccion_quimica
+            ) 
     def buscar_reaccion_quimica(self):
         filtros = {
             "especie_quimica": self.especie_quimica_rq.text(),

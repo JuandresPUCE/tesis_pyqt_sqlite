@@ -5,10 +5,8 @@ class Servicios:
     def __init__(self, parent=None):
         self.parent = parent  # Guardar referencia al widget padre
         self.mensaje = "Metodos comunes del controlador"
-
-    def mostrar_mensaje(self):
-        print(self.mensaje)
-
+    
+    #mostar tablas
     def mostrar_datos_tabla(self, tabla_datos_cineticos, resultados):
         try:
             # Definir la tabla
@@ -121,6 +119,19 @@ class Servicios:
             QMessageBox.critical(self.parent, "Error", f"Error inesperado al mostrar reacciones: {e}", QMessageBox.StandardButton.Ok)
 
     #funciones refactorizadas
+    def borrar_elemento(self, tabla, borrar_resultado, mensaje_confirmacion, mensaje_exito, mensaje_error, metodo_consultar, metodo_refescar, metodo_buscar):
+        fila_seleccionada = tabla.currentRow()
+        if fila_seleccionada != -1:
+            opcion_seleccionada = QMessageBox.question(self.parent, "Eliminar elemento", mensaje_confirmacion, QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            if opcion_seleccionada == QMessageBox.StandardButton.Yes:
+                if borrar_resultado:
+                    QMessageBox.information(self.parent, "Información", mensaje_exito, QMessageBox.StandardButton.Ok)
+                    metodo_consultar()
+                    metodo_refescar()
+                    metodo_buscar()
+                else:
+                    QMessageBox.information(self.parent, "Información", mensaje_error, QMessageBox.StandardButton.Ok)
+    # desplegar en combo box
     def desplegar_datos_combo_box(self, combo_box, elementos,mensaje_error):
         try:
             combo_box.clear()

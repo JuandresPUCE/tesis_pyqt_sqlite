@@ -21,7 +21,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 #db_path = r"D:\candidatos_proyectof\tesis_tec\dataReactor\tesis_GUI_sqlite\tesis_pyqt_sqlite\data\data_reactor1.db"
 #realtive
 #db_path = r"data\data_reactor1.db"
-db_path = r"data\data_reactor4.db"
+db_path = r"data\data_reactor2.db"
 engine = create_engine(f'sqlite:///{db_path}')
 
 # Crear todas las tablas
