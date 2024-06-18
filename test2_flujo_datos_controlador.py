@@ -22,8 +22,9 @@ from funciones import *
 from servicios import *
 
 class FlujoDatos(QMainWindow):
-    def __init__(self):
-        super().__init__()
+    def __init__(self,parent=None):
+        self.parent = parent
+        super(FlujoDatos, self).__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
@@ -66,6 +67,10 @@ class FlujoDatos(QMainWindow):
 
         self.cargar_datos_json(json_tipo_especie)
 
+        #mensajes barra de estado
+        self.statusbar=self.ui.statusbar
+        self.statusbar.showMessage("Bienvenido al sistema de flujo de datos")
+
 
     def manejadores_base(self):
         
@@ -73,7 +78,8 @@ class FlujoDatos(QMainWindow):
         self.RegistroDataExperimentalManejador = RegistroDataExperimentalManejador()
         self.CondicionesInicialesManejador = CondicionesInicialesManejador()
         self.DatosCineticosManejador = DatosCineticosManejador()
-        self.ReaccionQuimicaManejador = ReaccionQuimicaManejador()     
+        self.ReaccionQuimicaManejador = ReaccionQuimicaManejador()
+        self.RegistroUnidadesManejador = RegistroUnidadesManejador()     
 
         #self.metodos_comunes = MetodosComunesControlador()
         self.metodos_comunes = Servicios(self)
@@ -230,6 +236,29 @@ class FlujoDatos(QMainWindow):
 
         self.delta_n_rq = self.ui.delta_n_edit
 
+    def init_ui_elementos_u(self):
+        #Edicion manual de unidades
+        self.presion_u_edit = self.ui.presion_u_edit
+        self.temperatura_u_edit = self.ui.temperatura_u_edit
+        self.tiempo_u_edit = self.ui.tiempo_u_edit
+        self.concentracion_u_edit = self.ui.concentracion_u_edit
+        self.energia_u_edit = self.ui.energia_u_edit
+        self.nombre_data_u_edit = self.ui.nombre_data_u_edit
+        #botones de unidades
+        self.agregar_ru_btn = self.ui.agregar_ru_btn
+        self.actualizar_ru_btn = self.ui.actualizar_ru_btn
+        self.seleccionar_ru_btn = self.ui.seleccionar_ru_btn
+        self.buscar_ru_btn = self.ui.buscar_ru_btn
+        self.limpiar_ru_btn = self.ui.limpiar_ru_btn
+        self.borrar_ru_btn = self.ui.borrar_ru_btn
+
+
+        #tabla de unidades
+        self.tabla_registro_unidades = self.ui.registro_unidades_tabla
+        self.tabla_registro_unidades.setSortingEnabled(False)
+        self.lista_botones = self.ui.funciones_frame_u.findChildren(QPushButton)
+
+
     def init_control_botones_datos(self):
         # Conectar los botones a sus respectivas funciones
         # Datos cinéticos
@@ -281,18 +310,29 @@ class FlujoDatos(QMainWindow):
         #calculos reaccion quimica
         self.calcular_delta_n.clicked.connect(self.calculo_delta_n)
 
+    def init_control_botones_u(self):
+        self.agregar_ru_btn.clicked.connect(self.agregar_unidades)
+        self.actualizar_ru_btn.clicked.connect(self.actualizar_unidades)
+        self.seleccionar_ru_btn.clicked.connect(self.seleccionar_unidades)
+        self.borrar_ru_btn.clicked.connect(self.borrar_unidades)
+        self.limpiar_ru_btn.clicked.connect(self.limpiar_formulario_u)
+        self.buscar_ru_btn.clicked.connect(self.buscar_unidades)
+
+
     def refrescar_datos_tabla(self):
         # Limpiar la tabla
         self.tabla_datos.clearContents()
         self.tabla_registro_data_experimental.clearContents()
         self.tabla_condiciones_iniciales.clearContents()
         self.tabla_reaccion_quimica.clearContents()
+        self.tabla_registro_unidades.clearContents()
                 
         # Buscar los datos nuevamente y mostrarlos en la tabla
         self.buscar_dato()
         self.buscar_registros()
         self.buscar_condiciones_iniciales()
         self.buscar_reaccion_quimica()
+        self.buscar_unidades()
 
     #metodos para desactivar y activar botones
     def boton_desactivado(self):
@@ -1358,6 +1398,209 @@ class FlujoDatos(QMainWindow):
         #escojer R
         concentracion_gas = funciones.gas_concentracion_componente(1, fraccion_molar, presion_total,0.0821,temperatura, 'K')
         print(concentracion_gas)
+
+    def agregar_unidades(self):
+        self.boton_desactivado()
+        #validar que todos los campos esten llenos
+        try:
+            presion=self.presion_u_edit.text()
+            temperatura=self.temperatura_u_edit.text()
+            tiempo=self.tiempo_u_edit.text()
+            concentracion=self.concentracion_u_edit.text()
+            energia=self.energia_u_edit.text()
+            nombre_data=self.nombre_data_u_edit.text()
+        
+            if not presion or not temperatura or not tiempo or not concentracion or not energia or not nombre_data:
+                raise ValueError("Todos los campos de texto deben estar llenos")
+        except ValueError as e:
+            QMessageBox.warning(self, "Advertencia", f"Datos inválidos o incompletos: {e}", QMessageBox.StandardButton.Ok)
+            self.boton_activado()
+            return
+        #crear el objeto unidades
+        unidades=RegistroUnidades(
+            presion=presion,
+            temperatura=temperatura,
+            tiempo=tiempo,
+            concentracion=concentracion,
+            energia=energia,
+            nombre_data=nombre_data
+        )
+
+        #intentar agregar las unidades a la base de datos
+        try:
+            print("Intentando agregar unidades:", unidades)
+            agregar_resultado = self.UnidadesManejador.agregar_unidades(unidades)
+
+            if agregar_resultado:
+                QMessageBox.information(self, "Información", "Unidades agregadas correctamente", QMessageBox.StandardButton.Ok)
+                self.limpiar_formulario_unidades()
+                self.buscar_unidades()  # Refrescar la tabla con los nuevos datos
+            else:
+                QMessageBox.critical(self, "Error", "Hubo un problema al agregar las unidades", QMessageBox.StandardButton.Ok)
+
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Se produjo un error al agregar las unidades: {e}", QMessageBox.StandardButton.Ok)
+        
+        self.boton_activado()
+            
+    def actualizar_unidades(self):
+        self.boton_desactivado()
+        try:
+            # Obtener el ID de las unidades seleccionadas
+            fila_seleccionada = self.tabla_registro_unidades.currentRow()
+            if fila_seleccionada == -1:
+                QMessageBox.warning(self, "Advertencia", "Seleccione una fila para actualizar", QMessageBox.StandardButton.Ok)
+                return
+            id = int(self.tabla_registro_unidades.item(fila_seleccionada, 0).text().strip())
+
+            # Validaciones
+            presion = self.presion_u_edit.text()
+            temperatura = self.temperatura_u_edit.text()
+            tiempo = self.tiempo_u_edit.text()
+            concentracion = self.concentracion_u_edit.text()
+            energia = self.energia_u_edit.text()
+            nombre_data = self.nombre_data_u_edit.text()
+
+            if not presion or not temperatura or not tiempo or not concentracion or not energia or not nombre_data:
+                raise ValueError("Todos los campos de texto deben estar llenos")
+            
+            # Crear el objeto de unidades actualizadas
+            nuevas_unidades = {
+                "presion": presion,
+                "temperatura": temperatura,
+                "tiempo": tiempo,
+                "concentracion": concentracion,
+                "energia": energia,
+                "nombre_data": nombre_data,
+            }
+
+            # Intentar actualizar las unidades en la base de datos
+            actualizar_resultado = self.UnidadesManejador.actualizar_unidades(id, nuevas_unidades)
+
+            if actualizar_resultado:
+                QMessageBox.information(self, "Información", "Unidades actualizadas correctamente", QMessageBox.StandardButton.Ok)
+                self.limpiar_formulario_unidades()
+                self.buscar_unidades()
+            else:
+                QMessageBox.critical(self, "Error", "Hubo un problema al actualizar las unidades", QMessageBox.StandardButton.Ok)
+
+        except ValueError as ve:
+            QMessageBox.warning(self, "Advertencia", f"Datos inválidos o incompletos: {ve}", QMessageBox.StandardButton.Ok)
+
+        except Exception as e:
+            logging.error("Error al actualizar las unidades: %s", str(e))
+            QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar las unidades: {e}", QMessageBox.StandardButton.Ok)
+
+        finally:
+            self.boton_activado()
+
+
+        
+
+    def seleccionar_unidades(self):
+        seleccionar_fila = self.tabla_registro_unidades.currentRow()
+        if seleccionar_fila == -1:
+            id=self.tabla_registro_unidades.item(seleccionar_fila, 0).text().strip()
+            presion=self.tabla_registro_unidades.item(seleccionar_fila, 1).text().strip()
+            temperatura=self.tabla_registro_unidades.item(seleccionar_fila, 2).text().strip()
+            tiempo=self.tabla_registro_unidades.item(seleccionar_fila, 3).text().strip()
+            concentracion=self.tabla_registro_unidades.item(seleccionar_fila, 4).text().strip()
+            energia=self.tabla_registro_unidades.item(seleccionar_fila, 5).text().strip()
+            nombre_data=self.tabla_registro_unidades.item(seleccionar_fila, 6).text().strip()
+
+            self.presion_u_edit.setText(presion)
+            self.temperatura_u_edit.setText(temperatura)
+            self.tiempo_u_edit.setText(tiempo)
+            self.concentracion_u_edit.setText(concentracion)
+            self.energia_u_edit.setText(energia)
+            self.nombre_data_u_edit.setText(nombre_data)
+        else:
+            QMessageBox.information(self, "Información", "Seleccione una fila", QMessageBox.StandardButton.Ok)
+            return
+    
+    def borrar_unidades(self):
+        fila_seleccionada = self.tabla_registro_unidades.currentRow()
+        if fila_seleccionada != -1:
+            opcion_seleccionada = QMessageBox.question(self, "Eliminar unidades", "¿Estás seguro de eliminar las unidades?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            if opcion_seleccionada == QMessageBox.StandardButton.Yes:
+                id = self.tabla_registro_unidades.item(fila_seleccionada, 0).text().strip()
+                borrar_resultado = self.RegistroUnidadesManejador.borrar_unidad(id)
+                if borrar_resultado:
+                    QMessageBox.information(self, "Información", "Unidades eliminadas correctamente", QMessageBox.StandardButton.Ok)
+                    self.RegistroUnidadesManejador.consultar_unidad()
+                    self.buscar_unidades()
+                else:
+                    QMessageBox.information(self, "Información", "Hubo un problema al eliminar las unidades", QMessageBox.StandardButton.Ok)
+
+
+    def buscar_unidades(self):
+        filtros = {
+            "presion": self.presion_u_edit.text(),
+            "temperatura": self.temperatura_u_edit.text(),
+            "tiempo": self.tiempo_u_edit.text(),
+            "concentracion": self.concentracion_u_edit.text(),
+            "energia": self.energia_u_edit.text(),
+            "nombre_data": self.nombre_data_u_edit.text()
+        }
+        unidades = self.RegistroUnidadesManejador.consultar_unidad(filtros, "like")
+        self.mostrar_unidades(unidades)
+
+    def actualizar_valor_celda_unidades(self, fila, columna):
+        try:
+            item = self.tabla_registro_unidades.item(fila, columna)
+            if item is None:
+                logging.warning("La celda está vacía o fuera de los límites de la tabla")
+                return
+            
+            nuevo_valor = item.text().strip()
+
+            if nuevo_valor == '':
+                logging.warning("Error: el valor ingresado está vacío.")
+                return
+            
+            # Verificar si la celda debe contener un número y convertirla
+            header_text = self.tabla_registro_unidades.horizontalHeaderItem(columna).text().lower()
+            if header_text in ['presion', 'temperatura', 'tiempo', 'concentracion', 'energia']:
+                try:
+                    nuevo_valor = float(nuevo_valor)
+                except ValueError:
+                    logging.error("Error: el valor ingresado no es un número válido.")
+                    return
+                
+            # Obtener el ID de las unidades a actualizar
+            id_item = self.tabla_registro_unidades.item(fila, 0)
+            if id_item is None:
+                logging.warning("No se encontró el ID en la fila seleccionada")
+                return
+            
+            id = int(id_item.text().strip())
+
+            # Crear el diccionario de actualización
+            new_unidades = {header_text: nuevo_valor}
+
+            # Intentar actualizar las unidades en la base de datos
+            if self.RegistroUnidadesManejador.actualizar_unidad(id, new_unidades):
+                logging.info(f"Unidades con ID {id} actualizadas correctamente")
+            else:
+                logging.error(f"No se pudo actualizar las unidades con ID {id}")
+        
+        except Exception as e:
+            logging.error(f"Error al actualizar el valor de la celda: {e}")
+            QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar el valor de la celda: {e}", QMessageBox.StandardButton.Ok)
+
+    def mostrar_unidades(self,unidades):
+        self.metodos_comunes.mostrar_unidades(self.tabla_registro_unidades, unidades)
+
+    def limpiar_formulario_unidades(self):
+        self.presion_u_edit.clear()
+        self.temperatura_u_edit.clear()
+        self.tiempo_u_edit.clear()
+        self.concentracion_u_edit.clear()
+        self.energia_u_edit.clear()
+        self.nombre_data_u_edit.clear()
+
+
+
 
 
         

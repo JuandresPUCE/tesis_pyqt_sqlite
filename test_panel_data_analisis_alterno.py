@@ -58,6 +58,9 @@ class PanelDataAnalisis(QMainWindow):
         self.flujo_datos = FlujoDatos()
         self.init_panel_menu()
 
+        # Define panel_izquierdo aquí
+        self.panel_izquierdo = self.ui.tab_3
+
 
 
     def init_ui_elements(self):
@@ -431,8 +434,22 @@ class PanelDataAnalisis(QMainWindow):
         self.crud_db.show()
     
     def abrir_ingreso_datos(self):
+
+        if hasattr(self, 'flujo_datos'):
+            self.flujo_datos.setParent(None)
+            self.flujo_datos.deleteLater()
+
+        self.flujo_datos = FlujoDatos(self)
+        self.flujo_datos.setParent(self.panel_izquierdo)
+
+        if self.panel_izquierdo.layout() is None:
+            self.layout = QVBoxLayout(self.panel_izquierdo)
+        else:
+            self.layout = self.panel_izquierdo.layout()
+
+        self.layout.addWidget(self.flujo_datos)
+
         self.flujo_datos.show()
-       
         
 class MatplotlibWidget(QWidget):
     def __init__(self, parent=None):

@@ -72,6 +72,22 @@ class ReaccionQuimica(Base):
 
     def __str__(self):
         return f"id: {self.id}, especie_quimica: {self.especie_quimica}, formula: {self.formula}, coeficiente_estequiometrico: {self.coeficiente_estequiometrico}, detalle: {self.detalle}, tipo_especie: {self.tipo_especie}, nombre_reaccion: {self.nombre_reaccion}"
+    
+#   modelo de registro de unidades
+class RegistroUnidades(Base):
+    __tablename__ = "registro_unidades"
+
+    id = Column(Integer, primary_key=True)
+    presion= Column(String)
+    temperatura = Column(String)
+    tiempo = Column(String)
+    concentracion = Column(String)
+    energia= Column(String)
+
+    nombre_data = Column(Integer)
+
+    def __str__(self):
+        return f"id: {self.id}, nombre_unidad: {self.nombre_unidad}, simbolo: {self.simbolo}, nombre_data: {self.nombre_data}"
 
 # modelo de datos de salida
 class DatosSalida(Base):

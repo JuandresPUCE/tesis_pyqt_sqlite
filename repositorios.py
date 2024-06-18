@@ -403,3 +403,87 @@ class ReaccionQuimicaManejador:
             return False
         finally:
             session.close()
+
+    # crud para el modelo de unidades
+class RegistroUnidadesManejador:
+    def __init__(self):
+        self.engine = create_engine(f'sqlite:///{db_path}', poolclass=QueuePool, pool_size=20, max_overflow=0)
+        self.Session = sessionmaker(bind=self.engine)    
+    
+    def agregar_unidad(self, unidad):
+        session = self.Session()
+        try:
+            session.add(unidad)
+            session.commit()
+            return True
+        except SQLAlchemyError as e:
+            logging.error(f"Error de SQLAlchemy al agregar unidad: {e}")
+            session.rollback()
+            return False
+        finally:
+            session.close()
+    
+    def consultar_unidad(self, filtros=None, formato=None):
+        try:
+            session = self.Session()
+            query = session.query(RegistroUnidades)
+
+            # Primera cláusula de guarda: Si no se proporcionan filtros, no es necesario aplicar ninguna condición adicional.
+            if not filtros:
+                return query.all()
+
+            # Aplicar filtros si se proporcionan
+            condiciones = []
+            for columna, valor in filtros.items():
+                if valor:
+                    # Determinar el tipo de comparación basado en el formato
+                    if formato == 'like':
+                        condiciones.append(getattr(RegistroUnidades, columna).like(f'%{valor}%'))
+                    else:
+                        condiciones.append(getattr(RegistroUnidades, columna) == valor)
+
+            # Segunda cláusula de guarda: Si no hay condiciones de filtro válidas definidas, no es necesario aplicar ninguna condición adicional.
+            if not condiciones:
+                return query.all()
+
+            # Unir todas las condiciones con OR
+            query = query.filter(or_(*condiciones))
+
+            # Ejecutar la consulta
+            datos = query.all()
+            return datos
+        except SQLAlchemyError as e:
+            # Manejar la excepción SQLAlchemyError
+            print("Error de SQLAlchemy:", e)
+            # Puedes lanzar una nueva excepción personalizada o retornar un valor predeterminado
+            return None
+        finally:
+            session.close()
+    
+    def borrar_unidad(self, id):
+        session = self.Session()
+        unidad = session.query(RegistroUnidades).filter(RegistroUnidades.id == id).first()
+        if unidad:
+            session.delete(unidad)
+            session.commit()
+            return True
+        return False
+    
+    def actualizar_unidad(self, id, new_unidad):
+        session = self.Session()
+        try:
+            unidad = session.query(RegistroUnidades).filter(RegistroUnidades.id == id).first()
+            if unidad:
+                for key, value in new_unidad.items():
+                    setattr(unidad, key, value)
+                session.commit()
+                return True
+            else:
+                logging.warning(f"No se encontró la unidad con id {id}")
+                return False
+        except SQLAlchemyError as e:
+            logging.error(f"Error de SQLAlchemy al actualizar unidad: {e}")
+            session.rollback()
+            return False
+        finally:
+            session.close()

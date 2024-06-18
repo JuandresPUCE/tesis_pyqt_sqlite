@@ -118,6 +118,40 @@ class Servicios:
             print(f"Error inesperado: {e}")
             QMessageBox.critical(self.parent, "Error", f"Error inesperado al mostrar reacciones: {e}", QMessageBox.StandardButton.Ok)
 
+    def mostrar_unidades(self, unidades_tabla, unidades):
+        try:
+            # Definir la tabla
+            self.tabla = unidades_tabla
+            self.tabla.clearContents()
+            self.tabla.setRowCount(0)
+
+            # Verificar que hay unidades
+            if unidades:
+                self.tabla.setRowCount(len(unidades))
+                self.tabla.setColumnCount(7)
+
+                for fila, unidad in enumerate(unidades):
+                    self.tabla.setItem(fila, 0, QTableWidgetItem(str(unidad.id)))
+                    self.tabla.setItem(fila, 1, QTableWidgetItem(str(unidad.presion)))
+                    self.tabla.setItem(fila, 2, QTableWidgetItem(str(unidad.temperatura)))
+                    self.tabla.setItem(fila, 3, QTableWidgetItem(str(unidad.tiempo)))
+                    self.tabla.setItem(fila, 4, QTableWidgetItem(str(unidad.concentracion)))
+                    self.tabla.setItem(fila, 5, QTableWidgetItem(str(unidad.energia)))
+                    self.tabla.setItem(fila, 6, QTableWidgetItem(str(unidad.nombre_data)))
+
+                    
+            else:
+                self.tabla.setRowCount(0)
+                QMessageBox.information(self.parent, "No hay registros", "No se encontraron registros en la base de datos.", QMessageBox.StandardButton.Ok)
+        
+        except AttributeError as ae:
+            print(f"Error de atributo: {ae}")
+            QMessageBox.critical(self.parent, "Error", f"Error al mostrar unidades: {ae}", QMessageBox.StandardButton.Ok)
+        except Exception as e:
+            print(f"Error inesperado: {e}")
+            QMessageBox.critical(self.parent, "Error", f"Error inesperado al mostrar unidades: {e}", QMessageBox.StandardButton.Ok)
+            
+
     #funciones refactorizadas
     def borrar_elemento(self, tabla, borrar_resultado, mensaje_confirmacion, mensaje_exito, mensaje_error, metodo_consultar, metodo_refescar, metodo_buscar):
         fila_seleccionada = tabla.currentRow()

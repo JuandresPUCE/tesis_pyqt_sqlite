@@ -1,0 +1,79 @@
+{
+    "unidades": [
+        { "id": 1,
+        "nombre_unidad": "temperatura",
+        "simbolo": "K"
+    },
+    {
+        "id": 2,
+        "nombre_unidad": "temperatura",
+        "simbolo": "C"
+    },
+    {
+        "id": 3,
+        "nombre_unidad": "temperatura",
+        "simbolo": "R"
+    },
+    {
+        "id": 4,
+        "nombre_unidad": "temperatura",
+        "simbolo": "F"
+    },
+    {
+        "id": 5,
+        "nombre_unidad": "concentracion",
+        "simbolo": "mol/m³"
+    },
+    {
+        "id": 6,
+        "nombre_unidad": "concentracion",
+        "simbolo": "lbmol/ft³"
+    },
+
+    {
+        "id": 7,
+        "nombre_unidad": "presion",
+        "simbolo": "psi"
+    },
+    {
+        "id": 8,
+        "nombre_unidad": "presion",
+        "simbolo": "Pa"
+    },
+    {
+        "id": 9,
+        "nombre_unidad": "presion",
+        "simbolo": "atm"
+    },
+    {
+        "id": 10,
+        "nombre_unidad": "presion",
+        "simbolo": "KPa"
+    },
+    {
+        "id": 11,
+        "nombre_unidad": "presion",
+        "simbolo": "atm*L"
+    },
+    {
+        "id": 12,
+        "nombre_unidad": "energia",
+        "simbolo": "J"
+    },
+    {
+        "id": 13,
+        "nombre_unidad": "energia",
+        "simbolo": "KJ"
+    },
+    {
+        "id": 14,
+        "nombre_unidad": "energia",
+        "simbolo": "btu"
+    },
+    {
+        "id": 15,
+        "nombre_unidad": "energia",
+        "simbolo": "cal"
+    }
+]
+}
