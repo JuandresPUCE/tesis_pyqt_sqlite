@@ -41,24 +41,28 @@ class FlujoDatos(QMainWindow):
         self.init_ui_elementos_rde()
         self.init_ui_elementos_ci()
         self.init_ui_elementos_rq()
+        self.init_ui_elementos_u()
 
         # Inicializar conexiones de señales y ranuras
         self.init_control_botones_datos()
         self.init_control_botones_experimental()
         self.init_control_botones_ci()
         self.init_control_botones_rq()
+        self.init_control_botones_u()
 
         # Cargar datos iniciales
         self.buscar_dato()
         self.buscar_registros()
         self.buscar_condiciones_iniciales()
         self.buscar_reaccion_quimica()
+        self.buscar_unidades()
 
          # Conectar la señal cellChanged para actualizar la base de datos cuando cambie una celda
         self.tabla_datos.cellChanged.connect(self.actualizar_valor_celda_datos)
         self.tabla_registro_data_experimental.cellChanged.connect(self.actualizar_valor_celda_registro)
         self.tabla_condiciones_iniciales.cellChanged.connect(self.actualizar_valor_celda_ci)
         self.tabla_reaccion_quimica.cellChanged.connect(self.actualizar_valor_celda_reaccion)
+        self.tabla_registro_unidades.cellChanged.connect(self.actualizar_valor_celda_unidades)
 
         #iniciar funciones diferentes a crud
         self.establecer_fecha_sistema()
@@ -244,6 +248,7 @@ class FlujoDatos(QMainWindow):
         self.concentracion_u_edit = self.ui.concentracion_u_edit
         self.energia_u_edit = self.ui.energia_u_edit
         self.nombre_data_u_edit = self.ui.nombre_data_u_edit
+        self.r_u_edit = self.ui.r_u_edit
         #botones de unidades
         self.agregar_ru_btn = self.ui.agregar_ru_btn
         self.actualizar_ru_btn = self.ui.actualizar_ru_btn
@@ -315,7 +320,7 @@ class FlujoDatos(QMainWindow):
         self.actualizar_ru_btn.clicked.connect(self.actualizar_unidades)
         self.seleccionar_ru_btn.clicked.connect(self.seleccionar_unidades)
         self.borrar_ru_btn.clicked.connect(self.borrar_unidades)
-        self.limpiar_ru_btn.clicked.connect(self.limpiar_formulario_u)
+        self.limpiar_ru_btn.clicked.connect(self.limpiar_formulario_unidades)
         self.buscar_ru_btn.clicked.connect(self.buscar_unidades)
 
 
@@ -1395,8 +1400,11 @@ class FlujoDatos(QMainWindow):
 
         presion_total = float(self.presion_total_ci.text())
         fraccion_molar = float(self.fraccion_molar_ci.text())
+        temperatura = float(self.temperatura_ci.text())
+        unidad_temperatura = self.temperatura_u_edit.text()
         #escojer R
-        concentracion_gas = funciones.gas_concentracion_componente(1, fraccion_molar, presion_total,0.0821,temperatura, 'K')
+        #gas_concentracion_componente(self,coeficiente_gas_Z,y_A0,Presion_total,R,Temperatura,escala_temp=None):
+        concentracion_gas = funciones.gas_concentracion_componente(1, fraccion_molar, presion_total,self.r_u_edit,temperatura,unidad_temperatura)
         print(concentracion_gas)
 
     def agregar_unidades(self):
@@ -1429,7 +1437,7 @@ class FlujoDatos(QMainWindow):
         #intentar agregar las unidades a la base de datos
         try:
             print("Intentando agregar unidades:", unidades)
-            agregar_resultado = self.UnidadesManejador.agregar_unidades(unidades)
+            agregar_resultado = self.RegistroUnidadesManejador.agregar_unidad(unidades)
 
             if agregar_resultado:
                 QMessageBox.information(self, "Información", "Unidades agregadas correctamente", QMessageBox.StandardButton.Ok)
@@ -1475,7 +1483,7 @@ class FlujoDatos(QMainWindow):
             }
 
             # Intentar actualizar las unidades en la base de datos
-            actualizar_resultado = self.UnidadesManejador.actualizar_unidades(id, nuevas_unidades)
+            actualizar_resultado = self.RegistroUnidadesManejador.actualizar_unidad(id, nuevas_unidades)
 
             if actualizar_resultado:
                 QMessageBox.information(self, "Información", "Unidades actualizadas correctamente", QMessageBox.StandardButton.Ok)
@@ -1499,7 +1507,7 @@ class FlujoDatos(QMainWindow):
 
     def seleccionar_unidades(self):
         seleccionar_fila = self.tabla_registro_unidades.currentRow()
-        if seleccionar_fila == -1:
+        if seleccionar_fila != -1:
             id=self.tabla_registro_unidades.item(seleccionar_fila, 0).text().strip()
             presion=self.tabla_registro_unidades.item(seleccionar_fila, 1).text().strip()
             temperatura=self.tabla_registro_unidades.item(seleccionar_fila, 2).text().strip()

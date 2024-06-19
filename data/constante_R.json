@@ -5,6 +5,7 @@
     {"id": 3, "valor": 1.987, "unidades": "cal/(mol K)"},
     {"id": 4, "valor": 10.73, "unidades": "psia*ft3/(lbmol R)"},
     {"id": 5, "valor": 0.008314, "unidades": "KJ/(mol K)"},
-    {"id": 6, "valor": 1.986, "unidades": "btu/(lbmol R)"}
+    {"id": 6, "valor": 1.986, "unidades": "btu/(lbmol R)"},
+    {"id": 7, "valor": 0.08206, "unidades": "PSIa*ft3/(mol K)"}
 ]
 }

@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, Column, Integer, String, Float
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import *
+from sqlalchemy.ext import *
 import os
 
 Base = declarative_base()
@@ -84,10 +84,10 @@ class RegistroUnidades(Base):
     concentracion = Column(String)
     energia= Column(String)
 
-    nombre_data = Column(Integer)
+    nombre_data = Column(String)
 
     def __str__(self):
-        return f"id: {self.id}, nombre_unidad: {self.nombre_unidad}, simbolo: {self.simbolo}, nombre_data: {self.nombre_data}"
+        return f"id: {self.id}, presion: {self.presion}, temperatura: {self.temperatura}, tiempo: {self.tiempo}, concentracion: {self.concentracion}, energia: {self.energia}, nombre_data: {self.nombre_data}"
 
 # modelo de datos de salida
 class DatosSalida(Base):

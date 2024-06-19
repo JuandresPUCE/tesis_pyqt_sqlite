@@ -214,19 +214,21 @@ class Funciones:
         
         return k2
     
-    def gas_concentracion_componente(self,coeficiente_gas_Z,y_A0,Presion_total,R,Temperatura,escala_temp='K'):
-    
-        if escala_temp == 'K':
-            T_absoluta = Temperatura + 273.15  # Convertir a Kelvin
-        elif escala_temp == 'R':
-            T_absoluta = Temperatura + 459.67  # Convertir a Rankine
+    def gas_concentracion_componente(self,coeficiente_gas_Z,y_A0,Presion_total,R,Temperatura,escala_temp=None):
         
+        R_gas = float(R.text())  # Convertir el valor de R a un float     
+        if escala_temp == 'C':
+            T_absoluta = Temperatura + 273.15  # Convertir a Kelvin
+        elif escala_temp == 'F':
+            T_absoluta = Temperatura + 459.67  # Convertir a Rankine
+        elif escala_temp in ['K', 'R']:
+            T_absoluta = Temperatura  # No es necesario convertir
         else:
-            raise ValueError("Escala de temperatura no reconocida. Elija entre 'K' o 'R'.")
+            raise ValueError("Escala de temperatura no reconocida. Elija entre 'C', 'F', 'K' o 'R'.")
 
         Presion_parcial_componente = Presion_total*y_A0
         
-        concentracion_componente=coeficiente_gas_Z*Presion_parcial_componente/(R*T_absoluta)
+        concentracion_componente=coeficiente_gas_Z*Presion_parcial_componente/(R_gas*T_absoluta)
         return concentracion_componente
 
 

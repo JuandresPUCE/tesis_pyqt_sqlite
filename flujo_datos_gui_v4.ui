@@ -3405,12 +3405,12 @@
                 </column>
                 <column>
                  <property name="text">
-                  <string>nombre_unidad</string>
+                  <string>presion</string>
                  </property>
                 </column>
                 <column>
                  <property name="text">
-                  <string>simbolo</string>
+                  <string>temperatura</string>
                  </property>
                 </column>
                 <column>
@@ -3418,6 +3418,46 @@
                   <string>nombre_data</string>
                  </property>
                 </column>
+                <column>
+                 <property name="text">
+                  <string>concentracion</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>energia</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>nombre_data</string>
+                 </property>
+                </column>
+               </widget>
+               <widget class="QGroupBox" name="groupBox_11">
+                <property name="geometry">
+                 <rect>
+                  <x>490</x>
+                  <y>150</y>
+                  <width>191</width>
+                  <height>86</height>
+                 </rect>
+                </property>
+                <property name="title">
+                 <string>Constante universal de los gases</string>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_40">
+                 <item>
+                  <widget class="QComboBox" name="r_box"/>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="r_u_edit">
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </widget>
              </widget>
