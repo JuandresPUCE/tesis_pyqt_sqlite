@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import *
 import json
+import logging
 
 class Servicios:
     def __init__(self, parent=None):
@@ -178,4 +179,47 @@ class Servicios:
         except Exception as e:
             #print(f"Error inesperado: {e}")
             QMessageBox.critical(self.parent, "Error", f"Error inesperado al mostrar elementos: {e}", QMessageBox.StandardButton.Ok)
+         
 
+    @staticmethod
+    def obtener_valor_celda(tabla, fila, columna):
+        item = tabla.item(fila, columna)
+        if item is None:
+            logging.warning("La celda está vacía o fuera de los límites de la tabla")
+            return None
+        return item.text().strip()
+
+    @staticmethod
+    def actualizar_valor_celda(tabla, manejador, fila, columna, columnas_numericas):
+        try:
+            nuevo_valor = Servicios.obtener_valor_celda(tabla, fila, columna)
+            if nuevo_valor is None or nuevo_valor == '':
+                logging.warning("Error: el valor ingresado está vacío.")
+                return
+
+            header_text = tabla.horizontalHeaderItem(columna).text().lower()
+            if header_text in columnas_numericas:
+                try:
+                    nuevo_valor = float(nuevo_valor)
+                except ValueError:
+                    logging.error("Error: el valor ingresado no es un número válido.")
+                    return
+            else:
+                nuevo_valor = str(nuevo_valor)
+
+            id_item = Servicios.obtener_valor_celda(tabla, fila, 0)
+            if id_item is None or id_item == '':
+                logging.warning("No se encontró el ID en la fila seleccionada")
+                return
+
+            id = int(id_item)
+            datos_actualizados = {header_text: nuevo_valor}
+
+            if manejador.actualizar_dato(id, datos_actualizados):
+                logging.info(f"Dato con ID {id} actualizado correctamente")
+            else:
+                logging.error(f"No se pudo actualizar el dato con ID {id}")
+
+        except Exception as e:
+            logging.error(f"Error al actualizar el valor de la celda: {e}")
+            QMessageBox.critical(tabla.parentWidget(), "Error", f"Se produjo un error al actualizar el valor de la celda: {e}", QMessageBox.StandardButton.Ok)

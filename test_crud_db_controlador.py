@@ -401,48 +401,8 @@ class PantallaCrud(QMainWindow):
         self.metodos_comunes.mostrar_datos_tabla(self.tabla_datos, resultados)
 
     def actualizar_valor_celda_datos(self, fila, columna):
-        try:
-            item = self.tabla_datos.item(fila, columna)
-            if item is None:
-                logging.warning("La celda está vacía o fuera de los límites de la tabla")
-                return
-
-            nuevo_valor = item.text().strip()
-
-            if nuevo_valor == '':
-                logging.warning("Error: el valor ingresado está vacío.")
-                return
-
-            # Verificar si la celda debe contener un número y convertirla
-            header_text = self.tabla_datos.horizontalHeaderItem(columna).text().lower()
-            if header_text in ['tiempo', 'concentracion', 'otra_propiedad', 'conversion_reactivo_limitante']:
-                try:
-                    nuevo_valor = float(nuevo_valor)
-                except ValueError:
-                    logging.error("Error: el valor ingresado no es un número válido.")
-                    return
-
-            # Obtener el ID del dato a actualizar
-            id_item = self.tabla_datos.item(fila, 0)
-            if id_item is None:
-                logging.warning("No se encontró el ID en la fila seleccionada")
-                return
-
-            id = int(id_item.text().strip())
-
-            # Crear el diccionario de actualización
-            new_dato = {header_text: nuevo_valor}
-
-            # Intentar actualizar el dato en la base de datos
-            if self.DatosCineticosManejador.actualizar_dato(id, new_dato):
-                logging.info(f"Dato con ID {id} actualizado correctamente")
-            else:
-                logging.error(f"No se pudo actualizar el dato con ID {id}")
-
-        except Exception as e:
-            logging.error(f"Error al actualizar el valor de la celda: {e}")
-            QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar el valor de la celda: {e}", QMessageBox.StandardButton.Ok)
-
+        columnas_numericas = ['tiempo', 'concentracion', 'otra_propiedad', 'conversion_reactivo_limitante']
+        self.metodos_comunes.actualizar_valor_celda(self.tabla_datos, self.DatosCineticosManejador, fila, columna, columnas_numericas)
 
     # funciones crud para registro de data experimental
     # Registro de data experimental
