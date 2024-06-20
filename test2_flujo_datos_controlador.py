@@ -140,6 +140,8 @@ class FlujoDatos(QMainWindow):
         self.otra_propiedad_inicial = self.ui.otra_propiedad_inicial_edit
         self.conversion_reactivo_limitante_gas = self.ui.conversion_reactivo_limitante_dc_edit_3
 
+        self.agregar_dc_archivo_btn=self.ui.agregar_dc_archivo_btn
+
 
 
     def init_ui_elementos_rde(self):
@@ -283,6 +285,8 @@ class FlujoDatos(QMainWindow):
         self.calculo6.clicked.connect(self.calcular_concentracion_producto_dado_conversion)
         self.calculo7.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_epsilon_a_presion)
         self.calculo8.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_concentracion_gas)
+
+        self.agregar_dc_archivo_btn.clicked.connect(self.cargar_datos_btn_click)
         
 
     def init_control_botones_experimental(self):
@@ -1608,6 +1612,49 @@ class FlujoDatos(QMainWindow):
         self.energia_u_edit.clear()
         self.nombre_data_u_edit.clear()
 
+    def insertar_datos_cineticos_archivo(self, ruta_archivo):
+        # Leer el archivo
+        if ruta_archivo.endswith('.csv'):
+            df = pd.read_csv(ruta_archivo)
+        elif ruta_archivo.endswith('.xlsx'):
+            df = pd.read_excel(ruta_archivo)
+        else:
+            raise ValueError("Formato de archivo no soportado")
+
+        # Iterar sobre cada fila del DataFrame
+        for _, fila in df.iterrows():
+            # Crear el objeto DatosIngresadosCineticos
+            dato = DatosIngresadosCineticos(
+                tiempo=float(fila['tiempo']),
+                concentracion=float(fila['concentracion']),
+                otra_propiedad=float(fila['otra_propiedad']),
+                conversion_reactivo_limitante=float(fila['conversion_reactivo_limitante']),
+                tipo_especie=fila['tipo_especie'],
+                id_condiciones_iniciales=int(fila['id_condiciones_iniciales']),
+                nombre_data=fila['nombre_data'],
+                nombre_reaccion=fila['nombre_reaccion'],
+                especie_quimica=fila['especie_quimica'],
+            )
+
+            # Intentar agregar el dato a la base de datos
+            try:
+                agregar_resultado = self.DatosCineticosManejador.agregar(dato)
+                if not agregar_resultado:
+                    QMessageBox.critical(self, "Error", "Hubo un problema al agregar los datos ", QMessageBox.StandardButton.Ok)
+            except Exception as e:
+                QMessageBox.critical(self, "Error", f"Se produjo un error al agregar los datos: {e}", QMessageBox.StandardButton.Ok)
+
+        QMessageBox.information(self, "Información", "Datos agregados correctamente", QMessageBox.StandardButton.Ok)
+        self.buscar_dato()  # Refrescar la tabla con los nuevos datos
+
+    def cargar_datos_btn_click(self):
+        # Abrir la ventana de diálogo para seleccionar el archivo
+        ruta_archivo, _ = QFileDialog.getOpenFileName(self, "Seleccionar archivo")
+
+        # Si el usuario seleccionó un archivo (es decir, no hizo clic en "Cancelar")
+        if ruta_archivo:
+            # Llamar a tu función con la ruta del archivo seleccionado
+            self.insertar_datos_cineticos_archivo(ruta_archivo)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
