@@ -181,45 +181,47 @@ class Servicios:
             QMessageBox.critical(self.parent, "Error", f"Error inesperado al mostrar elementos: {e}", QMessageBox.StandardButton.Ok)
          
 
-    @staticmethod
-    def obtener_valor_celda(tabla, fila, columna):
-        item = tabla.item(fila, columna)
-        if item is None:
-            logging.warning("La celda está vacía o fuera de los límites de la tabla")
-            return None
-        return item.text().strip()
-
-    @staticmethod
-    def actualizar_valor_celda(tabla, manejador, fila, columna, columnas_numericas):
+    def actualizar_valor_celda(self, tabla, manejador, fila, columna):
         try:
-            nuevo_valor = Servicios.obtener_valor_celda(tabla, fila, columna)
-            if nuevo_valor is None or nuevo_valor == '':
+            item = tabla.item(fila, columna)
+            if item is None:
+                logging.warning("La celda está vacía o fuera de los límites de la tabla")
+                return
+
+            nuevo_valor = item.text().strip()
+
+            if nuevo_valor == '':
                 logging.warning("Error: el valor ingresado está vacío.")
                 return
 
+            # Verificar el tipo de datos esperado según el encabezado de la columna
             header_text = tabla.horizontalHeaderItem(columna).text().lower()
-            if header_text in columnas_numericas:
+            if header_text in ['temperatura', 'tiempo', 'presion_total', 'presion_parcial', 'fraccion_molar',
+                               'concentracion', 'otra_propiedad', 'conversion_reactivo_limitante','coeficiente_estequiometrico']:
+                # Verificar si el valor puede convertirse a float
                 try:
                     nuevo_valor = float(nuevo_valor)
                 except ValueError:
                     logging.error("Error: el valor ingresado no es un número válido.")
                     return
-            else:
-                nuevo_valor = str(nuevo_valor)
 
-            id_item = Servicios.obtener_valor_celda(tabla, fila, 0)
-            if id_item is None or id_item == '':
+            # Obtener el ID del dato a actualizar
+            id_item = tabla.item(fila, 0)
+            if id_item is None:
                 logging.warning("No se encontró el ID en la fila seleccionada")
                 return
 
-            id = int(id_item)
-            datos_actualizados = {header_text: nuevo_valor}
+            id = int(id_item.text().strip())
 
-            if manejador.actualizar_dato(id, datos_actualizados):
+            # Crear el diccionario de actualización
+            nuevo_dato = {header_text: nuevo_valor}
+
+            # Intentar actualizar el dato en la base de datos
+            if manejador.actualizar(id, nuevo_dato):
                 logging.info(f"Dato con ID {id} actualizado correctamente")
             else:
                 logging.error(f"No se pudo actualizar el dato con ID {id}")
 
         except Exception as e:
             logging.error(f"Error al actualizar el valor de la celda: {e}")
-            QMessageBox.critical(tabla.parentWidget(), "Error", f"Se produjo un error al actualizar el valor de la celda: {e}", QMessageBox.StandardButton.Ok)
+            QMessageBox.critical(self.parent, "Error", f"Se produjo un error al actualizar el valor de la celda: {e}", QMessageBox.StandardButton.Ok)

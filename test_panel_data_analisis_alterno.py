@@ -140,7 +140,7 @@ class PanelDataAnalisis(QMainWindow):
             self.menu_derecho.show()
     #funciones de consulta de registros
     def buscar_registros(self):       
-        registros = self.RegistroDataExperimentalManejador.consultar_registro()
+        registros = self.RegistroDataExperimentalManejador.consultar()
         self.mostrar_registros(registros)
         
     def mostrar_registros(self, registros):
@@ -150,16 +150,16 @@ class PanelDataAnalisis(QMainWindow):
     def actualizar_condiciones_iniciales(self):
         nombre_data = self.registro_datos_box.currentText()
         if nombre_data == "Todos":
-            condiciones = self.CondicionesInicialesManejador.consultar_condicion()
+            condiciones = self.CondicionesInicialesManejador.consultar()
         else:
             filtros = {'nombre_data': nombre_data}
-            condiciones = self.CondicionesInicialesManejador.consultar_condicion(filtros=filtros)
+            condiciones = self.CondicionesInicialesManejador.consultar(filtros=filtros)
         self.mostrar_condiciones_iniciales(condiciones)
 
     #funciones de consulta de condiciones iniciales
 
     def buscar_condiciones_iniciales(self):
-        condiciones = self.CondicionesInicialesManejador.consultar_condicion()
+        condiciones = self.CondicionesInicialesManejador.consultar()
         self.mostrar_condiciones_iniciales(condiciones) 
 
     def mostrar_condiciones_iniciales(self,condiciones):
@@ -176,7 +176,7 @@ class PanelDataAnalisis(QMainWindow):
         if condicion_inicial_id and condicion_inicial_id != "Todos":
             filtros['id'] = condicion_inicial_id
 
-        condiciones = self.CondicionesInicialesManejador.consultar_condicion(filtros=filtros)
+        condiciones = self.CondicionesInicialesManejador.consultar(filtros=filtros)
         self.mostrar_condiciones_iniciales_tabla(condiciones)
 
     def mostrar_condiciones_iniciales_tabla(self, condiciones):
@@ -186,7 +186,7 @@ class PanelDataAnalisis(QMainWindow):
 
     
     def buscar_dato(self):
-        datos_resultados = self.DatosCineticosManejador.consultar_datos()
+        datos_resultados = self.DatosCineticosManejador.consultar()
         self.mostrar_datos_tabla(datos_resultados)
 
     
@@ -194,7 +194,7 @@ class PanelDataAnalisis(QMainWindow):
         self.filtro_datos_box.clear()
         self.filtro_datos_box.addItem("Todos")
         
-        datos_cineticos = self.DatosCineticosManejador.consultar_datos()
+        datos_cineticos = self.DatosCineticosManejador.consultar()
         
         if datos_cineticos:
             tipos_especie = set(registro.tipo_especie for registro in datos_cineticos)
@@ -208,7 +208,7 @@ class PanelDataAnalisis(QMainWindow):
         self.filtro_datos_box_2.clear()
         self.filtro_datos_box_2.addItem("Todos")
 
-        datos_cineticos = self.DatosCineticosManejador.consultar_datos()
+        datos_cineticos = self.DatosCineticosManejador.consultar()
 
         if datos_cineticos:
             especie_quimica = set(registro.especie_quimica for registro in datos_cineticos)
@@ -246,7 +246,7 @@ class PanelDataAnalisis(QMainWindow):
             if condicion_inicial_id and condicion_inicial_id != "Todos":
                 filtros['id_condiciones_iniciales'] = condicion_inicial_id
 
-            datos_cineticos = self.DatosCineticosManejador.consultar_datos(filtros=filtros)
+            datos_cineticos = self.DatosCineticosManejador.consultar(filtros=filtros)
             self.mostrar_datos_tabla(datos_cineticos)
 
     def imprimir_registro_seleccionado(self):
@@ -260,14 +260,14 @@ class PanelDataAnalisis(QMainWindow):
             return
 
         filtros = {'nombre_data': nombre_data}
-        condiciones = self.CondicionesInicialesManejador.consultar_condicion(filtros=filtros)
+        condiciones = self.CondicionesInicialesManejador.consultar(filtros=filtros)
 
         # Convertir las condiciones a un DataFrame de pandas
         df_condiciones_iniciales = pd.DataFrame.from_records([condicion.__dict__ for condicion in condiciones])
         print("Condiciones iniciales:", df_condiciones_iniciales)
 
         # Consultar datos cinéticos filtrando por nombre_data
-        datos_cineticos = self.DatosCineticosManejador.consultar_datos(filtros=filtros)
+        datos_cineticos = self.DatosCineticosManejador.consultar(filtros=filtros)
 
         # Filtrar datos cinéticos por tipo_especie si se selecciona uno específico
         if tipo_especie != "Todos":
@@ -294,7 +294,7 @@ class PanelDataAnalisis(QMainWindow):
             nombre_reaccion = df_datos_cineticos_listos['nombre_reaccion'].iloc[0]
 
             filtro_reaccion = {'nombre_reaccion': nombre_reaccion}
-            reaccion_quimica = self.ReaccionQuimicaManejador.consultar_reaccion(filtros=filtro_reaccion)
+            reaccion_quimica = self.ReaccionQuimicaManejador.consultar(filtros=filtro_reaccion)
 
             # Convertir la reacción química a un DataFrame de pandas
             df_reaccion_quimica = pd.DataFrame.from_records([reaccion.__dict__ for reaccion in reaccion_quimica])

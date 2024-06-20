@@ -389,7 +389,7 @@ class FlujoDatos(QMainWindow):
         # Intentar agregar el dato a la base de datos
         try:
             #print("Intentando agregar dato:", dato)
-            agregar_resultado = self.DatosCineticosManejador.agregar_dato(dato)
+            agregar_resultado = self.DatosCineticosManejador.agregar(dato)
 
             if agregar_resultado:
                 QMessageBox.information(self, "Información", "Datos agregados correctamente", QMessageBox.StandardButton.Ok)
@@ -482,7 +482,7 @@ class FlujoDatos(QMainWindow):
             }
 
             # Intentar actualizar el dato en la base de datos
-            actualizar_resultado = self.DatosCineticosManejador.actualizar_dato(id, nuevo_dato)
+            actualizar_resultado = self.DatosCineticosManejador.actualizar(id, nuevo_dato)
 
             if actualizar_resultado:
                 QMessageBox.information(self, "Información", "Datos actualizados correctamente", QMessageBox.StandardButton.Ok)
@@ -507,11 +507,11 @@ class FlujoDatos(QMainWindow):
             opcion_seleccionada = QMessageBox.question(self, "Eliminar dato", "¿Estás seguro de eliminar el dato?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             if opcion_seleccionada == QMessageBox.StandardButton.Yes:
                 id = self.tabla_datos.item(fila_seleccionada, 0).text().strip()
-                borrar_resultado = self.DatosCineticosManejador.borrar_dato(id)
+                borrar_resultado = self.DatosCineticosManejador.borrar(id)
                 if borrar_resultado:
                     
                     QMessageBox.information(self, "Información", "Dato eliminado correctamente", QMessageBox.StandardButton.Ok)
-                    self.DatosCineticosManejador.consultar_datos()
+                    self.DatosCineticosManejador.consultar()
                     self.refrescar_datos_tabla() 
                     self.buscar_dato()
                 else:
@@ -530,7 +530,7 @@ class FlujoDatos(QMainWindow):
             "especie_quimica": self.especie_quimica.text(),
         }
 
-        datos_resultados = self.DatosCineticosManejador.consultar_datos(filtros,"like")
+        datos_resultados = self.DatosCineticosManejador.consultar(filtros,"like")
         self.mostrar_datos_tabla(datos_resultados)
     
 
@@ -571,7 +571,7 @@ class FlujoDatos(QMainWindow):
             new_dato = {header_text: nuevo_valor}
 
             # Intentar actualizar el dato en la base de datos
-            if self.DatosCineticosManejador.actualizar_dato(id, new_dato):
+            if self.DatosCineticosManejador.actualizar(id, new_dato):
                 logging.info(f"Dato con ID {id} actualizado correctamente")
             else:
                 logging.error(f"No se pudo actualizar el dato con ID {id}")
@@ -613,7 +613,7 @@ class FlujoDatos(QMainWindow):
         # Intentar agregar el registro a la base de datos
         try:
             print("Intentando agregar registro:", registro)
-            agregar_resultado = self.RegistroDataExperimentalManejador.agregar_registro(registro)
+            agregar_resultado = self.RegistroDataExperimentalManejador.agregar(registro)
 
             if agregar_resultado:
                 QMessageBox.information(self, "Información", "Registro agregado correctamente", QMessageBox.StandardButton.Ok)
@@ -674,7 +674,7 @@ class FlujoDatos(QMainWindow):
             }
 
             # Intentar actualizar el registro en la base de datos
-            actualizar_resultado = self.RegistroDataExperimentalManejador.actualizar_registro(id, nuevo_registro)
+            actualizar_resultado = self.RegistroDataExperimentalManejador.actualizar(id, nuevo_registro)
 
             if actualizar_resultado:
                 QMessageBox.information(self, "Información", "Registro actualizado correctamente", QMessageBox.StandardButton.Ok)
@@ -727,7 +727,7 @@ class FlujoDatos(QMainWindow):
             new_registro = {header_text: nuevo_valor}
 
             # Intentar actualizar el registro en la base de datos
-            if self.RegistroDataExperimentalManejador.actualizar_registro(id, new_registro):
+            if self.RegistroDataExperimentalManejador.actualizar(id, new_registro):
                 logging.info(f"Registro con ID {id} actualizado correctamente")
             else:
                 logging.error(f"No se pudo actualizar el registro con ID {id}")
@@ -742,10 +742,10 @@ class FlujoDatos(QMainWindow):
             opcion_seleccionada = QMessageBox.question(self, "Eliminar registro", "¿Estás seguro de eliminar el registro?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             if opcion_seleccionada == QMessageBox.StandardButton.Yes:
                 id = self.tabla_registro_data_experimental.item(fila_seleccionada, 0).text().strip()
-                borrar_resultado = self.RegistroDataExperimentalManejador.borrar_registro(id)
+                borrar_resultado = self.RegistroDataExperimentalManejador.borrar(id)
                 if borrar_resultado:
                     QMessageBox.information(self, "Información", "Registro eliminado correctamente", QMessageBox.StandardButton.Ok)
-                    self.RegistroDataExperimentalManejador.consultar_registro()
+                    self.RegistroDataExperimentalManejador.consultar()
                     self.buscar_registros()
                 else:
                     QMessageBox.information(self, "Información", "Hubo un problema al eliminar el registro", QMessageBox.StandardButton.Ok)
@@ -756,7 +756,7 @@ class FlujoDatos(QMainWindow):
             "fecha": self.fecha_data_experimental.text(),
             "detalle": self.detalle_data_experimental.text(),
         }
-        registros = self.RegistroDataExperimentalManejador.consultar_registro(filtros, "like")
+        registros = self.RegistroDataExperimentalManejador.consultar(filtros, "like")
         self.mostrar_registros(registros)    
 
     # funciones crud para condiciones iniciales
@@ -801,7 +801,7 @@ class FlujoDatos(QMainWindow):
         # Intentar agregar las condiciones iniciales a la base de datos
         try:
             print("Intentando agregar condiciones iniciales:", condiciones_iniciales)
-            agregar_resultado = self.CondicionesInicialesManejador.agregar_condicion(condiciones_iniciales)
+            agregar_resultado = self.CondicionesInicialesManejador.agregar(condiciones_iniciales)
 
             if agregar_resultado:
                 QMessageBox.information(self, "Información", "Condiciones iniciales agregadas correctamente", QMessageBox.StandardButton.Ok)
@@ -890,7 +890,7 @@ class FlujoDatos(QMainWindow):
             }
 
             # Intentar actualizar las condiciones iniciales en la base de datos
-            actualizar_resultado = self.CondicionesInicialesManejador.actualizar_condicion(id, nuevas_condiciones_iniciales)
+            actualizar_resultado = self.CondicionesInicialesManejador.actualizar(id, nuevas_condiciones_iniciales)
 
             if actualizar_resultado:
                 QMessageBox.information(self, "Información", "Condiciones iniciales actualizadas correctamente", QMessageBox.StandardButton.Ok)
@@ -943,7 +943,7 @@ class FlujoDatos(QMainWindow):
             new_condiciones_iniciales = {header_text: nuevo_valor}
 
             # Intentar actualizar las condiciones iniciales en la base de datos
-            if self.CondicionesInicialesManejador.actualizar_condicion(id, new_condiciones_iniciales):
+            if self.CondicionesInicialesManejador.actualizar(id, new_condiciones_iniciales):
                 logging.info(f"Condiciones iniciales con ID {id} actualizadas correctamente")
             else:
                 logging.error(f"No se pudo actualizar las condiciones iniciales con ID {id}")
@@ -958,10 +958,10 @@ class FlujoDatos(QMainWindow):
             opcion_seleccionada = QMessageBox.question(self, "Eliminar condiciones iniciales", "¿Estás seguro de eliminar las condiciones iniciales?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             if opcion_seleccionada == QMessageBox.StandardButton.Yes:
                 id = self.tabla_condiciones_iniciales.item(fila_seleccionada, 0).text().strip()
-                borrar_resultado = self.CondicionesInicialesManejador.borrar_condicion(id)
+                borrar_resultado = self.CondicionesInicialesManejador.borrar(id)
                 if borrar_resultado:
                     QMessageBox.information(self, "Información", "Condiciones iniciales eliminadas correctamente", QMessageBox.StandardButton.Ok)
-                    self.CondicionesInicialesManejador.consultar_condicion()
+                    self.CondicionesInicialesManejador.consultar()
                     self.buscar_condiciones_iniciales()
                 else:
                     QMessageBox.information(self, "Información", "Hubo un problema al eliminar las condiciones iniciales", QMessageBox.StandardButton.Ok)
@@ -978,7 +978,7 @@ class FlujoDatos(QMainWindow):
             "detalle": self.detalle_ci.text(),
             "nombre_data": self.nombre_data_ci.text(),
         }
-        condiciones_iniciales = self.CondicionesInicialesManejador.consultar_condicion(filtros, "like")
+        condiciones_iniciales = self.CondicionesInicialesManejador.consultar(filtros, "like")
         self.mostrar_condiciones_iniciales(condiciones_iniciales)
     
     # funciones crud para reaccion quimica
@@ -1017,7 +1017,7 @@ class FlujoDatos(QMainWindow):
         # Intentar agregar la reacción química a la base de datos
         try:
             print("Intentando agregar reacción química:", reaccion_quimica)
-            agregar_resultado = self.ReaccionQuimicaManejador.agregar_reaccion(reaccion_quimica)
+            agregar_resultado = self.ReaccionQuimicaManejador.agregar(reaccion_quimica)
 
             if agregar_resultado:
                 QMessageBox.information(self, "Información", "Reacción química agregada correctamente", QMessageBox.StandardButton.Ok)
@@ -1092,7 +1092,7 @@ class FlujoDatos(QMainWindow):
             }
 
             # Intentar actualizar la reacción química en la base de datos
-            actualizar_resultado = self.ReaccionQuimicaManejador.actualizar_reaccion(id, nueva_reaccion_quimica)
+            actualizar_resultado = self.ReaccionQuimicaManejador.actualizar(id, nueva_reaccion_quimica)
 
             if actualizar_resultado:
                 QMessageBox.information(self, "Información", "Reacción química actualizada correctamente", QMessageBox.StandardButton.Ok)
@@ -1145,7 +1145,7 @@ class FlujoDatos(QMainWindow):
             new_reaccion_quimica = {header_text: nuevo_valor}
 
             # Intentar actualizar la reacción química en la base de datos
-            if self.ReaccionQuimicaManejador.actualizar_reaccion(id, new_reaccion_quimica):
+            if self.ReaccionQuimicaManejador.actualizar(id, new_reaccion_quimica):
                 logging.info(f"Reacción química con ID {id} actualizada correctamente")
             else:
                 logging.error(f"No se pudo actualizar la reacción química con ID {id}")
@@ -1160,10 +1160,10 @@ class FlujoDatos(QMainWindow):
             opcion_seleccionada = QMessageBox.question(self, "Eliminar reacción química", "¿Estás seguro de eliminar la reacción química?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             if opcion_seleccionada == QMessageBox.StandardButton.Yes:
                 id = self.tabla_reaccion_quimica.item(fila_seleccionada, 0).text().strip()
-                borrar_resultado = self.ReaccionQuimicaManejador.borrar_reaccion(id)
+                borrar_resultado = self.ReaccionQuimicaManejador.borrar(id)
                 if borrar_resultado:
                     QMessageBox.information(self, "Información", "Reacción química eliminada correctamente", QMessageBox.StandardButton.Ok)
-                    self.ReaccionQuimicaManejador.consultar_reaccion()
+                    self.ReaccionQuimicaManejador.consultar()
                     self.buscar_reaccion_quimica()
                 else:
                     QMessageBox.information(self, "Información", "Hubo un problema al eliminar la reacción química", QMessageBox.StandardButton.Ok)
@@ -1177,7 +1177,7 @@ class FlujoDatos(QMainWindow):
             "tipo_especie": self.tipo_especie_rq.text(),
             "nombre_reaccion": self.nombre_reaccion_rq.text(),
         }
-        reaccion_quimica = self.ReaccionQuimicaManejador.consultar_reaccion(filtros, "like")
+        reaccion_quimica = self.ReaccionQuimicaManejador.consultar(filtros, "like")
         self.mostrar_reaccion_quimica(reaccion_quimica)
 
     # funciones especiales para datos
@@ -1334,7 +1334,7 @@ class FlujoDatos(QMainWindow):
         self.nombre_reaccion_rq_box.clear()
         self.nombre_reaccion_rq_box.addItem("Seleccione una opción", -1)
 
-        reaccion_quimica = self.ReaccionQuimicaManejador.consultar_reaccion()
+        reaccion_quimica = self.ReaccionQuimicaManejador.consultar()
 
         if reaccion_quimica:
             nombre_reaccion = set(registro.nombre_reaccion for registro in reaccion_quimica)
@@ -1350,7 +1350,7 @@ class FlujoDatos(QMainWindow):
         nombre_reaccion_seleccionada = self.nombre_reaccion_rq_box.currentText()
         # Consultar los datos de la reacción química seleccionada
         filtros = {"nombre_reaccion": nombre_reaccion_seleccionada}
-        reaccion_quimica = self.ReaccionQuimicaManejador.consultar_reaccion(filtros)
+        reaccion_quimica = self.ReaccionQuimicaManejador.consultar(filtros)
         
         if reaccion_quimica:
             # Convertir los datos de la reacción química a un DataFrame de pandas
@@ -1437,7 +1437,7 @@ class FlujoDatos(QMainWindow):
         #intentar agregar las unidades a la base de datos
         try:
             print("Intentando agregar unidades:", unidades)
-            agregar_resultado = self.RegistroUnidadesManejador.agregar_unidad(unidades)
+            agregar_resultado = self.RegistroUnidadesManejador.agregar(unidades)
 
             if agregar_resultado:
                 QMessageBox.information(self, "Información", "Unidades agregadas correctamente", QMessageBox.StandardButton.Ok)
@@ -1483,7 +1483,7 @@ class FlujoDatos(QMainWindow):
             }
 
             # Intentar actualizar las unidades en la base de datos
-            actualizar_resultado = self.RegistroUnidadesManejador.actualizar_unidad(id, nuevas_unidades)
+            actualizar_resultado = self.RegistroUnidadesManejador.actualizar(id, nuevas_unidades)
 
             if actualizar_resultado:
                 QMessageBox.information(self, "Información", "Unidades actualizadas correctamente", QMessageBox.StandardButton.Ok)
@@ -1532,10 +1532,10 @@ class FlujoDatos(QMainWindow):
             opcion_seleccionada = QMessageBox.question(self, "Eliminar unidades", "¿Estás seguro de eliminar las unidades?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             if opcion_seleccionada == QMessageBox.StandardButton.Yes:
                 id = self.tabla_registro_unidades.item(fila_seleccionada, 0).text().strip()
-                borrar_resultado = self.RegistroUnidadesManejador.borrar_unidad(id)
+                borrar_resultado = self.RegistroUnidadesManejador.borrar(id)
                 if borrar_resultado:
                     QMessageBox.information(self, "Información", "Unidades eliminadas correctamente", QMessageBox.StandardButton.Ok)
-                    self.RegistroUnidadesManejador.consultar_unidad()
+                    self.RegistroUnidadesManejador.consultar()
                     self.buscar_unidades()
                 else:
                     QMessageBox.information(self, "Información", "Hubo un problema al eliminar las unidades", QMessageBox.StandardButton.Ok)
@@ -1550,7 +1550,7 @@ class FlujoDatos(QMainWindow):
             "energia": self.energia_u_edit.text(),
             "nombre_data": self.nombre_data_u_edit.text()
         }
-        unidades = self.RegistroUnidadesManejador.consultar_unidad(filtros, "like")
+        unidades = self.RegistroUnidadesManejador.consultar(filtros, "like")
         self.mostrar_unidades(unidades)
 
     def actualizar_valor_celda_unidades(self, fila, columna):
@@ -1587,7 +1587,7 @@ class FlujoDatos(QMainWindow):
             new_unidades = {header_text: nuevo_valor}
 
             # Intentar actualizar las unidades en la base de datos
-            if self.RegistroUnidadesManejador.actualizar_unidad(id, new_unidades):
+            if self.RegistroUnidadesManejador.actualizar(id, new_unidades):
                 logging.info(f"Unidades con ID {id} actualizadas correctamente")
             else:
                 logging.error(f"No se pudo actualizar las unidades con ID {id}")
@@ -1606,17 +1606,6 @@ class FlujoDatos(QMainWindow):
         self.concentracion_u_edit.clear()
         self.energia_u_edit.clear()
         self.nombre_data_u_edit.clear()
-
-
-
-
-
-        
-
-
-
-    
-
 
 
 if __name__ == "__main__":

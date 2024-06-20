@@ -259,7 +259,7 @@ class PantallaCrud(QMainWindow):
         # Intentar agregar el dato a la base de datos
         try:
             #print("Intentando agregar dato:", dato)
-            agregar_resultado = self.DatosCineticosManejador.agregar_dato(dato)
+            agregar_resultado = self.DatosCineticosManejador.agregar(dato)
 
             if agregar_resultado:
                 QMessageBox.information(self, "Información", "Datos agregados correctamente", QMessageBox.StandardButton.Ok)
@@ -353,7 +353,7 @@ class PantallaCrud(QMainWindow):
             }
 
             # Intentar actualizar el dato en la base de datos
-            actualizar_resultado = self.DatosCineticosManejador.actualizar_dato(id, nuevo_dato)
+            actualizar_resultado = self.DatosCineticosManejador.actualizar(id, nuevo_dato)
 
             if actualizar_resultado:
                 QMessageBox.information(self, "Información", "Datos actualizados correctamente", QMessageBox.StandardButton.Ok)
@@ -377,7 +377,7 @@ class PantallaCrud(QMainWindow):
         fila_seleccionada = self.tabla_datos.currentRow()
         if fila_seleccionada != -1:
             id = self.tabla_datos.item(fila_seleccionada, 0).text().strip()
-            borrar_resultado = self.DatosCineticosManejador.borrar_dato(id)
+            borrar_resultado = self.DatosCineticosManejador.borrar(id)
             self.metodos_comunes.borrar_elemento(self.tabla_datos, borrar_resultado, "¿Estás seguro de eliminar el dato?", "Dato eliminado correctamente", "Hubo un problema al eliminar el dato", self.DatosCineticosManejador.consultar_datos, self.refrescar_datos_tabla, self.buscar_dato)
                 
     def buscar_dato(self):
@@ -393,7 +393,7 @@ class PantallaCrud(QMainWindow):
             "especie_quimica": self.especie_quimica.text(),
         }
 
-        datos_resultados = self.DatosCineticosManejador.consultar_datos(filtros,"like")
+        datos_resultados = self.DatosCineticosManejador.consultar(filtros,"like")
         self.mostrar_datos_tabla(datos_resultados)
     
 
@@ -401,8 +401,47 @@ class PantallaCrud(QMainWindow):
         self.metodos_comunes.mostrar_datos_tabla(self.tabla_datos, resultados)
 
     def actualizar_valor_celda_datos(self, fila, columna):
-        columnas_numericas = ['tiempo', 'concentracion', 'otra_propiedad', 'conversion_reactivo_limitante']
-        self.metodos_comunes.actualizar_valor_celda(self.tabla_datos, self.DatosCineticosManejador, fila, columna, columnas_numericas)
+        try:
+            item = self.tabla_datos.item(fila, columna)
+            if item is None:
+                logging.warning("La celda está vacía o fuera de los límites de la tabla")
+                return
+
+            nuevo_valor = item.text().strip()
+
+            if nuevo_valor == '':
+                logging.warning("Error: el valor ingresado está vacío.")
+                return
+
+            # Verificar si la celda debe contener un número y convertirla
+            header_text = self.tabla_datos.horizontalHeaderItem(columna).text().lower()
+            if header_text in ['tiempo', 'concentracion', 'otra_propiedad', 'conversion_reactivo_limitante']:
+                try:
+                    nuevo_valor = float(nuevo_valor)
+                except ValueError:
+                    logging.error("Error: el valor ingresado no es un número válido.")
+                    return
+
+            # Obtener el ID del dato a actualizar
+            id_item = self.tabla_datos.item(fila, 0)
+            if id_item is None:
+                logging.warning("No se encontró el ID en la fila seleccionada")
+                return
+
+            id = int(id_item.text().strip())
+
+            # Crear el diccionario de actualización
+            new_dato = {header_text: nuevo_valor}
+
+            # Intentar actualizar el dato en la base de datos
+            if self.DatosCineticosManejador.actualizar(id, new_dato):
+                logging.info(f"Dato con ID {id} actualizado correctamente")
+            else:
+                logging.error(f"No se pudo actualizar el dato con ID {id}")
+
+        except Exception as e:
+            logging.error(f"Error al actualizar el valor de la celda: {e}")
+            QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar el valor de la celda: {e}", QMessageBox.StandardButton.Ok)
 
     # funciones crud para registro de data experimental
     # Registro de data experimental
@@ -436,7 +475,7 @@ class PantallaCrud(QMainWindow):
         # Intentar agregar el registro a la base de datos
         try:
             print("Intentando agregar registro:", registro)
-            agregar_resultado = self.RegistroDataExperimentalManejador.agregar_registro(registro)
+            agregar_resultado = self.RegistroDataExperimentalManejador.agregar(registro)
 
             if agregar_resultado:
                 QMessageBox.information(self, "Información", "Registro agregado correctamente", QMessageBox.StandardButton.Ok)
@@ -498,7 +537,7 @@ class PantallaCrud(QMainWindow):
             }
 
             # Intentar actualizar el registro en la base de datos
-            actualizar_resultado = self.RegistroDataExperimentalManejador.actualizar_registro(id, nuevo_registro)
+            actualizar_resultado = self.RegistroDataExperimentalManejador.actualizar(id, nuevo_registro)
 
             if actualizar_resultado:
                 QMessageBox.information(self, "Información", "Registro actualizado correctamente", QMessageBox.StandardButton.Ok)
@@ -551,7 +590,7 @@ class PantallaCrud(QMainWindow):
             new_registro = {header_text: nuevo_valor}
 
             # Intentar actualizar el registro en la base de datos
-            if self.RegistroDataExperimentalManejador.actualizar_registro(id, new_registro):
+            if self.RegistroDataExperimentalManejador.actualizar(id, new_registro):
                 logging.info(f"Registro con ID {id} actualizado correctamente")
             else:
                 logging.error(f"No se pudo actualizar el registro con ID {id}")
@@ -564,14 +603,14 @@ class PantallaCrud(QMainWindow):
         fila_seleccionada = self.tabla_registro_data_experimental.currentRow()
         if fila_seleccionada != -1:
             id = self.tabla_registro_data_experimental.item(fila_seleccionada, 0).text().strip()
-            borrar_resultado = self.RegistroDataExperimentalManejador.borrar_registro(id)
+            borrar_resultado = self.RegistroDataExperimentalManejador.borrar(id)
             self.metodos_comunes.borrar_elemento(
                 self.tabla_registro_data_experimental, 
                 borrar_resultado, 
                 "¿Estás seguro de eliminar el registro?", 
                 "Registro eliminado correctamente", 
                 "Hubo un problema al eliminar el registro", 
-                self.RegistroDataExperimentalManejador.consultar_registro, 
+                self.RegistroDataExperimentalManejador.consultar, 
                 self.refrescar_datos_tabla, 
                 self.buscar_registros
             )
@@ -581,7 +620,7 @@ class PantallaCrud(QMainWindow):
             "fecha": self.fecha_data_experimental.text(),
             "detalle": self.detalle_data_experimental.text(),
         }
-        registros = self.RegistroDataExperimentalManejador.consultar_registro(filtros, "like")
+        registros = self.RegistroDataExperimentalManejador.consultar(filtros, "like")
         self.mostrar_registros(registros)    
 
     # funciones crud para condiciones iniciales
@@ -626,7 +665,7 @@ class PantallaCrud(QMainWindow):
         # Intentar agregar las condiciones iniciales a la base de datos
         try:
             print("Intentando agregar condiciones iniciales:", condiciones_iniciales)
-            agregar_resultado = self.CondicionesInicialesManejador.agregar_condicion(condiciones_iniciales)
+            agregar_resultado = self.CondicionesInicialesManejador.agregar(condiciones_iniciales)
 
             if agregar_resultado:
                 QMessageBox.information(self, "Información", "Condiciones iniciales agregadas correctamente", QMessageBox.StandardButton.Ok)
@@ -715,7 +754,7 @@ class PantallaCrud(QMainWindow):
             }
 
             # Intentar actualizar las condiciones iniciales en la base de datos
-            actualizar_resultado = self.CondicionesInicialesManejador.actualizar_condicion(id, nuevas_condiciones_iniciales)
+            actualizar_resultado = self.CondicionesInicialesManejador.actualizar(id, nuevas_condiciones_iniciales)
 
             if actualizar_resultado:
                 QMessageBox.information(self, "Información", "Condiciones iniciales actualizadas correctamente", QMessageBox.StandardButton.Ok)
@@ -768,7 +807,7 @@ class PantallaCrud(QMainWindow):
             new_condiciones_iniciales = {header_text: nuevo_valor}
 
             # Intentar actualizar las condiciones iniciales en la base de datos
-            if self.CondicionesInicialesManejador.actualizar_condicion(id, new_condiciones_iniciales):
+            if self.CondicionesInicialesManejador.actualizar(id, new_condiciones_iniciales):
                 logging.info(f"Condiciones iniciales con ID {id} actualizadas correctamente")
             else:
                 logging.error(f"No se pudo actualizar las condiciones iniciales con ID {id}")
@@ -781,14 +820,14 @@ class PantallaCrud(QMainWindow):
         fila_seleccionada = self.tabla_condiciones_iniciales.currentRow()
         if fila_seleccionada != -1:
             id = self.tabla_condiciones_iniciales.item(fila_seleccionada, 0).text().strip()
-            borrar_resultado = self.CondicionesInicialesManejador.borrar_condicion(id)
+            borrar_resultado = self.CondicionesInicialesManejador.borrar(id)
             self.metodos_comunes.borrar_elemento(
                 self.tabla_condiciones_iniciales, 
                 borrar_resultado, 
                 "¿Estás seguro de eliminar las condiciones iniciales?", 
                 "Condiciones iniciales eliminadas correctamente", 
                 "Hubo un problema al eliminar las condiciones iniciales", 
-                self.CondicionesInicialesManejador.consultar_condicion, 
+                self.CondicionesInicialesManejador.consultar, 
                 self.refrescar_datos_tabla, 
                 self.buscar_condiciones_iniciales
             )
@@ -804,7 +843,7 @@ class PantallaCrud(QMainWindow):
             "detalle": self.detalle_ci.text(),
             "nombre_data": self.nombre_data_ci.text(),
         }
-        condiciones_iniciales = self.CondicionesInicialesManejador.consultar_condicion(filtros, "like")
+        condiciones_iniciales = self.CondicionesInicialesManejador.consultar(filtros, "like")
         self.mostrar_condiciones_iniciales(condiciones_iniciales)
     
     # funciones crud para reaccion quimica
@@ -843,7 +882,7 @@ class PantallaCrud(QMainWindow):
         # Intentar agregar la reacción química a la base de datos
         try:
             print("Intentando agregar reacción química:", reaccion_quimica)
-            agregar_resultado = self.ReaccionQuimicaManejador.agregar_reaccion(reaccion_quimica)
+            agregar_resultado = self.ReaccionQuimicaManejador.agregar(reaccion_quimica)
 
             if agregar_resultado:
                 QMessageBox.information(self, "Información", "Reacción química agregada correctamente", QMessageBox.StandardButton.Ok)
@@ -918,7 +957,7 @@ class PantallaCrud(QMainWindow):
             }
 
             # Intentar actualizar la reacción química en la base de datos
-            actualizar_resultado = self.ReaccionQuimicaManejador.actualizar_reaccion(id, nueva_reaccion_quimica)
+            actualizar_resultado = self.ReaccionQuimicaManejador.actualizar(id, nueva_reaccion_quimica)
 
             if actualizar_resultado:
                 QMessageBox.information(self, "Información", "Reacción química actualizada correctamente", QMessageBox.StandardButton.Ok)
@@ -971,7 +1010,7 @@ class PantallaCrud(QMainWindow):
             new_reaccion_quimica = {header_text: nuevo_valor}
 
             # Intentar actualizar la reacción química en la base de datos
-            if self.ReaccionQuimicaManejador.actualizar_reaccion(id, new_reaccion_quimica):
+            if self.ReaccionQuimicaManejador.actualizar(id, new_reaccion_quimica):
                 logging.info(f"Reacción química con ID {id} actualizada correctamente")
             else:
                 logging.error(f"No se pudo actualizar la reacción química con ID {id}")
@@ -984,14 +1023,14 @@ class PantallaCrud(QMainWindow):
         fila_seleccionada = self.tabla_reaccion_quimica.currentRow()
         if fila_seleccionada != -1:
             id = self.tabla_reaccion_quimica.item(fila_seleccionada, 0).text().strip()
-            borrar_resultado = self.ReaccionQuimicaManejador.borrar_reaccion(id)
+            borrar_resultado = self.ReaccionQuimicaManejador.borrar(id)
             self.metodos_comunes.borrar_elemento(
                 self.tabla_reaccion_quimica, 
                 borrar_resultado, 
                 "¿Estás seguro de eliminar la reacción química?", 
                 "Reacción química eliminada correctamente", 
                 "Hubo un problema al eliminar la reacción química", 
-                self.ReaccionQuimicaManejador.consultar_reaccion, 
+                self.ReaccionQuimicaManejador.consultar, 
                 self.refrescar_datos_tabla, 
                 self.buscar_reaccion_quimica
             ) 
@@ -1004,7 +1043,7 @@ class PantallaCrud(QMainWindow):
             "tipo_especie": self.tipo_especie_rq.text(),
             "nombre_reaccion": self.nombre_reaccion_rq.text(),
         }
-        reaccion_quimica = self.ReaccionQuimicaManejador.consultar_reaccion(filtros, "like")
+        reaccion_quimica = self.ReaccionQuimicaManejador.consultar(filtros, "like")
         self.mostrar_reaccion_quimica(reaccion_quimica)
 
 
