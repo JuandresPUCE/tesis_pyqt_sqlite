@@ -18,7 +18,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Define la ruta relativa al archivo de la base de datos
 #db_path = r"data\data_reactor1.db"
-db_path = r"data\data_reactor5.db"
+db_path = r"data\data_reactor4.db"
 engine = create_engine(f'sqlite:///{db_path}', poolclass=QueuePool, pool_size=20, max_overflow=0)
 
 # Crear todas las tablas
@@ -132,3 +132,7 @@ class ReaccionQuimicaManejador(BaseManejador):
 class RegistroUnidadesManejador(BaseManejador):
     def __init__(self):
         super().__init__(RegistroUnidades)
+
+class RegistroDatosSalidaManejador(BaseManejador):
+    def __init__(self):
+        super().__init__(DatosSalida)

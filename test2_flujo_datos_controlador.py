@@ -1199,7 +1199,7 @@ class FlujoDatos(QMainWindow):
         self.tipo_especie_rq_box.addItem("Seleccione una opción", -1)
         if catalogo:
             for item in catalogo:
-                self.tipo_especie_rq_box.addItem(item["Descripcion"], item["ID"])
+                self.tipo_especie_rq_box.addItem(item["Descripcion"], item["id"])
         else:
             QMessageBox.information(self, "No hay datos", "No se encontraron datos en el archivo JSON.", QMessageBox.StandardButton.Ok)
 
@@ -1213,6 +1213,7 @@ class FlujoDatos(QMainWindow):
         except json.JSONDecodeError:
             QMessageBox.critical(self, "Error", f"Error al leer el archivo {archivo}", QMessageBox.StandardButton.Ok)
     
+    #empuja la seleccion al line edit
     def actualizar_lineedit(self):
         current_text = self.tipo_especie_rq_box.currentText()
         if current_text != "Seleccione una opción":

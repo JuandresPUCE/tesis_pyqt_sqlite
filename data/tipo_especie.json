@@ -1,10 +1,10 @@
 {
     "Tipo_especie_catalogo": [
-        {"ID": 1, "Descripcion": "reactivo_limitante"},
-        {"ID": 2, "Descripcion": "reactivo"},
-        {"ID": 3, "Descripcion": "producto"},
-        {"ID": 4, "Descripcion": "inerte"},
-        {"ID": 5, "Descripcion": "catalizador"},
-        {"ID": 6, "Descripcion": "otro"}
+        {"id": 1, "Descripcion": "reactivo_limitante"},
+        {"id": 2, "Descripcion": "reactivo"},
+        {"id": 3, "Descripcion": "producto"},
+        {"id": 4, "Descripcion": "inerte"},
+        {"id": 5, "Descripcion": "catalizador"},
+        {"id": 6, "Descripcion": "otro"}
     ]
 }

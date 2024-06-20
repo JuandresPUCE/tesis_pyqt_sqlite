@@ -225,3 +225,78 @@ class Servicios:
         except Exception as e:
             logging.error(f"Error al actualizar el valor de la celda: {e}")
             QMessageBox.critical(self.parent, "Error", f"Se produjo un error al actualizar el valor de la celda: {e}", QMessageBox.StandardButton.Ok)
+
+# refactor mostrar datos en tabla
+    def mostrar_datos_en_tabla(self, tabla, datos, columnas):
+        try:
+            # Definir la tabla
+            self.tabla = tabla
+            self.tabla.clearContents()
+            self.tabla.setRowCount(0)
+
+            # Verificar que hay datos
+            if datos:
+                self.tabla.setRowCount(len(datos))
+                self.tabla.setColumnCount(len(columnas))
+
+                for fila, dato in enumerate(datos):
+                    for columna, columna_nombre in enumerate(columnas):
+                        self.tabla.setItem(fila, columna, QTableWidgetItem(str(getattr(dato, columna_nombre))))
+
+            else:
+                self.tabla.setRowCount(0)
+                QMessageBox.information(self.parent, "No hay registros", "No se encontraron registros en la base de datos.", QMessageBox.StandardButton.Ok)
+
+        except AttributeError as ae:
+            print(f"Error de atributo: {ae}")
+            QMessageBox.critical(self.parent, "Error", f"Error al mostrar datos: {ae}", QMessageBox.StandardButton.Ok)
+        except Exception as e:
+            print(f"Error inesperado: {e}")
+            QMessageBox.critical(self.parent, "Error", f"Error inesperado al mostrar datos: {e}", QMessageBox.StandardButton.Ok)
+    #test de refactorizacion de mostrar datos en tabla
+    #def mostrar_unidades(self, unidades_tabla, unidades):
+    #    self.mostrar_datos_en_tabla(unidades_tabla, unidades, ['id', 'presion', 'temperatura', 'tiempo', 'concentracion', 'energia', 'nombre_data'])
+
+    #def mostrar_reacciones(self, reacciones_tabla, reacciones):
+    #    self.mostrar_datos_en_tabla(reacciones_tabla, reacciones, ['id', 'especie_quimica', 'formula', 'coeficiente_estequiometrico', 'detalle', 'tipo_especie', 'nombre_reaccion'])
+
+    #def mostrar_condiciones_iniciales(self, condiciones_iniciales_tabla, condiciones):
+    #    self.mostrar_datos_en_tabla(condiciones_iniciales_tabla, condiciones, ['id', 'nombre_data', 'fecha', 'detalle'])
+
+    #def mostrar_registros(self, registro_datos_tabla, registros):
+    #    self.mostrar_datos_en_tabla(registro_datos_tabla, registros, ['id', 'nombre_data', 'fecha', 'detalle'])
+
+    #def mostrar_datos_tabla(self, tabla_datos_cineticos, resultados):
+    #    self.mostrar_datos_en_tabla(tabla_datos_cineticos, resultados, ['id', 'nombre_data', 'fecha', 'detalle'])
+
+# refactor json
+
+    def cargar_datos_json_a_combo_box(self, archivo, combo_box,catalogo):
+        try:
+            with open(archivo, 'r') as f:
+                data = json.load(f)
+                self.llenar_combo_box(data.get(catalogo, []), combo_box)
+        except FileNotFoundError:
+            QMessageBox.critical(self.parent, "Error", f"No se encontró el archivo {archivo}", QMessageBox.StandardButton.Ok)
+        except json.JSONDecodeError:
+            QMessageBox.critical(self.parent, "Error", f"Error al leer el archivo {archivo}", QMessageBox.StandardButton.Ok)
+    
+    def llenar_combo_box(self, datos, combo_box):
+        combo_box.clear()
+        combo_box.addItem("Seleccione una opción")
+        for dato in datos:
+            combo_box.addItem(dato)
+    
+    def actualizar_lineedit_desde_combo_box(self, combo_box, line_edit):
+        current_text = combo_box.currentText()
+        if current_text != "Seleccione una opción":
+            line_edit.setText(current_text)
+        else:
+            line_edit.clear()
+
+    #uso 
+    #json_tipo_especie = r"data\tipo_especie.json"
+    #self.cargar_datos_json_a_combo_box(json_tipo_especie, self.tipo_especie_rq_box,Tipo_especie_catalogo)
+
+    # En algún lugar donde necesites actualizar el line edit basado en el combo box
+    #self.actualizar_lineedit_desde_combo_box(self.tipo_especie_rq_box, self.tipo_especie_rq)

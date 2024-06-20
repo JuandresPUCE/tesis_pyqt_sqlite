@@ -401,47 +401,7 @@ class PantallaCrud(QMainWindow):
         self.metodos_comunes.mostrar_datos_tabla(self.tabla_datos, resultados)
 
     def actualizar_valor_celda_datos(self, fila, columna):
-        try:
-            item = self.tabla_datos.item(fila, columna)
-            if item is None:
-                logging.warning("La celda está vacía o fuera de los límites de la tabla")
-                return
-
-            nuevo_valor = item.text().strip()
-
-            if nuevo_valor == '':
-                logging.warning("Error: el valor ingresado está vacío.")
-                return
-
-            # Verificar si la celda debe contener un número y convertirla
-            header_text = self.tabla_datos.horizontalHeaderItem(columna).text().lower()
-            if header_text in ['tiempo', 'concentracion', 'otra_propiedad', 'conversion_reactivo_limitante']:
-                try:
-                    nuevo_valor = float(nuevo_valor)
-                except ValueError:
-                    logging.error("Error: el valor ingresado no es un número válido.")
-                    return
-
-            # Obtener el ID del dato a actualizar
-            id_item = self.tabla_datos.item(fila, 0)
-            if id_item is None:
-                logging.warning("No se encontró el ID en la fila seleccionada")
-                return
-
-            id = int(id_item.text().strip())
-
-            # Crear el diccionario de actualización
-            new_dato = {header_text: nuevo_valor}
-
-            # Intentar actualizar el dato en la base de datos
-            if self.DatosCineticosManejador.actualizar(id, new_dato):
-                logging.info(f"Dato con ID {id} actualizado correctamente")
-            else:
-                logging.error(f"No se pudo actualizar el dato con ID {id}")
-
-        except Exception as e:
-            logging.error(f"Error al actualizar el valor de la celda: {e}")
-            QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar el valor de la celda: {e}", QMessageBox.StandardButton.Ok)
+        self.metodos_comunes.actualizar_valor_celda(self.tabla_datos, self.DatosCineticosManejador, fila, columna)
 
     # funciones crud para registro de data experimental
     # Registro de data experimental
@@ -557,47 +517,7 @@ class PantallaCrud(QMainWindow):
             self.boton_activado()
 
     def actualizar_valor_celda_registro(self, fila, columna):
-        try:
-            item = self.tabla_registro_data_experimental.item(fila, columna)
-            if item is None:
-                logging.warning("La celda está vacía o fuera de los límites de la tabla")
-                return
-
-            nuevo_valor = item.text().strip()
-
-            if nuevo_valor == '':
-                logging.warning("Error: el valor ingresado está vacío.")
-                return
-
-            # Verificar si la celda debe contener un número y convertirla
-            header_text = self.tabla_registro_data_experimental.horizontalHeaderItem(columna).text().lower()
-            if header_text in ['nombre_data', 'fecha', 'detalle']:
-                try:
-                    nuevo_valor = str(nuevo_valor)
-                except ValueError:
-                    logging.error("Error: el valor ingresado no es un número válido.")
-                    return
-
-            # Obtener el ID del registro a actualizar
-            id_item = self.tabla_registro_data_experimental.item(fila, 0)
-            if id_item is None:
-                logging.warning("No se encontró el ID en la fila seleccionada")
-                return
-
-            id = int(id_item.text().strip())
-
-            # Crear el diccionario de actualización
-            new_registro = {header_text: nuevo_valor}
-
-            # Intentar actualizar el registro en la base de datos
-            if self.RegistroDataExperimentalManejador.actualizar(id, new_registro):
-                logging.info(f"Registro con ID {id} actualizado correctamente")
-            else:
-                logging.error(f"No se pudo actualizar el registro con ID {id}")
-
-        except Exception as e:
-            logging.error(f"Error al actualizar el valor de la celda: {e}")
-            QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar el valor de la celda: {e}", QMessageBox.StandardButton.Ok)
+        self.metodos_comunes.actualizar_valor_celda(self.tabla_registro_data_experimental, self.RegistroDataExperimentalManejador, fila, columna)
 
     def borrar_registro_data_experimental(self):
         fila_seleccionada = self.tabla_registro_data_experimental.currentRow()
@@ -774,48 +694,8 @@ class PantallaCrud(QMainWindow):
             self.boton_activado()
 
     def actualizar_valor_celda_ci(self, fila, columna):
-        try:
-            item = self.tabla_condiciones_iniciales.item(fila, columna)
-            if item is None:
-                logging.warning("La celda está vacía o fuera de los límites de la tabla")
-                return
+        self.metodos_comunes.actualizar_valor_celda(self.tabla_condiciones_iniciales, self.CondicionesInicialesManejador, fila, columna)
 
-            nuevo_valor = item.text().strip()
-
-            if nuevo_valor == '':
-                logging.warning("Error: el valor ingresado está vacío.")
-                return
-
-            # Verificar si la celda debe contener un número y convertirla
-            header_text = self.tabla_condiciones_iniciales.horizontalHeaderItem(columna).text().lower()
-            if header_text in ['temperatura', 'tiempo', 'presion_total', 'presion_parcial', 'fraccion_molar']:
-                try:
-                    nuevo_valor = float(nuevo_valor)
-                except ValueError:
-                    logging.error("Error: el valor ingresado no es un número válido.")
-                    return
-
-            # Obtener el ID de las condiciones iniciales a actualizar
-            id_item = self.tabla_condiciones_iniciales.item(fila, 0)
-            if id_item is None:
-                logging.warning("No se encontró el ID en la fila seleccionada")
-                return
-
-            id = int(id_item.text().strip())
-
-            # Crear el diccionario de actualización
-            new_condiciones_iniciales = {header_text: nuevo_valor}
-
-            # Intentar actualizar las condiciones iniciales en la base de datos
-            if self.CondicionesInicialesManejador.actualizar(id, new_condiciones_iniciales):
-                logging.info(f"Condiciones iniciales con ID {id} actualizadas correctamente")
-            else:
-                logging.error(f"No se pudo actualizar las condiciones iniciales con ID {id}")
-
-        except Exception as e:
-            logging.error(f"Error al actualizar el valor de la celda: {e}")
-            QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar el valor de la celda: {e}", QMessageBox.StandardButton.Ok)
-    
     def borrar_condiciones_iniciales(self):
         fila_seleccionada = self.tabla_condiciones_iniciales.currentRow()
         if fila_seleccionada != -1:
@@ -977,47 +857,7 @@ class PantallaCrud(QMainWindow):
             self.boton_activado()
 
     def actualizar_valor_celda_reaccion(self, fila, columna):
-        try:
-            item = self.tabla_reaccion_quimica.item(fila, columna)
-            if item is None:
-                logging.warning("La celda está vacía o fuera de los límites de la tabla")
-                return
-            
-            nuevo_valor = item.text().strip()
-
-            if nuevo_valor == '':
-                logging.warning("Error: el valor ingresado está vacío.")
-                return
-            
-            # Verificar si la celda debe contener un número y convertirla
-            header_text = self.tabla_reaccion_quimica.horizontalHeaderItem(columna).text().lower()
-            if header_text in ['coeficiente_estequiometrico']:
-                try:
-                    nuevo_valor = float(nuevo_valor)
-                except ValueError:
-                    logging.error("Error: el valor ingresado no es un número válido.")
-                    return
-                
-            # Obtener el ID de la reacción química a actualizar
-            id_item = self.tabla_reaccion_quimica.item(fila, 0)
-            if id_item is None:
-                logging.warning("No se encontró el ID en la fila seleccionada")
-                return
-            
-            id = int(id_item.text().strip())
-
-            # Crear el diccionario de actualización
-            new_reaccion_quimica = {header_text: nuevo_valor}
-
-            # Intentar actualizar la reacción química en la base de datos
-            if self.ReaccionQuimicaManejador.actualizar(id, new_reaccion_quimica):
-                logging.info(f"Reacción química con ID {id} actualizada correctamente")
-            else:
-                logging.error(f"No se pudo actualizar la reacción química con ID {id}")
-
-        except Exception as e:
-            logging.error(f"Error al actualizar el valor de la celda: {e}")
-            QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar el valor de la celda: {e}", QMessageBox.StandardButton.Ok)
+        self.metodos_comunes.actualizar_valor_celda(self.tabla_reaccion_quimica, self.ReaccionQuimicaManejador, fila, columna)
 
     def borrar_reaccion_quimica(self):
         fila_seleccionada = self.tabla_reaccion_quimica.currentRow()
