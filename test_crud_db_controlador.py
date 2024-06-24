@@ -56,9 +56,9 @@ class PantallaCrud(QMainWindow):
         self.RegistroDataExperimentalManejador = RegistroDataExperimentalManejador()
         self.CondicionesInicialesManejador = CondicionesInicialesManejador()
         self.DatosCineticosManejador = DatosCineticosManejador()
-        self.ReaccionQuimicaManejador = ReaccionQuimicaManejador()     
+        self.ReaccionQuimicaManejador = ReaccionQuimicaManejador()
+        self.RegistroDatosSalidaManejador = RegistroDatosSalidaManejador()        
 
-        #self.metodos_comunes = MetodosComunesControlador()
         self.metodos_comunes = Servicios(self)
 
     def init_ui_elementos_dc(self):

@@ -98,6 +98,8 @@ class DatosSalida(Base):
     fecha = Column(String)
     id_nombre_data = Column(Integer)
     id_condiciones_iniciales = Column(Integer)
+    id_registro_unidades = Column(Integer)
+    r_utilizada = Column(Float)
     nombre_data = Column(String)
     nombre_reaccion = Column(String)
     delta_n_reaccion = Column(Float)

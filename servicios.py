@@ -151,7 +151,16 @@ class Servicios:
         except Exception as e:
             print(f"Error inesperado: {e}")
             QMessageBox.critical(self.parent, "Error", f"Error inesperado al mostrar unidades: {e}", QMessageBox.StandardButton.Ok)
-            
+
+    def mostrar_datos_salida(self, datos_salida_tabla, datos_salida):
+        self.mostrar_datos_en_tabla(datos_salida_tabla,datos_salida, ['id', 'nombre_data_salida', 'fecha', 'id_nombre_data', 'id_condiciones_iniciales',
+    'id_registro_unidades', 'r_utilizada', 'nombre_data', 'nombre_reaccion',
+    'delta_n_reaccion', 'epsilon_reactivo_limitante', 'tipo_especie', 'especie_quimica',
+    'constante_cinetica', 'orden_reaccion', 'modelo_cinetico', 'tipo_calculo',
+    'energia_activacion', 'detalles'])
+        
+
+                  
 
     #funciones refactorizadas
     def borrar_elemento(self, tabla, borrar_resultado, mensaje_confirmacion, mensaje_exito, mensaje_error, metodo_consultar, metodo_refescar, metodo_buscar):

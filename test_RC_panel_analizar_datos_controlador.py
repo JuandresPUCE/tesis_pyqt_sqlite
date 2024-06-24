@@ -411,8 +411,15 @@ class PanelDataAnalisis(QMainWindow):
 
         # Convertir los datos a un DataFrame de pandas
         df_datos_cineticos_listos = pd.DataFrame.from_records([dato.__dict__ for dato in datos_cineticos])
+
+                # Verificar si el DataFrame está vacío
+        if not df_datos_cineticos_listos.empty:
+            # Si no está vacío, ordenar por las columnas especificadas
+            df_datos_cineticos_listos = df_datos_cineticos_listos.sort_values(by=["tiempo", "especie_quimica","tipo_especie" ])
+                
         print("Datos cinéticos listos:", df_datos_cineticos_listos)
         # Guardar df_datos_cineticos_listos como variable de instancia
+        
         self.df_datos_cineticos_listos = df_datos_cineticos_listos
 
         if df_datos_cineticos_listos.empty:

@@ -28,7 +28,6 @@ class FlujoDatos(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-
         # Crear instancias de los manejadores de la base de datos
         self.manejadores_base()
 
@@ -42,6 +41,8 @@ class FlujoDatos(QMainWindow):
         self.init_ui_elementos_ci()
         self.init_ui_elementos_rq()
         self.init_ui_elementos_u()
+        self.init_ui_elementos_ds()
+        self.init_ui_menu_derecho()
 
         # Inicializar conexiones de señales y ranuras
         self.init_control_botones_datos()
@@ -49,6 +50,7 @@ class FlujoDatos(QMainWindow):
         self.init_control_botones_ci()
         self.init_control_botones_rq()
         self.init_control_botones_u()
+        self.init_control_botones_ds()
 
         # Cargar datos iniciales
         self.buscar_dato()
@@ -83,43 +85,38 @@ class FlujoDatos(QMainWindow):
         self.CondicionesInicialesManejador = CondicionesInicialesManejador()
         self.DatosCineticosManejador = DatosCineticosManejador()
         self.ReaccionQuimicaManejador = ReaccionQuimicaManejador()
-        self.RegistroUnidadesManejador = RegistroUnidadesManejador()     
+        self.RegistroUnidadesManejador = RegistroUnidadesManejador()
+        self.RegistroDatosSalidaManejador = RegistroDatosSalidaManejador()     
 
-        #self.metodos_comunes = MetodosComunesControlador()
         self.metodos_comunes = Servicios(self)
-        self.funciones=Funciones()
 
-    def init_ui_elementos_dc(self):
-        # Datos cinéticos
-        self.tiempo = self.ui.tiempo_dc_edit
-        self.concentracion = self.ui.concentracion_dc_edit
-        self.otra_propiedad = self.ui.otra_propiedad_dc_edit
-        self.conversion_reactivo_limitante = self.ui.conversion_reactivo_limitante_dc_edit
-        self.tipo_especie = self.ui.tipo_especie_dc_edit
-        self.id_condiciones_iniciales = self.ui.id_condiciones_iniciales_dc_edit
+
+    def init_ui_menu_derecho(self):
         #nombre_data_general_edit
         self.nombre_data = self.ui.nombre_data_general_edit
         #nombre_reaccion_dc_edit
-        #self.nombre_data = self.ui.nombre_data_dc_edit
-        #nombre_reaccion_dc_edit
-        #self.nombre_reaccion = self.ui.nombre_reaccion_dc_edit
         self.nombre_reaccion = self.ui.nombre_reaccion_general_edit
-        self.especie_quimica = self.ui.especie_quimica_dc_edit
+        self.nombre_data_experimental = self.ui.nombre_data_general_edit
+        self.nombre_data_ci = self.ui.nombre_data_general_edit
+        self.nombre_reaccion_rq = self.ui.nombre_reaccion_general_edit
 
-        # Botones de datos cinéticos
-        self.agregar_dc_btn = self.ui.agregar_dc_btn
-        self.actualizar_dc_btn = self.ui.actualizar_dc_btn
-        self.seleccionar_dc_btn = self.ui.seleccionar_dc_btn
-        self.buscar_dc_btn = self.ui.buscar_dc_btn
-        self.limpiar_dc_btn = self.ui.limpiar_dc_btn
-        self.borrar_dc_btn = self.ui.borrar_dc_btn
+        #configuracion unidades
+        self.nombre_data_u_edit = self.ui.nombre_data_general_edit
+        #data salida
+        self.r_ds_edit =self.ui.r_u_edit
+    
+        self.nombre_reaccion_ds_edit=self.ui.nombre_reaccion_general_edit
+        self.nombre_data_ds_edit=self.ui.nombre_data_general_edit
 
-        # Tabla de datos cinéticos
-        self.tabla_datos = self.ui.datos_cineticos_tabla
-        self.tabla_datos.setSortingEnabled(False)
-        self.lista_botones = self.ui.funciones_frame_dc.findChildren(QPushButton)
+                #botones
+        self.marcar_ci_btn = self.ui.marcar_ci_btn
+        self.epsilon_a_btn = self.ui.epsilon_a_btn
+        self.epsilon_reactivo_limitante_calculo = self.ui.epsilon_reactivo_limitante_calculo
+        self.concentracion_irl_btn=self.ui.concentracion_irl_btn
 
-        #objetos test dc
+        self.funciones=Funciones()
+
+         #objetos test dc
         self.calculo1=self.ui.marcar_a0_btn
         self.calculo0=self.ui.marcar_producto0_btn
         self.calculo2=self.ui.marcar_coeficiente_producto_btn
@@ -139,10 +136,66 @@ class FlujoDatos(QMainWindow):
         self.conversion_reactivo_limitante_calculo = self.ui.conversion_reactivo_limitante_dc_edit_2
         self.otra_propiedad_inicial = self.ui.otra_propiedad_inicial_edit
         self.conversion_reactivo_limitante_gas = self.ui.conversion_reactivo_limitante_dc_edit_3
-
+        self.concentracion_reactivo_limitante_calculo_2=self.ui.concentracion_reactivo_limitante_calculo_2
         self.agregar_dc_archivo_btn=self.ui.agregar_dc_archivo_btn
 
+        #objetos test rq
 
+        #box en calculos rq
+        self.nombre_reaccion_rq_box=self.ui.nombre_reaccion_rq_box
+        self.filtrar_reaccion_quimica()
+        
+        #self.especie_quimica_rq_box.currentIndexChanged.connect(self.)
+        
+        self.calcular_delta_n = self.ui.delta_n_btn
+
+        self.delta_n_rq = self.ui.delta_n_edit
+
+        #calculos
+        
+        self.calculo0.clicked.connect(self.marcar_quimico_inicial)
+        self.calculo1.clicked.connect(self.marcar_quimico_inicial)
+        self.calculo2.clicked.connect(self.marcar_coeficiente)
+        self.calculo3.clicked.connect(self.marcar_coeficiente)
+        self.calculo4.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_producto)
+        self.calculo5.clicked.connect(self.calcular_concentracion_reactivo_limitante_dado_conversion)
+        self.calculo6.clicked.connect(self.calcular_concentracion_producto_dado_conversion)
+        self.calculo7.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_epsilon_a_presion)
+        self.calculo8.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_concentracion_gas)
+
+        self.agregar_dc_archivo_btn.clicked.connect(self.cargar_datos_btn_click)
+            
+        self.epsilon_a_btn.clicked.connect(self.calcular_epsilon_reactivo_limitante)
+        #calculos reaccion quimica
+        self.calcular_delta_n.clicked.connect(self.calculo_delta_n)
+
+
+    def init_ui_elementos_dc(self):
+        # Datos cinéticos
+        self.tiempo = self.ui.tiempo_dc_edit
+        self.concentracion = self.ui.concentracion_dc_edit
+        self.otra_propiedad = self.ui.otra_propiedad_dc_edit
+        self.conversion_reactivo_limitante = self.ui.conversion_reactivo_limitante_dc_edit
+        self.tipo_especie = self.ui.tipo_especie_dc_edit
+        self.id_condiciones_iniciales = self.ui.id_condiciones_iniciales_dc_edit
+        #nombre_reaccion_dc_edit
+        #self.nombre_data = self.ui.nombre_data_dc_edit
+        #nombre_reaccion_dc_edit
+        #self.nombre_reaccion = self.ui.nombre_reaccion_dc_edit
+        self.especie_quimica = self.ui.especie_quimica_dc_edit
+
+        # Botones de datos cinéticos
+        self.agregar_dc_btn = self.ui.agregar_dc_btn
+        self.actualizar_dc_btn = self.ui.actualizar_dc_btn
+        self.seleccionar_dc_btn = self.ui.seleccionar_dc_btn
+        self.buscar_dc_btn = self.ui.buscar_dc_btn
+        self.limpiar_dc_btn = self.ui.limpiar_dc_btn
+        self.borrar_dc_btn = self.ui.borrar_dc_btn
+
+        # Tabla de datos cinéticos
+        self.tabla_datos = self.ui.datos_cineticos_tabla
+        self.tabla_datos.setSortingEnabled(False)
+        self.lista_botones = self.ui.funciones_frame_dc.findChildren(QPushButton)
 
     def init_ui_elementos_rde(self):
         # Datos experimentales
@@ -178,8 +231,6 @@ class FlujoDatos(QMainWindow):
         self.detalle_ci = self.ui.detalle_ci_edit
         #nombre_data_ci_edit
         #self.nombre_data_ci = self.ui.nombre_data_ci_edit
-        #nombre_data
-        self.nombre_data_ci = self.ui.nombre_data_general_edit
         
         # Botones de condiciones iniciales
         self.agregar_ci_btn = self.ui.agregar_ci_btn
@@ -194,11 +245,6 @@ class FlujoDatos(QMainWindow):
         self.tabla_condiciones_iniciales.setSortingEnabled(False)
         self.lista_botones = self.ui.funciones_frame_ci.findChildren(QPushButton)
 
-        #botones
-        self.marcar_ci_btn = self.ui.marcar_ci_btn
-        self.epsilon_a_btn = self.ui.epsilon_a_btn
-        self.epsilon_reactivo_limitante_calculo = self.ui.epsilon_reactivo_limitante_calculo
-        self.concentracion_irl_btn=self.ui.concentracion_irl_btn
 
     
     def init_ui_elementos_rq(self):
@@ -208,9 +254,6 @@ class FlujoDatos(QMainWindow):
         self.coeficiente_estequiometro_rq = self.ui.coeficiente_estequiometrico_rq_edit
         self.detalle_rq = self.ui.detalle_rq_edit
         self.tipo_especie_rq = self.ui.tipo_especie_rq_edit
-        #nombre_data_general_edit
-        self.nombre_reaccion_rq = self.ui.nombre_reaccion_general_edit
-        #nombre_reaccion_rq_edit
         #self.nombre_reaccion_rq = self.ui.nombre_reaccion_rq_edit
 
         # Botones de reacción química
@@ -242,6 +285,43 @@ class FlujoDatos(QMainWindow):
 
         self.delta_n_rq = self.ui.delta_n_edit
 
+    def init_ui_elementos_ds(self):
+        self.agregar_ds_btn = self.ui.agregar_ds_btn
+        self.actualizar_ds_btn = self.ui.actualizar_ds_btn
+        self.seleccionar_ds_btn = self.ui.seleccionar_ds_btn
+        self.buscar_ds_btn = self.ui.buscar_ds_btn
+        self.limpiar_ds_btn = self.ui.limpiar_ds_btn
+        self.borrar_ds_btn = self.ui.borrar_ds_btn
+    
+        #edicion manual de datos de salida
+        self.nombre_ds_edit=self.ui.nombre_ds_edit
+        self.fecha_ds_edit = self.ui.fecha_ds_edit
+        #self.nombre_data_ds_edit=self.ui.nombre_data_ds_edit
+        self.id_nombre_data_ds_edit = self.ui.id_nombre_data_ds_edit
+        self.id_condiciones_iniciales_ds_edit = self.ui.id_condiciones_iniciales_ds_edit
+        self.id_registro_unidades_ds_edit = self.ui.id_registro_unidades_ds_edit
+
+        #self.r_ds_edit=self.ui.r_ds_edit
+
+        #self.nombre_reaccion_ds_edit=self.ui.nombre_reaccion_ds_edit
+        self.delta_n_ds_edit=self.ui.delta_n_ds_edit
+       
+        self.epsilon_rl_ds_edit=self.ui.epsilon_rl_ds_edit
+
+        self.tipo_especie_ds_edit=self.ui.tipo_especie_ds_edit
+        self.especie_quimica_ds_edit=self.ui.especie_quimica_ds_edit
+
+        self.constante_cinetica_ds_edit=self.ui.constante_cinetica_ds_edit
+        self.orden_reaccion_ds_edit=self.ui.orden_reaccion_ds_edit
+        self.modelo_cinetico_ds_edit=self.ui.modelo_cinetico_ds_edit
+        self.tipo_calculo_ds_edit=self.ui.tipo_calculo_ds_edit
+        self.energia_activacion_ds_edit=self.ui.energia_activacion_ds_edit
+        self.detalles_ds_edit=self.ui.detalles_ds_edit
+
+
+        #tabla tabla_datos_salida
+        self.tabla_datos_salida = self.ui.datos_salida_tabla
+
     def init_ui_elementos_u(self):
         #Edicion manual de unidades
         self.presion_u_edit = self.ui.presion_u_edit
@@ -249,7 +329,7 @@ class FlujoDatos(QMainWindow):
         self.tiempo_u_edit = self.ui.tiempo_u_edit
         self.concentracion_u_edit = self.ui.concentracion_u_edit
         self.energia_u_edit = self.ui.energia_u_edit
-        self.nombre_data_u_edit = self.ui.nombre_data_u_edit
+        #self.nombre_data_u_edit = self.ui.nombre_data_u_edit
         self.r_u_edit = self.ui.r_u_edit
         #botones de unidades
         self.agregar_ru_btn = self.ui.agregar_ru_btn
@@ -275,19 +355,7 @@ class FlujoDatos(QMainWindow):
         self.borrar_dc_btn.clicked.connect(self.borrar_dato)
         self.limpiar_dc_btn.clicked.connect(self.limpiar_formulario)
         self.buscar_dc_btn.clicked.connect(self.buscar_dato)
-
-        self.calculo0.clicked.connect(self.marcar_quimico_inicial)
-        self.calculo1.clicked.connect(self.marcar_quimico_inicial)
-        self.calculo2.clicked.connect(self.marcar_coeficiente)
-        self.calculo3.clicked.connect(self.marcar_coeficiente)
-        self.calculo4.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_producto)
-        self.calculo5.clicked.connect(self.calcular_concentracion_reactivo_limitante_dado_conversion)
-        self.calculo6.clicked.connect(self.calcular_concentracion_producto_dado_conversion)
-        self.calculo7.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_epsilon_a_presion)
-        self.calculo8.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_concentracion_gas)
-
-        self.agregar_dc_archivo_btn.clicked.connect(self.cargar_datos_btn_click)
-        
+       
 
     def init_control_botones_experimental(self):
         self.agregar_rde_btn.clicked.connect(self.agregar_registro_data_experimental)
@@ -305,8 +373,7 @@ class FlujoDatos(QMainWindow):
         self.limpiar_ci_btn.clicked.connect(self.limpiar_formulario_ci)
         self.buscar_ci_btn.clicked.connect(self.buscar_condiciones_iniciales)   
         self.marcar_ci_btn.clicked.connect(self.marcar_condiciones_iniciales)
-    
-        self.epsilon_a_btn.clicked.connect(self.calcular_epsilon_reactivo_limitante)
+
 
     def init_control_botones_rq(self):
         self.agregar_rq_btn.clicked.connect(self.agregar_reaccion_quimica)
@@ -316,8 +383,6 @@ class FlujoDatos(QMainWindow):
         self.limpiar_rq_btn.clicked.connect(self.limpiar_formulario_rq)
         self.buscar_rq_btn.clicked.connect(self.buscar_reaccion_quimica) 
 
-        #calculos reaccion quimica
-        self.calcular_delta_n.clicked.connect(self.calculo_delta_n)
 
     def init_control_botones_u(self):
         self.agregar_ru_btn.clicked.connect(self.agregar_unidades)
@@ -326,6 +391,14 @@ class FlujoDatos(QMainWindow):
         self.borrar_ru_btn.clicked.connect(self.borrar_unidades)
         self.limpiar_ru_btn.clicked.connect(self.limpiar_formulario_unidades)
         self.buscar_ru_btn.clicked.connect(self.buscar_unidades)
+
+    def init_control_botones_ds(self):
+        self.agregar_ds_btn.clicked.connect(self.agregar_datos_salida)
+        self.actualizar_ds_btn.clicked.connect(self.actualizar_datos_salida)
+        self.seleccionar_ds_btn.clicked.connect(self.seleccionar_datos_salida)
+        self.borrar_ds_btn.clicked.connect(self.borrar_datos_salida)
+        self.limpiar_ds_btn.clicked.connect(self.limpiar_formulario_datos_salida)
+        self.buscar_ds_btn.clicked.connect(self.buscar_datos_salida)
 
 
     def refrescar_datos_tabla(self):
@@ -1301,39 +1374,95 @@ class FlujoDatos(QMainWindow):
 
         #calcula la conversion de XA con respecto al la concentracion del producto 
     def calcular_conversion_reactivo_limitante_dado_producto(self):
-        funciones=Funciones()
-        concentracion = float(self.concentracion.text())
-        concentracion_inicial_producto = float(self.concentracion_inicial_producto.text())
-        concentracion_inicial_reactivo_limitante = float(self.concentracion_inicial_reactivo_limitante.text())
-        coeficiente_estequiometro_producto = float(self.coeficiente_estequiometro_producto.text())
-        coeficiente_estequiometro_reactivo = float(self.coeficiente_estequiometro_reactivo.text())
-        xa=funciones.conversion_reactivo_limitante_dado_producto(concentracion, concentracion_inicial_producto, concentracion_inicial_reactivo_limitante, coeficiente_estequiometro_producto, coeficiente_estequiometro_reactivo)
-        print(xa)
-        self.conversion_reactivo_limitante.setText(str(xa))
-        self.conversion_reactivo_limitante_calculo.setText(str(xa))
+        try:
+            # Verificar individualmente cada campo y lanzar una excepción si está vacío
+            if not self.concentracion.text().strip():
+                raise ValueError("El campo 'Concentración datos cinéticos de la pestaña' está vacío. Por favor, llénelo.")
+            if not self.concentracion_inicial_producto.text().strip():
+                raise ValueError("El campo 'Concentración Inicial del Producto del panel' está vacío. Por favor, llénelo.")
+            if not self.concentracion_inicial_reactivo_limitante.text().strip():
+                raise ValueError("El campo 'Concentración Inicial del Reactivo Limitante del panel' está vacío. Por favor, llénelo.")
+            if not self.coeficiente_estequiometro_producto.text().strip():
+                raise ValueError("El campo 'Coeficiente Estequiométrico del Producto del panel' está vacío. Por favor, llénelo.")
+            if not self.coeficiente_estequiometro_reactivo.text().strip():
+                raise ValueError("El campo 'Coeficiente Estequiométrico Reactivo del panel' está vacío. Por favor, llénelo.")
+
+            # Continuar con la conversión a float y el cálculo
+            funciones = Funciones()
+            concentracion = float(self.concentracion.text())
+            concentracion_inicial_producto = float(self.concentracion_inicial_producto.text())
+            concentracion_inicial_reactivo_limitante = float(self.concentracion_inicial_reactivo_limitante.text())
+            coeficiente_estequiometro_producto = float(self.coeficiente_estequiometro_producto.text())
+            coeficiente_estequiometro_reactivo = float(self.coeficiente_estequiometro_reactivo.text())
+            xa = funciones.conversion_reactivo_limitante_dado_producto(concentracion, concentracion_inicial_producto, concentracion_inicial_reactivo_limitante, coeficiente_estequiometro_producto, coeficiente_estequiometro_reactivo)
+            self.conversion_reactivo_limitante.setText(str(xa))
+            self.conversion_reactivo_limitante_calculo.setText(str(xa))
+            self.statusbar.showMessage(f"la conversion del reactivo limitante es x reactivo limitante= {xa} .", 5000)
+        except ValueError as e:
+            # Mostrar el mensaje de error específico para el campo vacío
+            self.statusbar.showMessage(str(e), 5000)
+        except Exception as e:
+            # Manejar cualquier otro error inesperado
+            self.statusbar.showMessage(f"Error inesperado: {e}", 5000)
         
 
     #calcula A con Xa y la Concentracion inicial
     def calcular_concentracion_reactivo_limitante_dado_conversion(self):
-        funciones=Funciones()
-        concentracion_inicial_reactivo_limitante = float(self.concentracion_inicial_reactivo_limitante.text())
-        conversion_reactivo_limitante =float(self.conversion_reactivo_limitante.text())
-        A=funciones.concentracion_reactivo_funcion_conversion(concentracion_inicial_reactivo_limitante,conversion_reactivo_limitante)
-        print(A)
-        self.concentracion.setText(str(A))
-        self.concentracion_reactivo_limitante_calculo.setText(str(A))
+        try:
+            # Verificar individualmente cada campo y lanzar una excepción si está vacío
+            if not self.concentracion_inicial_reactivo_limitante.text().strip():
+                raise ValueError("El campo 'Concentración Inicial del Reactivo Limitante del panel' está vacío. Por favor, llénelo.")
+            if not self.conversion_reactivo_limitante.text().strip():
+                raise ValueError("El campo 'Conversión del Reactivo Limitante de la pestaña datos cinéticos' está vacío. Por favor, llénelo.")
+
+            # Continuar con la conversión a float y el cálculo
+            funciones = Funciones()
+            concentracion_inicial_reactivo_limitante = float(self.concentracion_inicial_reactivo_limitante.text())
+            conversion_reactivo_limitante = float(self.conversion_reactivo_limitante.text())
+            A = funciones.concentracion_reactivo_funcion_conversion(concentracion_inicial_reactivo_limitante, conversion_reactivo_limitante)
+            print(A)
+            self.concentracion.setText(str(A))
+            self.concentracion_reactivo_limitante_calculo.setText(str(A))
+            self.statusbar.showMessage(f"la conversion del reactivo limitante es x reactivo limitante= {A} .", 5000)
+        except ValueError as e:
+            # Mostrar el mensaje de error específico para el campo vacío
+            self.statusbar.showMessage(str(e), 5000)
+        except Exception as e:
+            # Manejar cualquier otro error inesperado
+            self.statusbar.showMessage(f"Error inesperado: {e}", 5000)
 
     def calcular_concentracion_producto_dado_conversion(self):
-        funciones=Funciones()
-        concentracion_inicial_producto = float(self.concentracion_inicial_producto.text())
-        concentracion_inicial_reactivo_limitante = float(self.concentracion_inicial_reactivo_limitante.text())
-        conversion_reactivo_limitante = float(self.conversion_reactivo_limitante.text())
-        coeficiente_estequiometro_producto = float(self.coeficiente_estequiometro_producto.text())
-        coeficiente_estequiometro_reactivo = float(self.coeficiente_estequiometro_reactivo.text())
-        producto=funciones.concentracion_Producto(concentracion_inicial_producto,coeficiente_estequiometro_producto,coeficiente_estequiometro_reactivo,conversion_reactivo_limitante,concentracion_inicial_reactivo_limitante,)
-        print(producto)
-        self.concentracion.setText(str(producto))
-        self.concentracion_producto_calculo.setText(str(producto))
+        try:
+            # Verificar individualmente cada campo y lanzar una excepción si está vacío
+            if not self.concentracion_inicial_producto.text().strip():
+                raise ValueError("El campo 'Concentración Inicial del Producto' está vacío. Por favor, llénelo.")
+            if not self.concentracion_inicial_reactivo_limitante.text().strip():
+                raise ValueError("El campo 'Concentración Inicial del Reactivo Limitante' está vacío. Por favor, llénelo.")
+            if not self.conversion_reactivo_limitante.text().strip():
+                raise ValueError("El campo 'Conversión del Reactivo Limitante' está vacío. Por favor, llénelo.")
+            if not self.coeficiente_estequiometro_producto.text().strip():
+                raise ValueError("El campo 'Coeficiente Estequiométrico del Producto' está vacío. Por favor, llénelo.")
+            if not self.coeficiente_estequiometro_reactivo.text().strip():
+                raise ValueError("El campo 'Coeficiente Estequiométrico del Reactivo' está vacío. Por favor, llénelo.")
+
+            # Continuar con la conversión a float y el cálculo
+            funciones = Funciones()
+            concentracion_inicial_producto = float(self.concentracion_inicial_producto.text())
+            concentracion_inicial_reactivo_limitante = float(self.concentracion_inicial_reactivo_limitante.text())
+            conversion_reactivo_limitante = float(self.conversion_reactivo_limitante.text())
+            coeficiente_estequiometro_producto = float(self.coeficiente_estequiometro_producto.text())
+            coeficiente_estequiometro_reactivo = float(self.coeficiente_estequiometro_reactivo.text())
+            producto = funciones.concentracion_Producto(concentracion_inicial_producto, coeficiente_estequiometro_producto, coeficiente_estequiometro_reactivo, conversion_reactivo_limitante, concentracion_inicial_reactivo_limitante)
+            print(producto)
+            self.concentracion.setText(str(producto))
+            self.concentracion_producto_calculo.setText(str(producto))
+            self.statusbar.showMessage(f"La concentración del producto dada la conversión es: {producto}", 5000)
+        except ValueError as e:
+            # Mostrar el mensaje de error específico para el campo vacío
+            self.statusbar.showMessage(str(e), 5000)
+        except Exception as e:
+            # Manejar cualquier otro error inesperado
+            self.statusbar.showMessage(f"Error inesperado: {e}", 5000)
     
     def filtrar_reaccion_quimica(self):
         self.nombre_reaccion_rq_box.clear()
@@ -1351,13 +1480,17 @@ class FlujoDatos(QMainWindow):
 
         #calcular despues
     def calculo_delta_n(self):
-        funciones = Funciones()
-        nombre_reaccion_seleccionada = self.nombre_reaccion_rq_box.currentText()
-        # Consultar los datos de la reacción química seleccionada
-        filtros = {"nombre_reaccion": nombre_reaccion_seleccionada}
-        reaccion_quimica = self.ReaccionQuimicaManejador.consultar(filtros)
-        
-        if reaccion_quimica:
+        try:
+            funciones = Funciones()
+            nombre_reaccion_seleccionada = self.nombre_reaccion_rq_box.currentText()
+            # Consultar los datos de la reacción química seleccionada
+            filtros = {"nombre_reaccion": nombre_reaccion_seleccionada}
+            reaccion_quimica = self.ReaccionQuimicaManejador.consultar(filtros)
+            
+            if not reaccion_quimica:
+                self.statusbar.showMessage("No se encontraron datos para la reacción seleccionada")
+                return
+            
             # Convertir los datos de la reacción química a un DataFrame de pandas
             df_reaccion_quimica = pd.DataFrame.from_records([r.__dict__ for r in reaccion_quimica])
             print(df_reaccion_quimica)
@@ -1366,6 +1499,11 @@ class FlujoDatos(QMainWindow):
             delta_n = funciones.calcular_delta_n(coeficientes_productos, coeficientes_reactivos)
             print(delta_n)
             self.delta_n_rq.setText(str(delta_n))
+            self.delta_n_ds_edit.setText(str(delta_n))
+            self.statusbar.showMessage(f"Delta n calculado: {delta_n}")
+        except Exception as e:
+            print(f"Ocurrió un error al calcular delta_n: {e}")
+            self.statusbar.showMessage("Error al calcular")
 
     def marcar_condiciones_iniciales(self):
         seleccionar_fila = self.tabla_condiciones_iniciales.currentRow()
@@ -1382,35 +1520,91 @@ class FlujoDatos(QMainWindow):
             nombre_data = self.tabla_condiciones_iniciales.item(seleccionar_fila, 9).text().strip()
 
     def calcular_epsilon_reactivo_limitante(self):
-        funciones = Funciones()
-        fraccion_molar_inicial = float(self.fraccion_molar_ci.text())
-        delta_n = float(self.delta_n_rq.text())
-        coeficiente_estequiometrico_reactivo = float(self.coeficiente_estequiometro_reactivo.text())
-        epsilon_a=funciones.calcular_epsilon_A(fraccion_molar_inicial, delta_n, coeficiente_estequiometrico_reactivo)
-
-        self.epsilon_reactivo_limitante_calculo.setText(str(epsilon_a))
-    
+        try:
+            funciones = Funciones()
+            # Verificar individualmente cada campo y mostrar un mensaje específico si está vacío
+            if not self.fraccion_molar_ci.text():
+                self.statusbar.showMessage("El campo 'Fracción Molar de condiciones iniciales' está vacío. Por favor, llénelo.", 5000)
+                return
+            if not self.delta_n_rq.text():
+                self.statusbar.showMessage("El campo 'Delta n de la reacción quimica' está vacío. Por favor, llénelo.", 5000)
+                return
+            if not self.coeficiente_estequiometro_reactivo.text():
+                self.statusbar.showMessage("El campo del 'Coeficiente Estequiométrico del Reactivo' está vacío. Por favor, llénelo.", 5000)
+                return
+            
+            fraccion_molar_inicial = float(self.fraccion_molar_ci.text())
+            delta_n = float(self.delta_n_rq.text())
+            coeficiente_estequiometrico_reactivo = float(self.coeficiente_estequiometro_reactivo.text())
+            epsilon_a = funciones.calcular_epsilon_A(fraccion_molar_inicial, delta_n, coeficiente_estequiometrico_reactivo)
+            self.epsilon_reactivo_limitante_calculo.setText(str(epsilon_a))
+            self.epsilon_rl_ds_edit.setText(str(epsilon_a))
+            self.statusbar.showMessage(f"epsilon del reactivo limintante es e_rl= {epsilon_a} .", 5000)
+        except ValueError as e:
+            self.statusbar.showMessage(f"Error al convertir a float: {e}", 5000)
+        except Exception as e:
+            self.statusbar.showMessage(f"Error inesperado: {e}", 5000)
+            
     def calcular_conversion_reactivo_limitante_dado_epsilon_a_presion(self):
-        funciones = Funciones()
-        otra_propiedad_inicial = float(self.otra_propiedad_inicial.text())
-        otra_propiedad = float(self.otra_propiedad.text())
-        epsilon_a = float(self.epsilon_reactivo_limitante_calculo.text())
-        gas_conversion_componente_principal = funciones.gas_conversion_componente_principal_epsilon_a(otra_propiedad, otra_propiedad_inicial, epsilon_a)
-
-        self.conversion_reactivo_limitante_gas.setText(str(gas_conversion_componente_principal))
+        try:
+            funciones = Funciones()
+            # Verificar individualmente cada campo y mostrar un mensaje específico si está vacío
+            if not self.otra_propiedad_inicial.text():
+                self.statusbar.showMessage("El campo 'Otra Propiedad Inicial del panel' está vacío. Por favor, llénelo.", 5000)
+                return
+            if not self.otra_propiedad.text():
+                self.statusbar.showMessage("El campo 'Otra Propiedad de la pestaña datos cinéticos' está vacío. Por favor, llénelo.", 5000)
+                return
+            if not self.epsilon_reactivo_limitante_calculo.text():
+                self.statusbar.showMessage("El campo 'Epsilon Reactivo Limitante del panel' está vacío. Por favor, llénelo.", 5000)
+                return
+            
+            otra_propiedad_inicial = float(self.otra_propiedad_inicial.text())
+            otra_propiedad = float(self.otra_propiedad.text())
+            epsilon_a = float(self.epsilon_reactivo_limitante_calculo.text())
+            gas_conversion_componente_principal = funciones.gas_conversion_componente_principal_epsilon_a(otra_propiedad, otra_propiedad_inicial, epsilon_a)
+            
+            self.conversion_reactivo_limitante_gas.setText(str(gas_conversion_componente_principal))
+            self.statusbar.showMessage(f" La conversion del reactivo limitante es x reactivo limitante= {gas_conversion_componente_principal} .", 5000)
+        except ValueError as e:
+            self.statusbar.showMessage(f"Error al convertir a float: {e}", 5000)
+        except Exception as e:
+            self.statusbar.showMessage(f"Error inesperado: {e}", 5000)
 
     def calcular_conversion_reactivo_limitante_dado_concentracion_gas(self):
-        funciones = Funciones()
-        temperatura = float(self.temperatura_ci.text())
-
-        presion_total = float(self.presion_total_ci.text())
-        fraccion_molar = float(self.fraccion_molar_ci.text())
-        temperatura = float(self.temperatura_ci.text())
-        unidad_temperatura = self.temperatura_u_edit.text()
-        #escojer R
-        #gas_concentracion_componente(self,coeficiente_gas_Z,y_A0,Presion_total,R,Temperatura,escala_temp=None):
-        concentracion_gas = funciones.gas_concentracion_componente(1, fraccion_molar, presion_total,self.r_u_edit,temperatura,unidad_temperatura)
-        print(concentracion_gas)
+        try:
+            funciones = Funciones()
+            # Verificar individualmente cada campo y mostrar un mensaje específico si está vacío
+            if not self.temperatura_ci.text():
+                self.statusbar.showMessage("El campo 'Temperatura condiciones iniciales' está vacío. Por favor, llénelo.", 5000)
+                return
+            if not self.presion_total_ci.text():
+                self.statusbar.showMessage("El campo 'Presión Total  de condiciones iniciales' está vacío. Por favor, llénelo.", 5000)
+                return
+            if not self.fraccion_molar_ci.text():
+                self.statusbar.showMessage("El campo 'Fracción Molar  de condiciones iniciales' está vacío. Por favor, llénelo.", 5000)
+                return
+            if not self.temperatura_u_edit.text():
+                self.statusbar.showMessage("El campo 'Unidad de Temperatura de condiciones iniciales' está vacío. Por favor, llénelo.", 5000)
+                return
+            
+            if not self.r_u_edit.text():
+                self.statusbar.showMessage("El valor de R está vacío. Por favor, llénelo.", 5000)
+                return
+            
+            temperatura = float(self.temperatura_ci.text())
+            presion_total = float(self.presion_total_ci.text())
+            fraccion_molar = float(self.fraccion_molar_ci.text())
+            unidad_temperatura = self.temperatura_u_edit.text()
+            
+            concentracion_gas = funciones.gas_concentracion_componente(1, fraccion_molar, presion_total, self.r_u_edit, temperatura, unidad_temperatura)
+            print(concentracion_gas)
+            self.concentracion_reactivo_limitante_calculo_2.setText(str(concentracion_gas))
+            self.statusbar.showMessage(f"La concentración inicial del gas reactivo limitante es: {concentracion_gas}", 5000)
+        except ValueError as e:
+            self.statusbar.showMessage(f"Error al convertir a float: {e}", 5000)
+        except Exception as e:
+            self.statusbar.showMessage(f"Error inesperado: {e}", 5000)
 
     def agregar_unidades(self):
         self.boton_desactivado()
@@ -1612,6 +1806,90 @@ class FlujoDatos(QMainWindow):
         self.energia_u_edit.clear()
         self.nombre_data_u_edit.clear()
 
+    def agregar_datos_salida(self):
+        self.boton_desactivado()
+        try:
+            nombre_data_salida=self.nombre_ds_edit.text()
+            fecha_ds=self.fecha_ds_edit.text()
+            id_nombre_data=int(self.id_nombre_data_ds_edit.text())
+            id_condiciones_iniciales=int(self.id_condiciones_iniciales_ds_edit.text())
+            id_registro_unidades=int(self.id_registro_unidades_ds_edit.text())
+            r_utilizada=float(self.r_ds_edit.text())
+            nombre_data=self.nombre_data_ds_edit.text()
+            nombre_reaccion=self.nombre_reaccion_ds_edit.text()
+            delta_n_reaccion=float(self.delta_n_ds_edit.text())
+            epsilon_reactivo_limitante=float(self.epsilon_rl_ds_edit.text())
+            #tipo_especie=self.tipo_especie_ds_edit.text()
+            #especie_quimica=self.especie_quimica_ds_edit.text()
+            #constante_cinetica=float(self.constante_cinetica_ds_edit.text())
+            #orden_reaccion=float(self.orden_reaccion_ds_edit.text())
+            #modelo_cinetico=self.modelo_cinetico_ds_edit.text()
+            #tipo_calculo=self.tipo_calculo_ds_edit.text()
+            #energia_activacion=float(self.energia_activacion_ds_edit.text())
+            #detalles_ds=self.detalles_ds_edit.text()
+
+            if not nombre_data_salida or not fecha_ds or not id_nombre_data or not id_condiciones_iniciales or not id_registro_unidades or not r_utilizada or not nombre_data or not delta_n_reaccion or not epsilon_reactivo_limitante :
+            #if not nombre_data_salida or not fecha_ds or not id_nombre_data or not id_condiciones_iniciales or not id_registro_unidades or not r_utilizada or not nombre_data or not delta_n_reaccion or not epsilon_reactivo_limitante or not tipo_especie or not especie_quimica or not constante_cinetica or not orden_reaccion or not modelo_cinetico or not tipo_calculo or not energia_activacion or not detalles_ds:
+                raise ValueError("Todos los campos de texto deben estar llenos")
+        except ValueError as e:
+            QMessageBox.warning(self, "Advertencia", f"Datos inválidos o incompletos: {e}", QMessageBox.StandardButton.Ok)
+            self.boton_activado()
+            return
+        #crear el objeto datos_salida
+        datos_salida=DatosSalida(
+            nombre_data_salida=nombre_data_salida,
+            fecha=fecha_ds,
+            id_nombre_data=id_nombre_data,
+            id_condiciones_iniciales=id_condiciones_iniciales,
+            id_registro_unidades=id_registro_unidades,
+            r_utilizada=r_utilizada,
+            nombre_data=nombre_data,
+            nombre_reaccion=nombre_reaccion,
+            delta_n_reaccion=delta_n_reaccion,
+            epsilon_reactivo_limitante=epsilon_reactivo_limitante,
+            #tipo_especie=tipo_especie,
+            #especie_quimica=especie_quimica,
+            #constante_cinetica=constante_cinetica,
+            #orden_reaccion=orden_reaccion,
+            #modelo_cinetico=modelo_cinetico,
+            #tipo_calculo=tipo_calculo,
+            #energia_activacion=energia_activacion,
+            #detalles=detalles_ds
+        )
+
+        #intentar agregar los datos de salida a la base de datos
+        try:
+            print("Intentando agregar datos de salida:", datos_salida)
+            agregar_resultado = self.RegistroDatosSalidaManejador.agregar(datos_salida)
+
+            if agregar_resultado:
+                QMessageBox.information(self, "Información", "Datos de salida agregados correctamente", QMessageBox.StandardButton.Ok)
+                self.limpiar_formulario_datos_salida()
+                self.buscar_datos_salida()
+            else:
+                QMessageBox.critical(self, "Error", "Hubo un problema al agregar los datos de salida", QMessageBox.StandardButton.Ok)
+
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Se produjo un error al agregar los datos de salida: {e}", QMessageBox.StandardButton.Ok)
+
+        self.boton_activado()
+
+    def actualizar_datos_salida(self):
+        pass
+    def seleccionar_datos_salida(self):
+        pass
+    def borrar_datos_salida(self):
+        pass
+    def buscar_datos_salida(self):
+        pass
+    def mostrar_datos_salida(self):
+        pass
+    def limpiar_formulario_datos_salida(self):
+        pass
+
+
+
+
     def insertar_datos_cineticos_archivo(self, ruta_archivo):
         # Leer el archivo
         if ruta_archivo.endswith('.csv'):
@@ -1646,6 +1924,9 @@ class FlujoDatos(QMainWindow):
 
         QMessageBox.information(self, "Información", "Datos agregados correctamente", QMessageBox.StandardButton.Ok)
         self.buscar_dato()  # Refrescar la tabla con los nuevos datos
+
+    def mostrar_datos_salida(self, datos_salida):
+        self.metodos_comunes.mostrar_datos_salida(self.tabla_datos_salida, datos_salida)
 
     def cargar_datos_btn_click(self):
         # Abrir la ventana de diálogo para seleccionar el archivo
