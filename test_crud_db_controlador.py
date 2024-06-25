@@ -31,24 +31,33 @@ class PantallaCrud(QMainWindow):
         self.init_ui_elementos_rde()
         self.init_ui_elementos_ci()
         self.init_ui_elementos_rq()
+        self.init_ui_elementos_u()
+        self.init_ui_elementos_ds()
 
         # Inicializar conexiones de señales y ranuras
         self.init_control_botones_datos()
         self.init_control_botones_experimental()
         self.init_control_botones_ci()
         self.init_control_botones_rq()
+        self.init_control_botones_u()
+        self.init_control_botones_ds()
 
         # Cargar datos iniciales
         self.buscar_dato()
         self.buscar_registros()
         self.buscar_condiciones_iniciales()
         self.buscar_reaccion_quimica()
+        self.buscar_unidades()
+        self.buscar_datos_salida()
+
 
          # Conectar la señal cellChanged para actualizar la base de datos cuando cambie una celda
         self.tabla_datos.cellChanged.connect(self.actualizar_valor_celda_datos)
         self.tabla_registro_data_experimental.cellChanged.connect(self.actualizar_valor_celda_registro)
         self.tabla_condiciones_iniciales.cellChanged.connect(self.actualizar_valor_celda_ci)
         self.tabla_reaccion_quimica.cellChanged.connect(self.actualizar_valor_celda_reaccion)
+        self.tabla_registro_unidades.cellChanged.connect(self.actualizar_valor_celda_unidades)
+        self.tabla_datos_salida.cellChanged.connect(self.actualizar_valor_celda_datos_salida)
 
     def manejadores_base(self):
         
@@ -57,7 +66,8 @@ class PantallaCrud(QMainWindow):
         self.CondicionesInicialesManejador = CondicionesInicialesManejador()
         self.DatosCineticosManejador = DatosCineticosManejador()
         self.ReaccionQuimicaManejador = ReaccionQuimicaManejador()
-        self.RegistroDatosSalidaManejador = RegistroDatosSalidaManejador()        
+        self.RegistroUnidadesManejador = RegistroUnidadesManejador()
+        self.RegistroDatosSalidaManejador = RegistroDatosSalidaManejador()           
 
         self.metodos_comunes = Servicios(self)
 
@@ -159,6 +169,68 @@ class PantallaCrud(QMainWindow):
         self.tabla_reaccion_quimica = self.ui.reaccion_quimica_tabla
         self.tabla_reaccion_quimica.setSortingEnabled(False)
         self.lista_botones = self.ui.funciones_frame_rq.findChildren(QPushButton)
+
+    def init_ui_elementos_ds(self):
+        self.agregar_ds_btn = self.ui.agregar_ds_btn
+        self.actualizar_ds_btn = self.ui.actualizar_ds_btn
+        self.seleccionar_ds_btn = self.ui.seleccionar_ds_btn
+        self.buscar_ds_btn = self.ui.buscar_ds_btn
+        self.limpiar_ds_btn = self.ui.limpiar_ds_btn
+        self.borrar_ds_btn = self.ui.borrar_ds_btn
+    
+        #edicion manual de datos de salida
+        self.nombre_ds_edit=self.ui.nombre_ds_edit
+        self.fecha_ds_edit = self.ui.fecha_ds_edit
+        self.nombre_data_ds_edit=self.ui.nombre_data_ds_edit
+        self.id_nombre_data_ds_edit = self.ui.id_nombre_data_ds_edit
+        self.id_condiciones_iniciales_ds_edit = self.ui.id_condiciones_iniciales_ds_edit
+        self.id_registro_unidades_ds_edit = self.ui.id_registro_unidades_ds_edit
+
+        self.r_ds_edit=self.ui.r_ds_edit
+
+        self.nombre_reaccion_ds_edit=self.ui.nombre_reaccion_ds_edit
+        self.delta_n_ds_edit=self.ui.delta_n_ds_edit
+       
+        self.epsilon_rl_ds_edit=self.ui.epsilon_rl_ds_edit
+
+        self.tipo_especie_ds_edit=self.ui.tipo_especie_ds_edit
+        self.especie_quimica_ds_edit=self.ui.especie_quimica_ds_edit
+
+        self.constante_cinetica_ds_edit=self.ui.constante_cinetica_ds_edit
+        self.orden_reaccion_ds_edit=self.ui.orden_reaccion_ds_edit
+        self.modelo_cinetico_ds_edit=self.ui.modelo_cinetico_ds_edit
+        self.tipo_calculo_ds_edit=self.ui.tipo_calculo_ds_edit
+        self.energia_activacion_ds_edit=self.ui.energia_activacion_ds_edit
+        self.detalles_ds_edit=self.ui.detalles_ds_edit
+        #tabla de datos de salida
+        self.tabla_datos_salida = self.ui.datos_salida_tabla
+        self.tabla_datos_salida.setSortingEnabled(False)
+        self.lista_botones = self.ui.funciones_frame_ds.findChildren(QPushButton)
+
+
+    def init_ui_elementos_u(self):
+        #Edicion manual de unidades
+        self.presion_u_edit = self.ui.presion_u_edit
+        self.temperatura_u_edit = self.ui.temperatura_u_edit
+        self.tiempo_u_edit = self.ui.tiempo_u_edit
+        self.concentracion_u_edit = self.ui.concentracion_u_edit
+        self.energia_u_edit = self.ui.energia_u_edit
+        self.nombre_data_u_edit = self.ui.nombre_data_u_edit
+        self.r_u_edit = self.ui.r_u_edit
+        #botones de unidades
+        self.agregar_ru_btn = self.ui.agregar_ru_btn
+        self.actualizar_ru_btn = self.ui.actualizar_ru_btn
+        self.seleccionar_ru_btn = self.ui.seleccionar_ru_btn
+        self.buscar_ru_btn = self.ui.buscar_ru_btn
+        self.limpiar_ru_btn = self.ui.limpiar_ru_btn
+        self.borrar_ru_btn = self.ui.borrar_ru_btn
+
+
+        #tabla de unidades
+        self.tabla_registro_unidades = self.ui.registro_unidades_tabla
+        self.tabla_registro_unidades.setSortingEnabled(False)
+        self.lista_botones = self.ui.funciones_frame_u.findChildren(QPushButton)    
+    
     
 
     def init_control_botones_datos(self):
@@ -195,6 +267,22 @@ class PantallaCrud(QMainWindow):
         self.limpiar_rq_btn.clicked.connect(self.limpiar_formulario_rq)
         self.buscar_rq_btn.clicked.connect(self.buscar_reaccion_quimica) 
 
+    def init_control_botones_u(self):
+        self.agregar_ru_btn.clicked.connect(self.agregar_unidades)
+        self.actualizar_ru_btn.clicked.connect(self.actualizar_unidades)
+        self.seleccionar_ru_btn.clicked.connect(self.seleccionar_unidades)
+        self.borrar_ru_btn.clicked.connect(self.borrar_unidades)
+        self.limpiar_ru_btn.clicked.connect(self.limpiar_formulario_unidades)
+        self.buscar_ru_btn.clicked.connect(self.buscar_unidades)
+
+    def init_control_botones_ds(self):
+        self.agregar_ds_btn.clicked.connect(self.agregar_datos_salida)
+        self.actualizar_ds_btn.clicked.connect(self.actualizar_datos_salida)
+        self.seleccionar_ds_btn.clicked.connect(self.seleccionar_datos_salida)
+        self.borrar_ds_btn.clicked.connect(self.borrar_datos_salida)
+        self.limpiar_ds_btn.clicked.connect(self.limpiar_formulario_datos_salida)
+        self.buscar_ds_btn.clicked.connect(self.buscar_datos_salida)
+
 
     def refrescar_datos_tabla(self):
         # Limpiar la tabla
@@ -208,6 +296,8 @@ class PantallaCrud(QMainWindow):
         self.buscar_registros()
         self.buscar_condiciones_iniciales()
         self.buscar_reaccion_quimica()
+        self.buscar_unidades()
+        self.buscar_datos_salida()
 
     #metodos para desactivar y activar botones
     def boton_desactivado(self):
@@ -885,6 +975,463 @@ class PantallaCrud(QMainWindow):
         }
         reaccion_quimica = self.ReaccionQuimicaManejador.consultar(filtros, "like")
         self.mostrar_reaccion_quimica(reaccion_quimica)
+
+    def agregar_unidades(self):
+        self.boton_desactivado()
+        #validar que todos los campos esten llenos
+        try:
+            presion=self.presion_u_edit.text()
+            temperatura=self.temperatura_u_edit.text()
+            tiempo=self.tiempo_u_edit.text()
+            concentracion=self.concentracion_u_edit.text()
+            energia=self.energia_u_edit.text()
+            nombre_data=self.nombre_data_u_edit.text()
+        
+            if not presion or not temperatura or not tiempo or not concentracion or not energia or not nombre_data:
+                raise ValueError("Todos los campos de texto deben estar llenos")
+        except ValueError as e:
+            QMessageBox.warning(self, "Advertencia", f"Datos inválidos o incompletos: {e}", QMessageBox.StandardButton.Ok)
+            self.boton_activado()
+            return
+        #crear el objeto unidades
+        unidades=RegistroUnidades(
+            presion=presion,
+            temperatura=temperatura,
+            tiempo=tiempo,
+            concentracion=concentracion,
+            energia=energia,
+            nombre_data=nombre_data
+        )
+
+        #intentar agregar las unidades a la base de datos
+        try:
+            print("Intentando agregar unidades:", unidades)
+            agregar_resultado = self.RegistroUnidadesManejador.agregar(unidades)
+
+            if agregar_resultado:
+                QMessageBox.information(self, "Información", "Unidades agregadas correctamente", QMessageBox.StandardButton.Ok)
+                self.limpiar_formulario_unidades()
+                self.buscar_unidades()  # Refrescar la tabla con los nuevos datos
+            else:
+                QMessageBox.critical(self, "Error", "Hubo un problema al agregar las unidades", QMessageBox.StandardButton.Ok)
+
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Se produjo un error al agregar las unidades: {e}", QMessageBox.StandardButton.Ok)
+        
+        self.boton_activado()
+            
+    def actualizar_unidades(self):
+        self.boton_desactivado()
+        try:
+            # Obtener el ID de las unidades seleccionadas
+            fila_seleccionada = self.tabla_registro_unidades.currentRow()
+            if fila_seleccionada == -1:
+                QMessageBox.warning(self, "Advertencia", "Seleccione una fila para actualizar", QMessageBox.StandardButton.Ok)
+                return
+            id = int(self.tabla_registro_unidades.item(fila_seleccionada, 0).text().strip())
+
+            # Validaciones
+            presion = self.presion_u_edit.text()
+            temperatura = self.temperatura_u_edit.text()
+            tiempo = self.tiempo_u_edit.text()
+            concentracion = self.concentracion_u_edit.text()
+            energia = self.energia_u_edit.text()
+            nombre_data = self.nombre_data_u_edit.text()
+
+            if not presion or not temperatura or not tiempo or not concentracion or not energia or not nombre_data:
+                raise ValueError("Todos los campos de texto deben estar llenos")
+            
+            # Crear el objeto de unidades actualizadas
+            nuevas_unidades = {
+                "presion": presion,
+                "temperatura": temperatura,
+                "tiempo": tiempo,
+                "concentracion": concentracion,
+                "energia": energia,
+                "nombre_data": nombre_data,
+            }
+
+            # Intentar actualizar las unidades en la base de datos
+            actualizar_resultado = self.RegistroUnidadesManejador.actualizar(id, nuevas_unidades)
+
+            if actualizar_resultado:
+                QMessageBox.information(self, "Información", "Unidades actualizadas correctamente", QMessageBox.StandardButton.Ok)
+                self.limpiar_formulario_unidades()
+                self.buscar_unidades()
+            else:
+                QMessageBox.critical(self, "Error", "Hubo un problema al actualizar las unidades", QMessageBox.StandardButton.Ok)
+
+        except ValueError as ve:
+            QMessageBox.warning(self, "Advertencia", f"Datos inválidos o incompletos: {ve}", QMessageBox.StandardButton.Ok)
+
+        except Exception as e:
+            logging.error("Error al actualizar las unidades: %s", str(e))
+            QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar las unidades: {e}", QMessageBox.StandardButton.Ok)
+
+        finally:
+            self.boton_activado()
+
+
+        
+
+    def seleccionar_unidades(self):
+        seleccionar_fila = self.tabla_registro_unidades.currentRow()
+        if seleccionar_fila != -1:
+            id=self.tabla_registro_unidades.item(seleccionar_fila, 0).text().strip()
+            presion=self.tabla_registro_unidades.item(seleccionar_fila, 1).text().strip()
+            temperatura=self.tabla_registro_unidades.item(seleccionar_fila, 2).text().strip()
+            tiempo=self.tabla_registro_unidades.item(seleccionar_fila, 3).text().strip()
+            concentracion=self.tabla_registro_unidades.item(seleccionar_fila, 4).text().strip()
+            energia=self.tabla_registro_unidades.item(seleccionar_fila, 5).text().strip()
+            nombre_data=self.tabla_registro_unidades.item(seleccionar_fila, 6).text().strip()
+
+            self.presion_u_edit.setText(presion)
+            self.temperatura_u_edit.setText(temperatura)
+            self.tiempo_u_edit.setText(tiempo)
+            self.concentracion_u_edit.setText(concentracion)
+            self.energia_u_edit.setText(energia)
+            self.nombre_data_u_edit.setText(nombre_data)
+        else:
+            QMessageBox.information(self, "Información", "Seleccione una fila", QMessageBox.StandardButton.Ok)
+            return
+    
+    def borrar_unidades(self):
+        fila_seleccionada = self.tabla_registro_unidades.currentRow()
+        if fila_seleccionada != -1:
+            opcion_seleccionada = QMessageBox.question(self, "Eliminar unidades", "¿Estás seguro de eliminar las unidades?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            if opcion_seleccionada == QMessageBox.StandardButton.Yes:
+                id = self.tabla_registro_unidades.item(fila_seleccionada, 0).text().strip()
+                borrar_resultado = self.RegistroUnidadesManejador.borrar(id)
+                if borrar_resultado:
+                    QMessageBox.information(self, "Información", "Unidades eliminadas correctamente", QMessageBox.StandardButton.Ok)
+                    self.RegistroUnidadesManejador.consultar()
+                    self.buscar_unidades()
+                else:
+                    QMessageBox.information(self, "Información", "Hubo un problema al eliminar las unidades", QMessageBox.StandardButton.Ok)
+
+
+    def buscar_unidades(self):
+        filtros = {
+            "presion": self.presion_u_edit.text(),
+            "temperatura": self.temperatura_u_edit.text(),
+            "tiempo": self.tiempo_u_edit.text(),
+            "concentracion": self.concentracion_u_edit.text(),
+            "energia": self.energia_u_edit.text(),
+            "nombre_data": self.nombre_data_u_edit.text()
+        }
+        unidades = self.RegistroUnidadesManejador.consultar(filtros, "like")
+        self.mostrar_unidades(unidades)
+
+    def actualizar_valor_celda_unidades(self, fila, columna):
+        try:
+            item = self.tabla_registro_unidades.item(fila, columna)
+            if item is None:
+                logging.warning("La celda está vacía o fuera de los límites de la tabla")
+                return
+            
+            nuevo_valor = item.text().strip()
+
+            if nuevo_valor == '':
+                logging.warning("Error: el valor ingresado está vacío.")
+                return
+            
+            # Verificar si la celda debe contener un número y convertirla
+            header_text = self.tabla_registro_unidades.horizontalHeaderItem(columna).text().lower()
+            if header_text in ['presion', 'temperatura', 'tiempo', 'concentracion', 'energia']:
+                try:
+                    nuevo_valor = float(nuevo_valor)
+                except ValueError:
+                    logging.error("Error: el valor ingresado no es un número válido.")
+                    return
+                
+            # Obtener el ID de las unidades a actualizar
+            id_item = self.tabla_registro_unidades.item(fila, 0)
+            if id_item is None:
+                logging.warning("No se encontró el ID en la fila seleccionada")
+                return
+            
+            id = int(id_item.text().strip())
+
+            # Crear el diccionario de actualización
+            new_unidades = {header_text: nuevo_valor}
+
+            # Intentar actualizar las unidades en la base de datos
+            if self.RegistroUnidadesManejador.actualizar(id, new_unidades):
+                logging.info(f"Unidades con ID {id} actualizadas correctamente")
+            else:
+                logging.error(f"No se pudo actualizar las unidades con ID {id}")
+        
+        except Exception as e:
+            logging.error(f"Error al actualizar el valor de la celda: {e}")
+            QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar el valor de la celda: {e}", QMessageBox.StandardButton.Ok)
+
+    def mostrar_unidades(self,unidades):
+        self.metodos_comunes.mostrar_unidades(self.tabla_registro_unidades, unidades)
+
+    def limpiar_formulario_unidades(self):
+        self.presion_u_edit.clear()
+        self.temperatura_u_edit.clear()
+        self.tiempo_u_edit.clear()
+        self.concentracion_u_edit.clear()
+        self.energia_u_edit.clear()
+        self.nombre_data_u_edit.clear()
+
+    
+    def actualizar_valor_celda_datos_salida(self, fila, columna):
+        self.metodos_comunes.actualizar_valor_celda(self.tabla_datos_salida, self.RegistroDatosSalidaManejador, fila, columna)
+
+    #refactor de tabla salida
+    def mostrar_datos_tabla_salida(self, resultados):
+        self.metodos_comunes.mostrar_datos_tabla_salida(self.tabla_datos_salida, resultados)
+    
+    def buscar_datos_salida(self):
+        filtros = {
+            "nombre_data_salida": self.nombre_ds_edit.text(),
+            "fecha": self.fecha_ds_edit.text(),
+            "id_nombre_data": self.id_nombre_data_ds_edit.text(),
+            "id_condiciones_iniciales" : self.id_condiciones_iniciales_ds_edit.text(),
+            "id_registro_unidades" : self.id_registro_unidades_ds_edit.text(),
+            "r_utilizada" : self.r_ds_edit.text(),
+            "nombre_data" : self.nombre_data_ds_edit.text(),
+            "nombre_reaccion" : self.nombre_reaccion_ds_edit.text(),
+            "delta_n_reaccion" : self.delta_n_ds_edit.text(),
+            "epsilon_reactivo_limitante" : self.epsilon_rl_ds_edit.text(),
+            "tipo_especie": self.tipo_especie_ds_edit.text(),
+            "especie_quimica": self.especie_quimica_ds_edit.text(),
+            "constante_cinetica": self.constante_cinetica_ds_edit.text(),
+            "orden_reaccion": self.orden_reaccion_ds_edit.text(),
+            "modelo_cinetico": self.modelo_cinetico_ds_edit.text(),
+            "tipo_calculo": self.tipo_calculo_ds_edit.text(),
+            "energia_activacion": self.energia_activacion_ds_edit.text(),
+            "detalles": self.detalles_ds_edit.text(),
+        }
+        datos_salida = self.RegistroDatosSalidaManejador.consultar(filtros, "like")
+        self.mostrar_datos_tabla_salida(datos_salida)
+    
+    def limpiar_formulario_datos_salida(self):
+        self.nombre_ds_edit.clear()
+        self.fecha_ds_edit.clear()
+        self.id_nombre_data_ds_edit.clear()
+        self.id_condiciones_iniciales_ds_edit.clear()
+        self.id_registro_unidades_ds_edit.clear()
+        self.r_ds_edit.clear()
+        self.nombre_data_ds_edit.clear()
+        self.nombre_reaccion_ds_edit.clear()
+        self.delta_n_ds_edit.clear()
+        self.epsilon_rl_ds_edit.clear()
+        self.tipo_especie_ds_edit.clear()
+        self.especie_quimica_ds_edit.clear()
+        self.constante_cinetica_ds_edit.clear()
+        self.orden_reaccion_ds_edit.clear()
+        self.modelo_cinetico_ds_edit.clear()
+        self.tipo_calculo_ds_edit.clear()
+        self.energia_activacion_ds_edit.clear()
+        self.detalles_ds_edit.clear()
+    
+    def seleccionar_datos_salida(self):
+        seleccionar_fila = self.tabla_datos_salida.currentRow()
+        if seleccionar_fila != -1:
+            id = self.tabla_datos_salida.item(seleccionar_fila, 0).text().strip()
+            nombre_data_salida = self.tabla_datos_salida.item(seleccionar_fila, 1).text().strip()
+            fecha = self.tabla_datos_salida.item(seleccionar_fila, 2).text().strip()
+            id_nombre_data = self.tabla_datos_salida.item(seleccionar_fila, 3).text().strip()
+            id_condiciones_iniciales = self.tabla_datos_salida.item(seleccionar_fila, 4).text().strip()
+            id_registro_unidades = self.tabla_datos_salida.item(seleccionar_fila, 5).text().strip()
+            r_utilizada = self.tabla_datos_salida.item(seleccionar_fila, 6).text().strip()
+            nombre_data = self.tabla_datos_salida.item(seleccionar_fila, 7).text().strip()
+            nombre_reaccion = self.tabla_datos_salida.item(seleccionar_fila, 8).text().strip()
+            delta_n_reaccion = self.tabla_datos_salida.item(seleccionar_fila, 9).text().strip()
+            epsilon_reactivo_limitante = self.tabla_datos_salida.item(seleccionar_fila, 10).text().strip()
+            tipo_especie = self.tabla_datos_salida.item(seleccionar_fila, 11).text().strip()
+            especie_quimica = self.tabla_datos_salida.item(seleccionar_fila, 12).text().strip()
+            constante_cinetica = self.tabla_datos_salida.item(seleccionar_fila, 13).text().strip()
+            orden_reaccion = self.tabla_datos_salida.item(seleccionar_fila, 14).text().strip()
+            modelo_cinetico = self.tabla_datos_salida.item(seleccionar_fila, 15).text().strip()
+            tipo_calculo = self.tabla_datos_salida.item(seleccionar_fila, 16).text().strip()
+            energia_activacion = self.tabla_datos_salida.item(seleccionar_fila, 17).text().strip()
+            detalles = self.tabla_datos_salida.item(seleccionar_fila, 18).text().strip()
+
+            self.nombre_ds_edit.setText(nombre_data_salida)
+            self.fecha_ds_edit.setText(fecha)
+            self.id_nombre_data_ds_edit.setText(id_nombre_data)
+            self.id_condiciones_iniciales_ds_edit.setText(id_condiciones_iniciales)
+            self.id_registro_unidades_ds_edit.setText(id_registro_unidades)
+            self.r_ds_edit.setText(r_utilizada)
+            self.nombre_data_ds_edit.setText(nombre_data)
+            self.nombre_reaccion_ds_edit.setText(nombre_reaccion)
+            self.delta_n_ds_edit.setText(delta_n_reaccion)
+            self.epsilon_rl_ds_edit.setText(epsilon_reactivo_limitante)
+            self.tipo_especie_ds_edit.setText(tipo_especie)
+            self.especie_quimica_ds_edit.setText(especie_quimica)
+            self.constante_cinetica_ds_edit.setText(constante_cinetica)
+            self.orden_reaccion_ds_edit.setText(orden_reaccion)
+            self.modelo_cinetico_ds_edit.setText(modelo_cinetico)
+            self.tipo_calculo_ds_edit.setText(tipo_calculo)
+            self.energia_activacion_ds_edit.setText(energia_activacion)
+            self.detalles_ds_edit.setText(detalles)
+        else:
+            QMessageBox.information(self, "Información", "Seleccione una fila", QMessageBox.StandardButton.Ok)
+            return
+    def borrar_datos_salida(self):
+        fila_seleccionada = self.tabla_datos_salida.currentRow()
+        if fila_seleccionada != -1:
+            id = self.tabla_datos_salida.item(fila_seleccionada, 0).text().strip()
+            borrar_resultado = self.RegistroDatosSalidaManejador.borrar(id)
+            self.metodos_comunes.borrar_elemento(
+                self.tabla_datos_salida, 
+                borrar_resultado, 
+                "¿Estás seguro de eliminar los datos de salida?", 
+                "Datos de salida eliminados correctamente", 
+                "Hubo un problema al eliminar los datos de salida", 
+                self.RegistroDatosSalidaManejador.consultar, 
+                self.refrescar_datos_tabla, 
+                self.buscar_datos_salida
+            )
+    def actualizar_datos_salida(self):
+        self.boton_desactivado()
+        try:
+            # Obtener el ID de los datos de salida seleccionados
+            fila_seleccionada = self.tabla_datos_salida.currentRow()
+            if fila_seleccionada == -1:
+                QMessageBox.warning(self, "Advertencia", "Seleccione una fila para actualizar", QMessageBox.StandardButton.Ok)
+                return
+            id = int(self.tabla_datos_salida.item(fila_seleccionada, 0).text().strip())
+
+            # Validaciones
+            nombre_data_salida=self.nombre_ds_edit.text()
+            fecha_ds=self.fecha_ds_edit.text()
+            id_nombre_data=int(self.id_nombre_data_ds_edit.text())
+            id_condiciones_iniciales=int(self.id_condiciones_iniciales_ds_edit.text())
+            id_registro_unidades=int(self.id_registro_unidades_ds_edit.text())
+            r_utilizada=float(self.r_ds_edit.text())
+            nombre_data=self.nombre_data_ds_edit.text()
+            nombre_reaccion=self.nombre_reaccion_ds_edit.text()
+            delta_n_reaccion=float(self.delta_n_ds_edit.text())
+            epsilon_reactivo_limitante=float(self.epsilon_rl_ds_edit.text())
+            tipo_especie=self.tipo_especie_ds_edit.text()
+            especie_quimica=self.especie_quimica_ds_edit.text()
+            constante_cinetica=float(self.constante_cinetica_ds_edit.text())
+            orden_reaccion=float(self.orden_reaccion_ds_edit.text())
+            modelo_cinetico=self.modelo_cinetico_ds_edit.text()
+            tipo_calculo=self.tipo_calculo_ds_edit.text()
+            energia_activacion=float(self.energia_activacion_ds_edit.text())
+            detalles_ds=self.detalles_ds_edit.text()
+
+            if not nombre_data_salida or not fecha_ds or not id_nombre_data or not id_condiciones_iniciales or not id_registro_unidades or not r_utilizada or not nombre_data or not delta_n_reaccion or not epsilon_reactivo_limitante or not tipo_especie or not especie_quimica or not constante_cinetica or not orden_reaccion or not modelo_cinetico or not tipo_calculo or not energia_activacion or not detalles_ds:
+                raise ValueError("Todos los campos de texto deben estar llenos")
+        
+            # Crear el objeto de datos de salida actualizados
+            nuevos_datos_salida = {
+                "nombre_data_salida": nombre_data_salida,
+                "fecha": fecha_ds,
+                "id_nombre_data": id_nombre_data,
+                "id_condiciones_iniciales": id_condiciones_iniciales,
+                "id_registro_unidades": id_registro_unidades,
+                "r_utilizada": r_utilizada,
+                "nombre_data": nombre_data,
+                "nombre_reaccion": nombre_reaccion,
+                "delta_n_reaccion": delta_n_reaccion,
+                "epsilon_reactivo_limitante": epsilon_reactivo_limitante,
+                "tipo_especie": tipo_especie,
+                "especie_quimica": especie_quimica,
+                "constante_cinetica": constante_cinetica,
+                "orden_reaccion": orden_reaccion,
+                "modelo_cinetico": modelo_cinetico,
+                "tipo_calculo": tipo_calculo,
+                "energia_activacion": energia_activacion,
+                "detalles": detalles_ds,
+            }
+
+            # Intentar actualizar los datos de salida en la base de datos
+            actualizar_resultado = self.RegistroDatosSalidaManejador.actualizar(id, nuevos_datos_salida)
+
+            if actualizar_resultado:
+                QMessageBox.information(self, "Información", "Datos de salida actualizados correctamente", QMessageBox.StandardButton.Ok)
+                self.limpiar_formulario_datos_salida()
+                self.buscar_datos_salida()
+            else:
+                QMessageBox.critical(self, "Error", "Hubo un problema al actualizar los datos de salida", QMessageBox.StandardButton.Ok)
+            
+        except ValueError as ve:
+            QMessageBox.warning(self, "Advertencia", f"Datos inválidos o incompletos: {ve}", QMessageBox.StandardButton.Ok)
+
+        except Exception as e:
+            logging.error("Error al actualizar los datos de salida: %s", str(e))
+            QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar los datos de salida: {e}", QMessageBox.StandardButton.Ok)
+        
+        finally:
+            self.boton_activado()
+        
+    def agregar_datos_salida(self):
+        self.boton_desactivado()
+        try:
+            nombre_data_salida=self.nombre_ds_edit.text()
+            fecha_ds=self.fecha_ds_edit.text()
+            id_nombre_data=int(self.id_nombre_data_ds_edit.text())
+            id_condiciones_iniciales=int(self.id_condiciones_iniciales_ds_edit.text())
+            id_registro_unidades=int(self.id_registro_unidades_ds_edit.text())
+            r_utilizada=float(self.r_ds_edit.text())
+            nombre_data=self.nombre_data_ds_edit.text()
+            nombre_reaccion=self.nombre_reaccion_ds_edit.text()
+            delta_n_reaccion=float(self.delta_n_ds_edit.text())
+            epsilon_reactivo_limitante=float(self.epsilon_rl_ds_edit.text())
+            tipo_especie=self.tipo_especie_ds_edit.text()
+            especie_quimica=self.especie_quimica_ds_edit.text()
+            constante_cinetica=float(self.constante_cinetica_ds_edit.text())
+            orden_reaccion=float(self.orden_reaccion_ds_edit.text())
+            modelo_cinetico=self.modelo_cinetico_ds_edit.text()
+            tipo_calculo=self.tipo_calculo_ds_edit.text()
+            energia_activacion=float(self.energia_activacion_ds_edit.text())
+            detalles_ds=self.detalles_ds_edit.text()
+
+            #if not nombre_data_salida or not fecha_ds or not id_nombre_data or not id_condiciones_iniciales or not id_registro_unidades or not r_utilizada or not nombre_data or not delta_n_reaccion or not epsilon_reactivo_limitante :
+            if not nombre_data_salida or not fecha_ds or not id_nombre_data or not id_condiciones_iniciales or not id_registro_unidades or not r_utilizada or not nombre_data or not delta_n_reaccion or not epsilon_reactivo_limitante or not tipo_especie or not especie_quimica or not constante_cinetica or not orden_reaccion or not modelo_cinetico or not tipo_calculo or not energia_activacion or not detalles_ds:
+                raise ValueError("Todos los campos de texto deben estar llenos")
+        except ValueError as e:
+            QMessageBox.warning(self, "Advertencia", f"Datos inválidos o incompletos: {e}", QMessageBox.StandardButton.Ok)
+            self.boton_activado()
+            return
+        #crear el objeto datos_salida
+        datos_salida=DatosSalida(
+            nombre_data_salida=nombre_data_salida,
+            fecha=fecha_ds,
+            id_nombre_data=id_nombre_data,
+            id_condiciones_iniciales=id_condiciones_iniciales,
+            id_registro_unidades=id_registro_unidades,
+            r_utilizada=r_utilizada,
+            nombre_data=nombre_data,
+            nombre_reaccion=nombre_reaccion,
+            delta_n_reaccion=delta_n_reaccion,
+            epsilon_reactivo_limitante=epsilon_reactivo_limitante,
+            tipo_especie=tipo_especie,
+            especie_quimica=especie_quimica,
+            constante_cinetica=constante_cinetica,
+            orden_reaccion=orden_reaccion,
+            modelo_cinetico=modelo_cinetico,
+            tipo_calculo=tipo_calculo,
+            energia_activacion=energia_activacion,
+            detalles=detalles_ds
+        )
+
+        #intentar agregar los datos de salida a la base de datos
+        try:
+            print("Intentando agregar datos de salida:", datos_salida)
+            agregar_resultado = self.RegistroDatosSalidaManejador.agregar(datos_salida)
+
+            if agregar_resultado:
+                QMessageBox.information(self, "Información", "Datos de salida agregados correctamente", QMessageBox.StandardButton.Ok)
+                self.limpiar_formulario_datos_salida()
+                self.buscar_datos_salida()
+            else:
+                QMessageBox.critical(self, "Error", "Hubo un problema al agregar los datos de salida", QMessageBox.StandardButton.Ok)
+
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Se produjo un error al agregar los datos de salida: {e}", QMessageBox.StandardButton.Ok)
+
+        self.boton_activado()    
+
+        
+
 
 
 if __name__ == "__main__":

@@ -278,6 +278,10 @@ class Servicios:
     #def mostrar_datos_tabla(self, tabla_datos_cineticos, resultados):
     #    self.mostrar_datos_en_tabla(tabla_datos_cineticos, resultados, ['id', 'nombre_data', 'fecha', 'detalle'])
 
+    def mostrar_datos_tabla_salida(self, tabla_datos_salida, resultados):
+        columnas = ["id","nombre_data_salida","fecha","id_nombre_data","id_condiciones_iniciales","id_registro_unidades","r_utilizada","nombre_data","nombre_reaccion","delta_n_reaccion","epsilon_reactivo_limitante","tipo_especie","especie_quimica","constante_cinetica","orden_reaccion","modelo_cinetico","tipo_calculo","energia_activacion","detalles"]
+        self.mostrar_datos_en_tabla(tabla_datos_salida, resultados, columnas)
+
 # refactor json
 
     def cargar_datos_json_a_combo_box(self, archivo, combo_box,catalogo):

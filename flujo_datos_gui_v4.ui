@@ -3499,7 +3499,7 @@
                <attribute name="title">
                 <string>Calculos</string>
                </attribute>
-               <widget class="QFrame" name="funciones_frame_dc_2">
+               <widget class="QFrame" name="funciones_frame_ds">
                 <property name="geometry">
                  <rect>
                   <x>30</x>

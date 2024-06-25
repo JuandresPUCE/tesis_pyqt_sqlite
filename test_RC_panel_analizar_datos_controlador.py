@@ -53,6 +53,7 @@ class PanelDataAnalisis(QMainWindow):
         # Cargar datos iniciales
         self.buscar_registros()
         self.buscar_dato()
+        self.buscar_condiciones_iniciales()
         self.crud_db = PantallaCrud()
         self.flujo_datos = FlujoDatos()
         self.init_panel_menu()
@@ -118,6 +119,11 @@ class PanelDataAnalisis(QMainWindow):
         self.reactivo_limitante_inicial_edit = self.ui.reactivo_limitante_inicial_edit
         self.estimacion_inicial_k_edit = self.ui.estimacion_inicial_k_edit
         self.estimacion_inicial_n_edit = self.ui.estimacion_inicial_n_edit
+        #line edit de calculo
+        self.reactivo_limitante_calculado= self.ui.reactivo_limitante_calculado
+        self.k_calculado = self.ui.k_calculado
+        self.n_calculado = self.ui.n_calculado
+        self.modelo_utilizado = self.ui.modelo_utilizado
 
         #boton de ejecutar modelo
         self.ejecutar_modelo_button = self.ui.graficar_btn
@@ -171,6 +177,7 @@ class PanelDataAnalisis(QMainWindow):
     def mostrar_condiciones_iniciales(self,condiciones):
         self.mensaje_error = "No se encontraron condiciones iniciales en la base de datos."
         self.metodos_comunes.desplegar_datos_combo_box(self.condiciones_iniciales_box,condiciones,self.mensaje_error)
+        self.metodos_comunes.mostrar_condiciones_iniciales(self.condiciones_iniciales_tabla, condiciones)
     
     def desplegar_condiciones_iniciales_tabla(self):
         nombre_data = self.registro_datos_box.currentText()
@@ -254,6 +261,7 @@ class PanelDataAnalisis(QMainWindow):
         tabla = self.reaccion_quimica_tabla
         tabla.clearContents()
         self.metodos_comunes.mostrar_reacciones(self.reaccion_quimica_tabla, resultados)
+    
 
     def actualizar_datos_cineticos(self):
         nombre_data = self.registro_datos_box.currentText()
@@ -271,7 +279,7 @@ class PanelDataAnalisis(QMainWindow):
 
     def mostrar_metodos_ajustador(self):
         self.ajustar_modelo_box.clear()
-        self.ajustar_modelo_box.addItem("Modelos cinéticos")
+        self.ajustar_modelo_box.addItem("Seleccionar Modelo")
         metodos = [metodo for metodo in dir(MetodoIntegralAjustador) if callable(getattr(MetodoIntegralAjustador, metodo)) and not metodo.startswith("__")]
         for metodo in metodos:
             self.ajustar_modelo_box.addItem(metodo)
@@ -316,6 +324,11 @@ class PanelDataAnalisis(QMainWindow):
 
             QMessageBox.information(self, "Resultado", f"El modelo se ajustó. Resultado: {resultado}", QMessageBox.StandardButton.Ok)
             print(resultado)
+            #colocar en un box para enviar a la base de datos
+            self.reactivo_limitante_calculado.setText(str(resultado[1]))
+            self.k_calculado.setText(str(resultado[0]))
+            self.n_calculado.setText(str(resultado[2]))
+            self.modelo_utilizado.setText(nombre_metodo)
             
             # Graficar utilizando el resultado obtenido
 

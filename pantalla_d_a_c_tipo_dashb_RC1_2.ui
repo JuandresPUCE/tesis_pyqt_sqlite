@@ -451,11 +451,11 @@
           <item>
            <widget class="QTabWidget" name="tabWidget">
             <property name="currentIndex">
-             <number>2</number>
+             <number>1</number>
             </property>
-            <widget class="QWidget" name="tab">
+            <widget class="QWidget" name="data_tab">
              <attribute name="title">
-              <string>Tab 1</string>
+              <string>Visualización de datos</string>
              </attribute>
              <layout class="QHBoxLayout" name="horizontalLayout_7">
               <property name="spacing">
@@ -777,6 +777,194 @@
                      </item>
                     </layout>
                    </widget>
+                   <widget class="QWidget" name="tab_4">
+                    <attribute name="title">
+                     <string>Unidades</string>
+                    </attribute>
+                    <layout class="QVBoxLayout" name="verticalLayout_17">
+                     <item>
+                      <widget class="QTableWidget" name="registro_unidades_tabla">
+                       <property name="focusPolicy">
+                        <enum>Qt::NoFocus</enum>
+                       </property>
+                       <property name="showGrid">
+                        <bool>false</bool>
+                       </property>
+                       <attribute name="horizontalHeaderMinimumSectionSize">
+                        <number>50</number>
+                       </attribute>
+                       <attribute name="horizontalHeaderDefaultSectionSize">
+                        <number>70</number>
+                       </attribute>
+                       <attribute name="horizontalHeaderStretchLastSection">
+                        <bool>true</bool>
+                       </attribute>
+                       <attribute name="verticalHeaderVisible">
+                        <bool>false</bool>
+                       </attribute>
+                       <column>
+                        <property name="text">
+                         <string>id</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>presion</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>temperatura</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>nombre_data</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>concentracion</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>energia</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>nombre_data</string>
+                        </property>
+                       </column>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                   <widget class="QWidget" name="tab_5">
+                    <attribute name="title">
+                     <string>salida</string>
+                    </attribute>
+                    <layout class="QVBoxLayout" name="verticalLayout_12">
+                     <item>
+                      <widget class="QTableWidget" name="datos_salida_tabla">
+                       <property name="focusPolicy">
+                        <enum>Qt::NoFocus</enum>
+                       </property>
+                       <property name="showGrid">
+                        <bool>false</bool>
+                       </property>
+                       <attribute name="horizontalHeaderMinimumSectionSize">
+                        <number>50</number>
+                       </attribute>
+                       <attribute name="horizontalHeaderDefaultSectionSize">
+                        <number>70</number>
+                       </attribute>
+                       <attribute name="horizontalHeaderStretchLastSection">
+                        <bool>true</bool>
+                       </attribute>
+                       <attribute name="verticalHeaderVisible">
+                        <bool>false</bool>
+                       </attribute>
+                       <column>
+                        <property name="text">
+                         <string>id</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>nombre_data_salida</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>fecha</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>id_nombre_data</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>id_condiciones_iniciales</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>id_registro_unidades</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>r_utilizada</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>nombre_data</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>nombre_reaccion</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>delta_n_reaccion</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>epsilon_reactivo_limitante</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>tipo_especie</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>especie_quimica</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>constante_cinetica</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>orden_reaccion</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>modelo_cinetico</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>tipo_calculo</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>energia_activacion</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>detalles</string>
+                        </property>
+                       </column>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
                   </widget>
                  </item>
                 </layout>
@@ -784,9 +972,9 @@
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="tab_2">
+            <widget class="QWidget" name="mi_tab">
              <attribute name="title">
-              <string>Tab 2</string>
+              <string>método integral</string>
              </attribute>
              <widget class="QFrame" name="modelamiento">
               <property name="geometry">
@@ -1025,6 +1213,218 @@
                 </layout>
                </item>
               </layout>
+             </widget>
+             <widget class="QWidget" name="layoutWidget">
+              <property name="geometry">
+               <rect>
+                <x>320</x>
+                <y>340</y>
+                <width>277</width>
+                <height>24</height>
+               </rect>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_19">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="label_13">
+                 <property name="text">
+                  <string> n calculado</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_11">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="n_calculado">
+                 <property name="tabletTracking">
+                  <bool>false</bool>
+                 </property>
+                 <property name="contextMenuPolicy">
+                  <enum>Qt::DefaultContextMenu</enum>
+                 </property>
+                 <property name="toolTip">
+                  <string extracomment="comentario aquí"/>
+                 </property>
+                 <property name="statusTip">
+                  <string extracomment="cometario 2 aquí"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string extracomment="cometario 3 aquí"/>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="layoutWidget_2">
+              <property name="geometry">
+               <rect>
+                <x>250</x>
+                <y>270</y>
+                <width>343</width>
+                <height>24</height>
+               </rect>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_20">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="label_14">
+                 <property name="text">
+                  <string>reactivo limitante calculado</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_12">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="reactivo_limitante_calculado">
+                 <property name="tabletTracking">
+                  <bool>false</bool>
+                 </property>
+                 <property name="contextMenuPolicy">
+                  <enum>Qt::DefaultContextMenu</enum>
+                 </property>
+                 <property name="toolTip">
+                  <string extracomment="comentario aquí"/>
+                 </property>
+                 <property name="statusTip">
+                  <string extracomment="cometario 2 aquí"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string extracomment="cometario 3 aquí"/>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="layoutWidget_3">
+              <property name="geometry">
+               <rect>
+                <x>320</x>
+                <y>300</y>
+                <width>276</width>
+                <height>24</height>
+               </rect>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_21">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="label_15">
+                 <property name="text">
+                  <string>k calculado</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_13">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="k_calculado">
+                 <property name="tabletTracking">
+                  <bool>false</bool>
+                 </property>
+                 <property name="contextMenuPolicy">
+                  <enum>Qt::DefaultContextMenu</enum>
+                 </property>
+                 <property name="toolTip">
+                  <string extracomment="comentario aquí"/>
+                 </property>
+                 <property name="statusTip">
+                  <string extracomment="cometario 2 aquí"/>
+                 </property>
+                 <property name="whatsThis">
+                  <string extracomment="cometario 3 aquí"/>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QLineEdit" name="modelo_utilizado">
+              <property name="geometry">
+               <rect>
+                <x>460</x>
+                <y>380</y>
+                <width>133</width>
+                <height>22</height>
+               </rect>
+              </property>
+              <property name="tabletTracking">
+               <bool>false</bool>
+              </property>
+              <property name="contextMenuPolicy">
+               <enum>Qt::DefaultContextMenu</enum>
+              </property>
+              <property name="toolTip">
+               <string extracomment="comentario aquí"/>
+              </property>
+              <property name="statusTip">
+               <string extracomment="cometario 2 aquí"/>
+              </property>
+              <property name="whatsThis">
+               <string extracomment="cometario 3 aquí"/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_16">
+              <property name="geometry">
+               <rect>
+                <x>310</x>
+                <y>380</y>
+                <width>146</width>
+                <height>22</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Modelo utilizado</string>
+              </property>
              </widget>
             </widget>
             <widget class="QWidget" name="tab_3">
