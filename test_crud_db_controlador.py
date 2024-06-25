@@ -468,7 +468,7 @@ class PantallaCrud(QMainWindow):
         if fila_seleccionada != -1:
             id = self.tabla_datos.item(fila_seleccionada, 0).text().strip()
             borrar_resultado = self.DatosCineticosManejador.borrar(id)
-            self.metodos_comunes.borrar_elemento(self.tabla_datos, borrar_resultado, "¿Estás seguro de eliminar el dato?", "Dato eliminado correctamente", "Hubo un problema al eliminar el dato", self.DatosCineticosManejador.consultar_datos, self.refrescar_datos_tabla, self.buscar_dato)
+            self.metodos_comunes.borrar_elemento(self.tabla_datos, borrar_resultado, "¿Estás seguro de eliminar el dato?", "Dato eliminado correctamente", "Hubo un problema al eliminar el dato", self.DatosCineticosManejador.consultar, self.refrescar_datos_tabla, self.buscar_dato)
                 
     def buscar_dato(self):
         filtros = {
@@ -1098,18 +1098,18 @@ class PantallaCrud(QMainWindow):
     def borrar_unidades(self):
         fila_seleccionada = self.tabla_registro_unidades.currentRow()
         if fila_seleccionada != -1:
-            opcion_seleccionada = QMessageBox.question(self, "Eliminar unidades", "¿Estás seguro de eliminar las unidades?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-            if opcion_seleccionada == QMessageBox.StandardButton.Yes:
-                id = self.tabla_registro_unidades.item(fila_seleccionada, 0).text().strip()
-                borrar_resultado = self.RegistroUnidadesManejador.borrar(id)
-                if borrar_resultado:
-                    QMessageBox.information(self, "Información", "Unidades eliminadas correctamente", QMessageBox.StandardButton.Ok)
-                    self.RegistroUnidadesManejador.consultar()
-                    self.buscar_unidades()
-                else:
-                    QMessageBox.information(self, "Información", "Hubo un problema al eliminar las unidades", QMessageBox.StandardButton.Ok)
-
-
+            id = self.tabla_registro_unidades.item(fila_seleccionada, 0).text().strip()
+            borrar_resultado = self.RegistroUnidadesManejador.borrar(id)
+            self.metodos_comunes.borrar_elemento(
+                self.tabla_registro_unidades, 
+                borrar_resultado, 
+                "¿Estás seguro de eliminar las unidades?", 
+                "Unidades eliminadas correctamente", 
+                "Hubo un problema al eliminar las unidades", 
+                self.RegistroUnidadesManejador.consultar, 
+                self.refrescar_datos_tabla, 
+                self.buscar_unidades
+            )           
     def buscar_unidades(self):
         filtros = {
             "presion": self.presion_u_edit.text(),
@@ -1123,47 +1123,7 @@ class PantallaCrud(QMainWindow):
         self.mostrar_unidades(unidades)
 
     def actualizar_valor_celda_unidades(self, fila, columna):
-        try:
-            item = self.tabla_registro_unidades.item(fila, columna)
-            if item is None:
-                logging.warning("La celda está vacía o fuera de los límites de la tabla")
-                return
-            
-            nuevo_valor = item.text().strip()
-
-            if nuevo_valor == '':
-                logging.warning("Error: el valor ingresado está vacío.")
-                return
-            
-            # Verificar si la celda debe contener un número y convertirla
-            header_text = self.tabla_registro_unidades.horizontalHeaderItem(columna).text().lower()
-            if header_text in ['presion', 'temperatura', 'tiempo', 'concentracion', 'energia']:
-                try:
-                    nuevo_valor = float(nuevo_valor)
-                except ValueError:
-                    logging.error("Error: el valor ingresado no es un número válido.")
-                    return
-                
-            # Obtener el ID de las unidades a actualizar
-            id_item = self.tabla_registro_unidades.item(fila, 0)
-            if id_item is None:
-                logging.warning("No se encontró el ID en la fila seleccionada")
-                return
-            
-            id = int(id_item.text().strip())
-
-            # Crear el diccionario de actualización
-            new_unidades = {header_text: nuevo_valor}
-
-            # Intentar actualizar las unidades en la base de datos
-            if self.RegistroUnidadesManejador.actualizar(id, new_unidades):
-                logging.info(f"Unidades con ID {id} actualizadas correctamente")
-            else:
-                logging.error(f"No se pudo actualizar las unidades con ID {id}")
-        
-        except Exception as e:
-            logging.error(f"Error al actualizar el valor de la celda: {e}")
-            QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar el valor de la celda: {e}", QMessageBox.StandardButton.Ok)
+        self.metodos_comunes.actualizar_valor_celda(self.tabla_registro_unidades, self.RegistroUnidadesManejador, fila, columna)
 
     def mostrar_unidades(self,unidades):
         self.metodos_comunes.mostrar_unidades(self.tabla_registro_unidades, unidades)
@@ -1429,10 +1389,6 @@ class PantallaCrud(QMainWindow):
             QMessageBox.critical(self, "Error", f"Se produjo un error al agregar los datos de salida: {e}", QMessageBox.StandardButton.Ok)
 
         self.boton_activado()    
-
-        
-
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

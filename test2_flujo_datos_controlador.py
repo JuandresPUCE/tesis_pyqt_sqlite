@@ -586,19 +586,10 @@ class FlujoDatos(QMainWindow):
     def borrar_dato(self):
         fila_seleccionada = self.tabla_datos.currentRow()
         if fila_seleccionada != -1:
-            opcion_seleccionada = QMessageBox.question(self, "Eliminar dato", "¿Estás seguro de eliminar el dato?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-            if opcion_seleccionada == QMessageBox.StandardButton.Yes:
-                id = self.tabla_datos.item(fila_seleccionada, 0).text().strip()
-                borrar_resultado = self.DatosCineticosManejador.borrar(id)
-                if borrar_resultado:
-                    
-                    QMessageBox.information(self, "Información", "Dato eliminado correctamente", QMessageBox.StandardButton.Ok)
-                    self.DatosCineticosManejador.consultar()
-                    self.refrescar_datos_tabla() 
-                    self.buscar_dato()
-                else:
-                    QMessageBox.information(self, "Información", "Hubo un problema al eliminar el dato", QMessageBox.StandardButton.Ok)
-
+            id = self.tabla_datos.item(fila_seleccionada, 0).text().strip()
+            borrar_resultado = self.DatosCineticosManejador.borrar(id)
+            self.metodos_comunes.borrar_elemento(self.tabla_datos, borrar_resultado, "¿Estás seguro de eliminar el dato?", "Dato eliminado correctamente", "Hubo un problema al eliminar el dato", self.DatosCineticosManejador.consultar, self.refrescar_datos_tabla, self.buscar_dato)
+                
     def buscar_dato(self):
         filtros = {
             "tiempo": self.tiempo.text(),
@@ -620,48 +611,7 @@ class FlujoDatos(QMainWindow):
         self.metodos_comunes.mostrar_datos_tabla(self.tabla_datos, resultados)
 
     def actualizar_valor_celda_datos(self, fila, columna):
-        try:
-            item = self.tabla_datos.item(fila, columna)
-            if item is None:
-                logging.warning("La celda está vacía o fuera de los límites de la tabla")
-                return
-
-            nuevo_valor = item.text().strip()
-
-            if nuevo_valor == '':
-                logging.warning("Error: el valor ingresado está vacío.")
-                return
-
-            # Verificar si la celda debe contener un número y convertirla
-            header_text = self.tabla_datos.horizontalHeaderItem(columna).text().lower()
-            if header_text in ['tiempo', 'concentracion', 'otra_propiedad', 'conversion_reactivo_limitante']:
-                try:
-                    nuevo_valor = float(nuevo_valor)
-                except ValueError:
-                    logging.error("Error: el valor ingresado no es un número válido.")
-                    return
-
-            # Obtener el ID del dato a actualizar
-            id_item = self.tabla_datos.item(fila, 0)
-            if id_item is None:
-                logging.warning("No se encontró el ID en la fila seleccionada")
-                return
-
-            id = int(id_item.text().strip())
-
-            # Crear el diccionario de actualización
-            new_dato = {header_text: nuevo_valor}
-
-            # Intentar actualizar el dato en la base de datos
-            if self.DatosCineticosManejador.actualizar(id, new_dato):
-                logging.info(f"Dato con ID {id} actualizado correctamente")
-            else:
-                logging.error(f"No se pudo actualizar el dato con ID {id}")
-
-        except Exception as e:
-            logging.error(f"Error al actualizar el valor de la celda: {e}")
-            QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar el valor de la celda: {e}", QMessageBox.StandardButton.Ok)
-
+        self.metodos_comunes.actualizar_valor_celda(self.tabla_datos, self.DatosCineticosManejador, fila, columna)
 
     # funciones crud para registro de data experimental
     # Registro de data experimental
@@ -776,62 +726,23 @@ class FlujoDatos(QMainWindow):
             self.boton_activado()
 
     def actualizar_valor_celda_registro(self, fila, columna):
-        try:
-            item = self.tabla_registro_data_experimental.item(fila, columna)
-            if item is None:
-                logging.warning("La celda está vacía o fuera de los límites de la tabla")
-                return
-
-            nuevo_valor = item.text().strip()
-
-            if nuevo_valor == '':
-                logging.warning("Error: el valor ingresado está vacío.")
-                return
-
-            # Verificar si la celda debe contener un número y convertirla
-            header_text = self.tabla_registro_data_experimental.horizontalHeaderItem(columna).text().lower()
-            if header_text in ['nombre_data', 'fecha', 'detalle']:
-                try:
-                    nuevo_valor = str(nuevo_valor)
-                except ValueError:
-                    logging.error("Error: el valor ingresado no es un número válido.")
-                    return
-
-            # Obtener el ID del registro a actualizar
-            id_item = self.tabla_registro_data_experimental.item(fila, 0)
-            if id_item is None:
-                logging.warning("No se encontró el ID en la fila seleccionada")
-                return
-
-            id = int(id_item.text().strip())
-
-            # Crear el diccionario de actualización
-            new_registro = {header_text: nuevo_valor}
-
-            # Intentar actualizar el registro en la base de datos
-            if self.RegistroDataExperimentalManejador.actualizar(id, new_registro):
-                logging.info(f"Registro con ID {id} actualizado correctamente")
-            else:
-                logging.error(f"No se pudo actualizar el registro con ID {id}")
-
-        except Exception as e:
-            logging.error(f"Error al actualizar el valor de la celda: {e}")
-            QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar el valor de la celda: {e}", QMessageBox.StandardButton.Ok)
-
+        self.metodos_comunes.actualizar_valor_celda(self.tabla_registro_data_experimental, self.RegistroDataExperimentalManejador, fila, columna)
+        
     def borrar_registro_data_experimental(self):
         fila_seleccionada = self.tabla_registro_data_experimental.currentRow()
         if fila_seleccionada != -1:
-            opcion_seleccionada = QMessageBox.question(self, "Eliminar registro", "¿Estás seguro de eliminar el registro?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-            if opcion_seleccionada == QMessageBox.StandardButton.Yes:
-                id = self.tabla_registro_data_experimental.item(fila_seleccionada, 0).text().strip()
-                borrar_resultado = self.RegistroDataExperimentalManejador.borrar(id)
-                if borrar_resultado:
-                    QMessageBox.information(self, "Información", "Registro eliminado correctamente", QMessageBox.StandardButton.Ok)
-                    self.RegistroDataExperimentalManejador.consultar()
-                    self.buscar_registros()
-                else:
-                    QMessageBox.information(self, "Información", "Hubo un problema al eliminar el registro", QMessageBox.StandardButton.Ok)
-
+            id = self.tabla_registro_data_experimental.item(fila_seleccionada, 0).text().strip()
+            borrar_resultado = self.RegistroDataExperimentalManejador.borrar(id)
+            self.metodos_comunes.borrar_elemento(
+                self.tabla_registro_data_experimental, 
+                borrar_resultado, 
+                "¿Estás seguro de eliminar el registro?", 
+                "Registro eliminado correctamente", 
+                "Hubo un problema al eliminar el registro", 
+                self.RegistroDataExperimentalManejador.consultar, 
+                self.refrescar_datos_tabla, 
+                self.buscar_registros
+            )
     def buscar_registros(self):
         filtros = {
             "nombre_data": self.nombre_data_experimental.text(),
@@ -992,62 +903,23 @@ class FlujoDatos(QMainWindow):
             self.boton_activado()
 
     def actualizar_valor_celda_ci(self, fila, columna):
-        try:
-            item = self.tabla_condiciones_iniciales.item(fila, columna)
-            if item is None:
-                logging.warning("La celda está vacía o fuera de los límites de la tabla")
-                return
-
-            nuevo_valor = item.text().strip()
-
-            if nuevo_valor == '':
-                logging.warning("Error: el valor ingresado está vacío.")
-                return
-
-            # Verificar si la celda debe contener un número y convertirla
-            header_text = self.tabla_condiciones_iniciales.horizontalHeaderItem(columna).text().lower()
-            if header_text in ['temperatura', 'tiempo', 'presion_total', 'presion_parcial', 'fraccion_molar']:
-                try:
-                    nuevo_valor = float(nuevo_valor)
-                except ValueError:
-                    logging.error("Error: el valor ingresado no es un número válido.")
-                    return
-
-            # Obtener el ID de las condiciones iniciales a actualizar
-            id_item = self.tabla_condiciones_iniciales.item(fila, 0)
-            if id_item is None:
-                logging.warning("No se encontró el ID en la fila seleccionada")
-                return
-
-            id = int(id_item.text().strip())
-
-            # Crear el diccionario de actualización
-            new_condiciones_iniciales = {header_text: nuevo_valor}
-
-            # Intentar actualizar las condiciones iniciales en la base de datos
-            if self.CondicionesInicialesManejador.actualizar(id, new_condiciones_iniciales):
-                logging.info(f"Condiciones iniciales con ID {id} actualizadas correctamente")
-            else:
-                logging.error(f"No se pudo actualizar las condiciones iniciales con ID {id}")
-
-        except Exception as e:
-            logging.error(f"Error al actualizar el valor de la celda: {e}")
-            QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar el valor de la celda: {e}", QMessageBox.StandardButton.Ok)
-    
+        self.metodos_comunes.actualizar_valor_celda(self.tabla_condiciones_iniciales, self.CondicionesInicialesManejador, fila, columna)
+   
     def borrar_condiciones_iniciales(self):
         fila_seleccionada = self.tabla_condiciones_iniciales.currentRow()
         if fila_seleccionada != -1:
-            opcion_seleccionada = QMessageBox.question(self, "Eliminar condiciones iniciales", "¿Estás seguro de eliminar las condiciones iniciales?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-            if opcion_seleccionada == QMessageBox.StandardButton.Yes:
-                id = self.tabla_condiciones_iniciales.item(fila_seleccionada, 0).text().strip()
-                borrar_resultado = self.CondicionesInicialesManejador.borrar(id)
-                if borrar_resultado:
-                    QMessageBox.information(self, "Información", "Condiciones iniciales eliminadas correctamente", QMessageBox.StandardButton.Ok)
-                    self.CondicionesInicialesManejador.consultar()
-                    self.buscar_condiciones_iniciales()
-                else:
-                    QMessageBox.information(self, "Información", "Hubo un problema al eliminar las condiciones iniciales", QMessageBox.StandardButton.Ok)
-    
+            id = self.tabla_condiciones_iniciales.item(fila_seleccionada, 0).text().strip()
+            borrar_resultado = self.CondicionesInicialesManejador.borrar(id)
+            self.metodos_comunes.borrar_elemento(
+                self.tabla_condiciones_iniciales, 
+                borrar_resultado, 
+                "¿Estás seguro de eliminar las condiciones iniciales?", 
+                "Condiciones iniciales eliminadas correctamente", 
+                "Hubo un problema al eliminar las condiciones iniciales", 
+                self.CondicionesInicialesManejador.consultar, 
+                self.refrescar_datos_tabla, 
+                self.buscar_condiciones_iniciales
+            )
     def buscar_condiciones_iniciales(self):
         filtros = {
             "temperatura": self.temperatura_ci.text(),
@@ -1194,62 +1066,23 @@ class FlujoDatos(QMainWindow):
             self.boton_activado()
 
     def actualizar_valor_celda_reaccion(self, fila, columna):
-        try:
-            item = self.tabla_reaccion_quimica.item(fila, columna)
-            if item is None:
-                logging.warning("La celda está vacía o fuera de los límites de la tabla")
-                return
-            
-            nuevo_valor = item.text().strip()
-
-            if nuevo_valor == '':
-                logging.warning("Error: el valor ingresado está vacío.")
-                return
-            
-            # Verificar si la celda debe contener un número y convertirla
-            header_text = self.tabla_reaccion_quimica.horizontalHeaderItem(columna).text().lower()
-            if header_text in ['coeficiente_estequiometrico']:
-                try:
-                    nuevo_valor = float(nuevo_valor)
-                except ValueError:
-                    logging.error("Error: el valor ingresado no es un número válido.")
-                    return
-                
-            # Obtener el ID de la reacción química a actualizar
-            id_item = self.tabla_reaccion_quimica.item(fila, 0)
-            if id_item is None:
-                logging.warning("No se encontró el ID en la fila seleccionada")
-                return
-            
-            id = int(id_item.text().strip())
-
-            # Crear el diccionario de actualización
-            new_reaccion_quimica = {header_text: nuevo_valor}
-
-            # Intentar actualizar la reacción química en la base de datos
-            if self.ReaccionQuimicaManejador.actualizar(id, new_reaccion_quimica):
-                logging.info(f"Reacción química con ID {id} actualizada correctamente")
-            else:
-                logging.error(f"No se pudo actualizar la reacción química con ID {id}")
-
-        except Exception as e:
-            logging.error(f"Error al actualizar el valor de la celda: {e}")
-            QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar el valor de la celda: {e}", QMessageBox.StandardButton.Ok)
+        self.metodos_comunes.actualizar_valor_celda(self.tabla_reaccion_quimica, self.ReaccionQuimicaManejador, fila, columna)
 
     def borrar_reaccion_quimica(self):
         fila_seleccionada = self.tabla_reaccion_quimica.currentRow()
         if fila_seleccionada != -1:
-            opcion_seleccionada = QMessageBox.question(self, "Eliminar reacción química", "¿Estás seguro de eliminar la reacción química?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-            if opcion_seleccionada == QMessageBox.StandardButton.Yes:
-                id = self.tabla_reaccion_quimica.item(fila_seleccionada, 0).text().strip()
-                borrar_resultado = self.ReaccionQuimicaManejador.borrar(id)
-                if borrar_resultado:
-                    QMessageBox.information(self, "Información", "Reacción química eliminada correctamente", QMessageBox.StandardButton.Ok)
-                    self.ReaccionQuimicaManejador.consultar()
-                    self.buscar_reaccion_quimica()
-                else:
-                    QMessageBox.information(self, "Información", "Hubo un problema al eliminar la reacción química", QMessageBox.StandardButton.Ok)
-        
+            id = self.tabla_reaccion_quimica.item(fila_seleccionada, 0).text().strip()
+            borrar_resultado = self.ReaccionQuimicaManejador.borrar(id)
+            self.metodos_comunes.borrar_elemento(
+                self.tabla_reaccion_quimica, 
+                borrar_resultado, 
+                "¿Estás seguro de eliminar la reacción química?", 
+                "Reacción química eliminada correctamente", 
+                "Hubo un problema al eliminar la reacción química", 
+                self.ReaccionQuimicaManejador.consultar, 
+                self.refrescar_datos_tabla, 
+                self.buscar_reaccion_quimica
+            ) 
     def buscar_reaccion_quimica(self):
         filtros = {
             "especie_quimica": self.especie_quimica_rq.text(),
@@ -1733,18 +1566,18 @@ class FlujoDatos(QMainWindow):
     def borrar_unidades(self):
         fila_seleccionada = self.tabla_registro_unidades.currentRow()
         if fila_seleccionada != -1:
-            opcion_seleccionada = QMessageBox.question(self, "Eliminar unidades", "¿Estás seguro de eliminar las unidades?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-            if opcion_seleccionada == QMessageBox.StandardButton.Yes:
-                id = self.tabla_registro_unidades.item(fila_seleccionada, 0).text().strip()
-                borrar_resultado = self.RegistroUnidadesManejador.borrar(id)
-                if borrar_resultado:
-                    QMessageBox.information(self, "Información", "Unidades eliminadas correctamente", QMessageBox.StandardButton.Ok)
-                    self.RegistroUnidadesManejador.consultar()
-                    self.buscar_unidades()
-                else:
-                    QMessageBox.information(self, "Información", "Hubo un problema al eliminar las unidades", QMessageBox.StandardButton.Ok)
-
-
+            id = self.tabla_registro_unidades.item(fila_seleccionada, 0).text().strip()
+            borrar_resultado = self.RegistroUnidadesManejador.borrar(id)
+            self.metodos_comunes.borrar_elemento(
+                self.tabla_registro_unidades, 
+                borrar_resultado, 
+                "¿Estás seguro de eliminar las unidades?", 
+                "Unidades eliminadas correctamente", 
+                "Hubo un problema al eliminar las unidades", 
+                self.RegistroUnidadesManejador.consultar, 
+                self.refrescar_datos_tabla, 
+                self.buscar_unidades
+            )  
     def buscar_unidades(self):
         filtros = {
             "presion": self.presion_u_edit.text(),
@@ -1758,48 +1591,8 @@ class FlujoDatos(QMainWindow):
         self.mostrar_unidades(unidades)
 
     def actualizar_valor_celda_unidades(self, fila, columna):
-        try:
-            item = self.tabla_registro_unidades.item(fila, columna)
-            if item is None:
-                logging.warning("La celda está vacía o fuera de los límites de la tabla")
-                return
-            
-            nuevo_valor = item.text().strip()
-
-            if nuevo_valor == '':
-                logging.warning("Error: el valor ingresado está vacío.")
-                return
-            
-            # Verificar si la celda debe contener un número y convertirla
-            header_text = self.tabla_registro_unidades.horizontalHeaderItem(columna).text().lower()
-            if header_text in ['presion', 'temperatura', 'tiempo', 'concentracion', 'energia']:
-                try:
-                    nuevo_valor = float(nuevo_valor)
-                except ValueError:
-                    logging.error("Error: el valor ingresado no es un número válido.")
-                    return
-                
-            # Obtener el ID de las unidades a actualizar
-            id_item = self.tabla_registro_unidades.item(fila, 0)
-            if id_item is None:
-                logging.warning("No se encontró el ID en la fila seleccionada")
-                return
-            
-            id = int(id_item.text().strip())
-
-            # Crear el diccionario de actualización
-            new_unidades = {header_text: nuevo_valor}
-
-            # Intentar actualizar las unidades en la base de datos
-            if self.RegistroUnidadesManejador.actualizar(id, new_unidades):
-                logging.info(f"Unidades con ID {id} actualizadas correctamente")
-            else:
-                logging.error(f"No se pudo actualizar las unidades con ID {id}")
-        
-        except Exception as e:
-            logging.error(f"Error al actualizar el valor de la celda: {e}")
-            QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar el valor de la celda: {e}", QMessageBox.StandardButton.Ok)
-
+        self.metodos_comunes.actualizar_valor_celda(self.tabla_registro_unidades, fila, columna)
+ 
     def mostrar_unidades(self,unidades):
         self.metodos_comunes.mostrar_unidades(self.tabla_registro_unidades, unidades)
 
