@@ -214,6 +214,34 @@ class Funciones:
         
         return k2
     
+    def calcular_energia_activacion(k1, T1, k2, T2, escala_temp='K', unidades='J', R_custom=None):
+        if escala_temp == 'K':
+            T1_absoluta = T1 + 273.15  # Convertir a Kelvin
+            T2_absoluta = T2 + 273.15  # Convertir a Kelvin
+        elif escala_temp == 'R':
+            T1_absoluta = T1 + 459.67  # Convertir a Rankine
+            T2_absoluta = T2 + 459.67  # Convertir a Rankine
+        else:
+            raise ValueError("Escala de temperatura no reconocida. Elija entre 'K' o 'R'.")
+
+        if R_custom is not None:
+            R = R_custom
+        else:
+            if unidades == 'J':
+                R = 8.314  # J/(mol K)
+            elif unidades == 'atm':
+                R = 0.0821  # atm L/(mol K)
+            elif unidades == 'cal':
+                R = 1.987  # cal/(mol K)
+            elif unidades == 'psia*ft3':
+                R = 10.73   # psia*ft3/(lbmol R)
+            else:
+                raise ValueError("Unidades no reconocidas. Elija entre 'J', 'atm', 'cal' o 'psia*ft3'.")
+            
+        Energia_activacion = -R * (1/T2_absoluta - 1/T1_absoluta)**-1 * np.log(k2/k1)
+    
+        return Energia_activacion
+    
     def gas_concentracion_componente(self,coeficiente_gas_Z,y_A0,Presion_total,R,Temperatura,escala_temp=None):
         
         R_gas = float(R.text())  # Convertir el valor de R a un float     

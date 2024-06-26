@@ -33,11 +33,13 @@ class PanelDataAnalisis(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        #manejadores de base
+        # manejadores de base
         self.RegistroDataExperimentalManejador = RegistroDataExperimentalManejador()
         self.CondicionesInicialesManejador = CondicionesInicialesManejador()
         self.DatosCineticosManejador = DatosCineticosManejador()
         self.ReaccionQuimicaManejador = ReaccionQuimicaManejador()
+        self.RegistroUnidadesManejador = RegistroUnidadesManejador()
+        self.RegistroDatosSalidaManejador = RegistroDatosSalidaManejador()     
         #traer funciones
         self.funciones = Funciones()
         self.modelos_metodo_integral = MetodoIntegralGraficador()
@@ -113,6 +115,9 @@ class PanelDataAnalisis(QMainWindow):
 
         # Conectar la señal currentIndexChanged a la función manejadora
         self.ajustar_modelo_box.currentIndexChanged.connect(self.manejador_seleccion_modelo)
+        
+        self.opcion_btn_3 = self.ui.opcion_btn_3
+        self.opcion_btn_3.clicked.connect(self.calcular_arrenius)
 
         #botones para abrir otros paneles
         # line edit de modelo de ajuste
@@ -491,6 +496,65 @@ class PanelDataAnalisis(QMainWindow):
             self.matplotlib_widget.canvas.draw()
         except KeyError as e:
             print(f"Error: {e}. La columna no existe en el DataFrame.")
+            
+    def calcular_arrenius(self):
+        filtros = {'nombre_data': self.registro_datos_box.currentText()}
+        resultados= self.RegistroDataExperimentalManejador.consultar(filtros=filtros)
+        if resultados:
+            filtros_datos_salida= {'id_registro_data_experimental': resultados[0].id}
+            resultados_a_ci = self.CondicionesInicialesManejador.consultar(filtros=filtros)
+            df_resultados_a_ci = pd.DataFrame.from_records([condicion.__dict__ for condicion in resultados_a_ci])
+            print("Condiciones iniciales:", df_resultados_a_ci[['id', 'temperatura']])
+            fitro_salida={'id_nombre_data': resultados[0].id,'id_condiciones_iniciales': df_resultados_a_ci["id"].to_string(index=False)}
+            print(fitro_salida)
+            resultados_ds = self.RegistroDatosSalidaManejador.consultar(filtros=fitro_salida)
+            df_resultados_ds = pd.DataFrame.from_records([condicion.__dict__ for condicion in resultados_ds])
+            print("Datos Salida:", df_resultados_ds)
+            print("CI T :", df_resultados_a_ci['temperatura'])
+            print("Datos Salida:", df_resultados_ds['constante_cinetica'])
+            #return resultados[0].id, print(resultados[0].id)
+            # Primero, resetea el índice de las Series para evitar problemas de alineación.
+            temperatura_reset = df_resultados_a_ci['temperatura'].reset_index(drop=True)
+            constante_cinetica_reset = df_resultados_ds['constante_cinetica'].reset_index(drop=True)
+
+            # Luego, concatena las dos Series en un nuevo DataFrame.
+            df_combinado = pd.concat([temperatura_reset, constante_cinetica_reset], axis=1)
+
+            # Renombra las columnas del nuevo DataFrame para reflejar el contenido.
+            df_combinado.columns = ['temperatura', 'constante_cinetica']
+
+            # Finalmente, imprime el DataFrame combinado.
+            print(df_combinado.to_string(index=False))
+            
+            #ejecutar modelo de 2 puntos
+            # Para acceder a los valores de la primera fila (índice 0)
+            temperatura_primera_fila = df_combinado.iloc[0]['temperatura']
+            constante_cinetica_primera_fila = df_combinado.iloc[0]['constante_cinetica']
+
+            # Para acceder a los valores de la segunda fila (índice 1)
+            temperatura_segunda_fila = df_combinado.iloc[1]['temperatura']
+            constante_cinetica_segunda_fila = df_combinado.iloc[1]['constante_cinetica']
+            
+            # Llamar a la función calcular_energia_activacion con los valores obtenidos
+            #calcular_energia_activacion(k1, T1, k2, T2, escala_temp='K', unidades='J', R_custom=None)
+            resultado = Funciones.calcular_energia_activacion(
+                k1=constante_cinetica_primera_fila,
+                T1=temperatura_primera_fila,
+                k2=constante_cinetica_segunda_fila,
+                T2=temperatura_segunda_fila,escala_temp='K', unidades='cal'
+            )
+
+            # Imprimir el resultado
+            print("El resultado de la energía de activación es:", resultado)
+
+            
+            
+        else:
+            logging.warning(f"No se encontró un registro con el nombre: {self.registro_datos_box.currentText()}")
+            return None
+        
+
+
 
 
 
