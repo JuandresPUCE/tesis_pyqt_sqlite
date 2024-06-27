@@ -381,6 +381,10 @@ class PanelDataAnalisis(QMainWindow):
         self.crud_db.show()
     
     def abrir_ingreso_datos(self):
+        self.flujo_datos.show()
+
+    """
+    def abrir_ingreso_datos(self):
 
         if hasattr(self, 'flujo_datos'):
             self.flujo_datos.setParent(None)
@@ -397,7 +401,8 @@ class PanelDataAnalisis(QMainWindow):
         self.layout.addWidget(self.flujo_datos)
 
         self.flujo_datos.show()
-    
+    """
+
     def imprimir_registro_seleccionado(self):
         nombre_data = self.registro_datos_box.currentText()
         id_condiciones_iniciales = self.filtro_datos_box_3.currentText()

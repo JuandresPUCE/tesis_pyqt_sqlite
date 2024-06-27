@@ -1591,7 +1591,7 @@ class FlujoDatos(QMainWindow):
         self.mostrar_unidades(unidades)
 
     def actualizar_valor_celda_unidades(self, fila, columna):
-        self.metodos_comunes.actualizar_valor_celda(self.tabla_registro_unidades, fila, columna)
+        self.metodos_comunes.actualizar_valor_celda(self.tabla_registro_unidades, self.RegistroUnidadesManejador, fila, columna)
  
     def mostrar_unidades(self,unidades):
         self.metodos_comunes.mostrar_unidades(self.tabla_registro_unidades, unidades)
@@ -1607,34 +1607,52 @@ class FlujoDatos(QMainWindow):
     def agregar_datos_salida(self):
         self.boton_desactivado()
         try:
-            nombre_data_salida=self.nombre_ds_edit.text()
-            fecha_ds=self.fecha_ds_edit.text()
-            id_nombre_data=int(self.id_nombre_data_ds_edit.text())
-            id_condiciones_iniciales=int(self.id_condiciones_iniciales_ds_edit.text())
-            id_registro_unidades=int(self.id_registro_unidades_ds_edit.text())
-            r_utilizada=float(self.r_ds_edit.text())
-            nombre_data=self.nombre_data_ds_edit.text()
-            nombre_reaccion=self.nombre_reaccion_ds_edit.text()
-            delta_n_reaccion=float(self.delta_n_ds_edit.text())
-            epsilon_reactivo_limitante=float(self.epsilon_rl_ds_edit.text())
-            #tipo_especie=self.tipo_especie_ds_edit.text()
-            #especie_quimica=self.especie_quimica_ds_edit.text()
-            #constante_cinetica=float(self.constante_cinetica_ds_edit.text())
-            #orden_reaccion=float(self.orden_reaccion_ds_edit.text())
-            #modelo_cinetico=self.modelo_cinetico_ds_edit.text()
-            #tipo_calculo=self.tipo_calculo_ds_edit.text()
-            #energia_activacion=float(self.energia_activacion_ds_edit.text())
-            #detalles_ds=self.detalles_ds_edit.text()
+            nombre_data_salida = self.nombre_ds_edit.text().strip()
+            fecha_ds = self.fecha_ds_edit.text().strip()
+            id_nombre_data = self.id_nombre_data_ds_edit.text().strip()
+            id_condiciones_iniciales = self.id_condiciones_iniciales_ds_edit.text().strip()
+            id_registro_unidades = self.id_registro_unidades_ds_edit.text().strip()
+            r_utilizada = self.r_ds_edit.text().strip()
+            nombre_data = self.nombre_data_ds_edit.text().strip()
+            nombre_reaccion = self.nombre_reaccion_ds_edit.text().strip()
+            delta_n_reaccion = self.delta_n_ds_edit.text().strip()
+            epsilon_reactivo_limitante = self.epsilon_rl_ds_edit.text().strip()
 
-            if not nombre_data_salida or not fecha_ds or not id_nombre_data or not id_condiciones_iniciales or not id_registro_unidades or not r_utilizada or not nombre_data or not delta_n_reaccion or not epsilon_reactivo_limitante :
-            #if not nombre_data_salida or not fecha_ds or not id_nombre_data or not id_condiciones_iniciales or not id_registro_unidades or not r_utilizada or not nombre_data or not delta_n_reaccion or not epsilon_reactivo_limitante or not tipo_especie or not especie_quimica or not constante_cinetica or not orden_reaccion or not modelo_cinetico or not tipo_calculo or not energia_activacion or not detalles_ds:
-                raise ValueError("Todos los campos de texto deben estar llenos")
+            # Verificar individualmente cada campo y lanzar una excepción si está vacío
+            if not nombre_data_salida:
+                raise ValueError("El campo 'Nombre de datos de salida' está vacío. Por favor, llénelo.")
+            if not fecha_ds:
+                raise ValueError("El campo 'Fecha' está vacío. Por favor, llénelo.")
+            if not id_nombre_data:
+                raise ValueError("El campo 'ID de nombre de datos' está vacío. Por favor, llénelo.")
+            if not id_condiciones_iniciales:
+                raise ValueError("El campo 'ID de condiciones iniciales' está vacío. Por favor, llénelo.")
+            if not id_registro_unidades:
+                raise ValueError("El campo 'ID de registro de unidades' está vacío. Por favor, llénelo.")
+            if not r_utilizada:
+                raise ValueError("El campo 'R utilizada' está vacío. Por favor, llénelo.")
+            if not nombre_data:
+                raise ValueError("El campo 'Nombre de datos' está vacío. Por favor, llénelo.")
+            if not delta_n_reaccion:
+                raise ValueError("El campo 'Delta N de la reacción' está vacío. Por favor, llénelo.")
+            if not epsilon_reactivo_limitante:
+                raise ValueError("El campo 'Epsilon reactivo limitante' está vacío. Por favor, llénelo.")
+
+            # Convertir los campos a sus tipos correspondientes
+            id_nombre_data = int(id_nombre_data)
+            id_condiciones_iniciales = int(id_condiciones_iniciales)
+            id_registro_unidades = int(id_registro_unidades)
+            r_utilizada = float(r_utilizada)
+            delta_n_reaccion = float(delta_n_reaccion)
+            epsilon_reactivo_limitante = float(epsilon_reactivo_limitante)
+
         except ValueError as e:
             QMessageBox.warning(self, "Advertencia", f"Datos inválidos o incompletos: {e}", QMessageBox.StandardButton.Ok)
             self.boton_activado()
             return
-        #crear el objeto datos_salida
-        datos_salida=DatosSalida(
+
+        # Crear el objeto datos_salida
+        datos_salida = DatosSalida(
             nombre_data_salida=nombre_data_salida,
             fecha=fecha_ds,
             id_nombre_data=id_nombre_data,
@@ -1645,17 +1663,9 @@ class FlujoDatos(QMainWindow):
             nombre_reaccion=nombre_reaccion,
             delta_n_reaccion=delta_n_reaccion,
             epsilon_reactivo_limitante=epsilon_reactivo_limitante,
-            #tipo_especie=tipo_especie,
-            #especie_quimica=especie_quimica,
-            #constante_cinetica=constante_cinetica,
-            #orden_reaccion=orden_reaccion,
-            #modelo_cinetico=modelo_cinetico,
-            #tipo_calculo=tipo_calculo,
-            #energia_activacion=energia_activacion,
-            #detalles=detalles_ds
         )
 
-        #intentar agregar los datos de salida a la base de datos
+        # Intentar agregar los datos de salida a la base de datos
         try:
             print("Intentando agregar datos de salida:", datos_salida)
             agregar_resultado = self.RegistroDatosSalidaManejador.agregar(datos_salida)
@@ -1671,6 +1681,7 @@ class FlujoDatos(QMainWindow):
             QMessageBox.critical(self, "Error", f"Se produjo un error al agregar los datos de salida: {e}", QMessageBox.StandardButton.Ok)
 
         self.boton_activado()
+
     def actualizar_datos_salida(self):
         self.boton_desactivado()
         try:
@@ -1909,3 +1920,6 @@ if __name__ == "__main__":
     window = FlujoDatos()
     window.show()
     sys.exit(app.exec())
+
+#nota falta para datos otros calcular x o A a partir de su propia concentracion y su propio dato inicial
+#agregar calculos para XA solo con XA
