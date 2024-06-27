@@ -598,3 +598,6 @@ if __name__ == "__main__":
     window = PanelDataAnalisis()
     window.show()
     sys.exit(app.exec())
+    
+#visual faltante conjunto de datos para energía cinética
+#manual de usuario con ejemplos
