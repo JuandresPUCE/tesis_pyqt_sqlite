@@ -175,11 +175,27 @@ class Servicios:
                     metodo_buscar()
                 else:
                     QMessageBox.information(self.parent, "Información", mensaje_error, QMessageBox.StandardButton.Ok)
+    
     # desplegar en combo box
-    def desplegar_datos_combo_box(self, combo_box, elementos,mensaje_error):
+    def desplegar_datos_combo_box_catalogo(self, combo_box, elementos,mensaje_error,tipo_elemento_catalogo):
         try:
             combo_box.clear()
-            combo_box.addItem("Todos")
+            combo_box.addItem("Seleccione una opción",-1)
+            if elementos:
+                for elemento in elementos:
+                    combo_box.addItem(str(elemento.get(tipo_elemento_catalogo)), str(elemento.get("id")))
+            else:
+                QMessageBox.information(self.parent, "No hay elementos", mensaje_error, QMessageBox.StandardButton.Ok)
+        except Exception as e:
+            #print(f"Error inesperado: {e}")
+            QMessageBox.critical(self.parent, "Error", f"Error inesperado al mostrar elementos: {e}", QMessageBox.StandardButton.Ok)
+
+        
+    def desplegar_datos_combo_box(self, combo_box, elementos,mensaje_error):
+
+        try:
+            combo_box.clear()
+            combo_box.addItem("Seleccione una opción",-1)
             if elementos:
                 for elemento in elementos:
                     combo_box.addItem(str(elemento.nombre_data), str(elemento.id))
@@ -188,6 +204,30 @@ class Servicios:
         except Exception as e:
             #print(f"Error inesperado: {e}")
             QMessageBox.critical(self.parent, "Error", f"Error inesperado al mostrar elementos: {e}", QMessageBox.StandardButton.Ok)
+
+
+    def cargar_datos_json_box(self, archivo, catalogo, combo_box, tipo_elemento_catalogo):
+        try:
+            with open(archivo, 'r') as f:
+                data = json.load(f)
+                self.desplegar_datos_combo_box_catalogo(combo_box, data.get(catalogo, []), "No se encontraron datos en el archivo JSON.", tipo_elemento_catalogo)
+        except FileNotFoundError:
+            QMessageBox.critical(self.parent, "Error", f"No se encontró el archivo {archivo}", QMessageBox.StandardButton.Ok)
+        except json.JSONDecodeError:
+            QMessageBox.critical(self.parent, "Error", f"Error al leer el archivo {archivo}", QMessageBox.StandardButton.Ok)
+
+    def actualizar_lineedit(self, combo_box, line_edit):
+            try:
+                current_text = combo_box.currentText()
+                line_edit.setText(current_text)
+                if current_text == "otro":
+                    line_edit.show()
+                    line_edit.setText(current_text)
+                else:
+                    line_edit.hide()
+                    #line_edit.clear()
+            except Exception as e:
+                QMessageBox.critical(self.parent, "Error", f"Error inesperado al actualizar el line edit: {e}", QMessageBox.StandardButton.Ok)
          
 
     def actualizar_valor_celda(self, tabla, manejador, fila, columna):

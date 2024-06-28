@@ -1,5 +1,5 @@
 {
-    "Tipo_especie_catalogo": [
+    "tipo_especie_catalogo": [
         {"id": 1, "Descripcion": "reactivo_limitante"},
         {"id": 2, "Descripcion": "reactivo"},
         {"id": 3, "Descripcion": "producto"},

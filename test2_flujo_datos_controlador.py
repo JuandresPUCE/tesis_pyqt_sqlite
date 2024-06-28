@@ -43,6 +43,7 @@ class FlujoDatos(QMainWindow):
         self.init_ui_elementos_u()
         self.init_ui_elementos_ds()
         self.init_ui_menu_derecho()
+        self.ocultar_elementos()
 
         # Inicializar conexiones de señales y ranuras
         self.init_control_botones_datos()
@@ -71,14 +72,15 @@ class FlujoDatos(QMainWindow):
         #iniciar funciones diferentes a crud
         self.establecer_fecha_sistema()
 
-        json_tipo_especie = r"data\tipo_especie.json"
+        #refactor direccion con datos json
+        #json_tipo_especie = r"data\tipo_especie.json"
+        #self.cargar_datos_json(r"data\tipo_especie.json")
 
-        self.cargar_datos_json(json_tipo_especie)
+        self.cargar_datos_json_tipo_especie(r"data\tipo_especie.json")
 
         #mensajes barra de estado
         self.statusbar=self.ui.statusbar
         self.statusbar.showMessage("Bienvenido al sistema de flujo de datos")
-
 
     def manejadores_base(self):
         
@@ -91,7 +93,6 @@ class FlujoDatos(QMainWindow):
         self.RegistroDatosSalidaManejador = RegistroDatosSalidaManejador()     
 
         self.metodos_comunes = Servicios(self)
-
 
     def init_ui_menu_derecho(self):
         #nombre_data_general_edit
@@ -117,6 +118,7 @@ class FlujoDatos(QMainWindow):
         self.concentracion_irl_btn=self.ui.concentracion_irl_btn
 
         self.funciones=Funciones()
+        
 
          #objetos test dc
         self.calculo1=self.ui.marcar_a0_btn
@@ -170,6 +172,16 @@ class FlujoDatos(QMainWindow):
         self.epsilon_a_btn.clicked.connect(self.calcular_epsilon_reactivo_limitante)
         #calculos reaccion quimica
         self.calcular_delta_n.clicked.connect(self.calculo_delta_n)
+
+        #elementos ocultos
+        #self.ui.label_20.hide()
+        #self.ui.nombre_data_rde_edit.hide()
+
+    def ocultar_elementos(self):
+        # Lista de nombres de elementos a ocultar
+        elementos_a_ocultar = ['label_20', 'nombre_data_rde_edit','nombre_reaccion_rq_edit','label_27','nombre_data_ci_edit','label_17','label_8','nombre_data_dc_edit','label_9','nombre_reaccion_dc_edit']
+        for nombre in elementos_a_ocultar:
+            getattr(self.ui, nombre).hide()
 
 
     def init_ui_elementos_dc(self):
@@ -246,8 +258,6 @@ class FlujoDatos(QMainWindow):
         self.tabla_condiciones_iniciales = self.ui.condiciones_iniciales_tabla
         self.tabla_condiciones_iniciales.setSortingEnabled(False)
         self.lista_botones = self.ui.funciones_frame_ci.findChildren(QPushButton)
-
-
     
     def init_ui_elementos_rq(self):
         # Reacción química
@@ -273,7 +283,7 @@ class FlujoDatos(QMainWindow):
 
         #combo box
         self.tipo_especie_rq_box=self.ui.tipo_especie_rq_box
-        self.tipo_especie_rq_box.currentIndexChanged.connect(self.actualizar_lineedit) 
+        self.tipo_especie_rq_box.currentIndexChanged.connect(self.actualizar_lineedit_tipo_especie) 
 
         #objetos test rq
 
@@ -349,7 +359,6 @@ class FlujoDatos(QMainWindow):
         self.tabla_registro_unidades.setSortingEnabled(False)
         self.lista_botones = self.ui.funciones_frame_u.findChildren(QPushButton)
 
-
     def init_control_botones_datos(self):
         # Conectar los botones a sus respectivas funciones
         # Datos cinéticos
@@ -360,7 +369,6 @@ class FlujoDatos(QMainWindow):
         self.limpiar_dc_btn.clicked.connect(self.limpiar_formulario)
         self.buscar_dc_btn.clicked.connect(self.buscar_dato)
        
-
     def init_control_botones_experimental(self):
         self.agregar_rde_btn.clicked.connect(self.agregar_registro_data_experimental)
         self.actualizar_rde_btn.clicked.connect(self.actualizar_registro_data_experimental)
@@ -378,7 +386,6 @@ class FlujoDatos(QMainWindow):
         self.buscar_ci_btn.clicked.connect(self.buscar_condiciones_iniciales)   
         self.marcar_ci_btn.clicked.connect(self.marcar_condiciones_iniciales)
 
-
     def init_control_botones_rq(self):
         self.agregar_rq_btn.clicked.connect(self.agregar_reaccion_quimica)
         self.actualizar_rq_btn.clicked.connect(self.actualizar_reaccion_quimica)
@@ -386,7 +393,6 @@ class FlujoDatos(QMainWindow):
         self.borrar_rq_btn.clicked.connect(self.borrar_reaccion_quimica)
         self.limpiar_rq_btn.clicked.connect(self.limpiar_formulario_rq)
         self.buscar_rq_btn.clicked.connect(self.buscar_reaccion_quimica) 
-
 
     def init_control_botones_u(self):
         self.agregar_ru_btn.clicked.connect(self.agregar_unidades)
@@ -403,7 +409,6 @@ class FlujoDatos(QMainWindow):
         self.borrar_ds_btn.clicked.connect(self.borrar_datos_salida)
         self.limpiar_ds_btn.clicked.connect(self.limpiar_formulario_datos_salida)
         self.buscar_ds_btn.clicked.connect(self.buscar_datos_salida)
-
 
     def refrescar_datos_tabla(self):
         # Limpiar la tabla
@@ -1109,34 +1114,14 @@ class FlujoDatos(QMainWindow):
         # Asignar fecha_rde_edit a fecha_data_experimental
         self.fecha_data_experimental = self.ui.fecha_rde_edit
 
-    def mostrar_tipo_especie(self, catalogo):
-        self.tipo_especie_rq_box.clear()
-        self.tipo_especie_rq_box.addItem("Seleccione una opción", -1)
-        if catalogo:
-            for item in catalogo:
-                self.tipo_especie_rq_box.addItem(item["Descripcion"], item["id"])
-        else:
-            QMessageBox.information(self, "No hay datos", "No se encontraron datos en el archivo JSON.", QMessageBox.StandardButton.Ok)
-
-    def cargar_datos_json(self, archivo):
-        try:
-            with open(archivo, 'r') as f:
-                data = json.load(f)
-                self.mostrar_tipo_especie(data.get("Tipo_especie_catalogo", []))
-        except FileNotFoundError:
-            QMessageBox.critical(self, "Error", f"No se encontró el archivo {archivo}", QMessageBox.StandardButton.Ok)
-        except json.JSONDecodeError:
-            QMessageBox.critical(self, "Error", f"Error al leer el archivo {archivo}", QMessageBox.StandardButton.Ok)
-    
+# se requiere inyectar el catálogo y a donde dirigir la información
+    def cargar_datos_json_tipo_especie(self, archivo):
+        self.metodos_comunes.cargar_datos_json_box(archivo, "tipo_especie_catalogo", self.tipo_especie_rq_box, "Descripcion")
+   
     #empuja la seleccion al line edit
-    def actualizar_lineedit(self):
-        current_text = self.tipo_especie_rq_box.currentText()
-        if current_text != "Seleccione una opción":
-            self.tipo_especie_rq.setText(current_text)
-        else:
-            self.tipo_especie_rq.clear()
+    def actualizar_lineedit_tipo_especie(self):
+        self.metodos_comunes.actualizar_lineedit(self.tipo_especie_rq_box, self.tipo_especie_rq)
 
-    
     def marcar_quimico_inicial(self):
         # Definir los filtros para la consulta
 
