@@ -181,6 +181,7 @@ class Servicios:
         try:
             combo_box.clear()
             combo_box.addItem("Seleccione una opción",-1)
+            combo_box.addItem("otro") # Agregar la opción "otro" al final de la lista
             if elementos:
                 for elemento in elementos:
                     combo_box.addItem(str(elemento.get(tipo_elemento_catalogo)), str(elemento.get("id")))

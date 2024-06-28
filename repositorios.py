@@ -24,7 +24,6 @@ engine = create_engine(f'sqlite:///{db_path}', poolclass=QueuePool, pool_size=20
 # Crear todas las tablas
 Base.metadata.create_all(engine)
 
-
 class BaseManejador:
     def __init__(self, model):
         self.model = model
@@ -106,28 +105,23 @@ class BaseManejador:
         finally:
             session.close()
 
-
 # Definir manejadores específicos para cada modelo
 
 class CondicionesInicialesManejador(BaseManejador):
     def __init__(self):
         super().__init__(CondicionesIniciales)
 
-
 class DatosCineticosManejador(BaseManejador):
     def __init__(self):
         super().__init__(DatosIngresadosCineticos)
-
 
 class RegistroDataExperimentalManejador(BaseManejador):
     def __init__(self):
         super().__init__(RegistroDataExperimental)
 
-
 class ReaccionQuimicaManejador(BaseManejador):
     def __init__(self):
         super().__init__(ReaccionQuimica)
-
 
 class RegistroUnidadesManejador(BaseManejador):
     def __init__(self):

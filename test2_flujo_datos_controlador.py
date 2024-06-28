@@ -43,7 +43,7 @@ class FlujoDatos(QMainWindow):
         self.init_ui_elementos_u()
         self.init_ui_elementos_ds()
         self.init_ui_menu_derecho()
-        self.ocultar_elementos()
+        self.ocultar_elementos_vista()
 
         # Inicializar conexiones de señales y ranuras
         self.init_control_botones_datos()
@@ -77,6 +77,7 @@ class FlujoDatos(QMainWindow):
         #self.cargar_datos_json(r"data\tipo_especie.json")
 
         self.cargar_datos_json_tipo_especie(r"data\tipo_especie.json")
+        self.cargar_datos_json_unidades_temperatura(r"data\unidades.json")
 
         #mensajes barra de estado
         self.statusbar=self.ui.statusbar
@@ -177,10 +178,10 @@ class FlujoDatos(QMainWindow):
         #self.ui.label_20.hide()
         #self.ui.nombre_data_rde_edit.hide()
 
-    def ocultar_elementos(self):
+    def ocultar_elementos_vista(self):
         # Lista de nombres de elementos a ocultar
-        elementos_a_ocultar = ['label_20', 'nombre_data_rde_edit','nombre_reaccion_rq_edit','label_27','nombre_data_ci_edit','label_17','label_8','nombre_data_dc_edit','label_9','nombre_reaccion_dc_edit']
-        for nombre in elementos_a_ocultar:
+        elementos_ocultar = ['label_20', 'nombre_data_rde_edit','nombre_reaccion_rq_edit','label_27','nombre_data_ci_edit','label_17','label_8','nombre_data_dc_edit','label_9','nombre_reaccion_dc_edit']
+        for nombre in elementos_ocultar:
             getattr(self.ui, nombre).hide()
 
 
@@ -358,6 +359,18 @@ class FlujoDatos(QMainWindow):
         self.tabla_registro_unidades = self.ui.registro_unidades_tabla
         self.tabla_registro_unidades.setSortingEnabled(False)
         self.lista_botones = self.ui.funciones_frame_u.findChildren(QPushButton)
+
+        #box unidades
+        self.presion_box=self.ui.presion_box
+        self.temperatura_box=self.ui.temperatura_box
+        self.tiempo_box=self.ui.tiempo_box
+        self.concentracion_box=self.ui.concentracion_box
+        self.energia_box=self.ui.energia_box
+        self.r_box=self.ui.r_box
+
+        #conxiones box unidades
+        self.temperatura_box.currentIndexChanged.connect(self.actualizar_lineedit_unidades_temperatura) 
+
 
     def init_control_botones_datos(self):
         # Conectar los botones a sus respectivas funciones
@@ -1117,6 +1130,14 @@ class FlujoDatos(QMainWindow):
 # se requiere inyectar el catálogo y a donde dirigir la información
     def cargar_datos_json_tipo_especie(self, archivo):
         self.metodos_comunes.cargar_datos_json_box(archivo, "tipo_especie_catalogo", self.tipo_especie_rq_box, "Descripcion")
+    
+    def cargar_datos_json_unidades_temperatura(self, archivo):
+        self.metodos_comunes.cargar_datos_json_box(archivo, "unidades_temperatura", self.temperatura_box, "simbolo")
+        #self.temperatura_box.addItem("otro") # Agregar la opción "otro" al final de la lista
+    
+    def actualizar_lineedit_unidades_temperatura(self):
+        self.metodos_comunes.actualizar_lineedit(self.temperatura_box, self.temperatura_u_edit)
+
    
     #empuja la seleccion al line edit
     def actualizar_lineedit_tipo_especie(self):

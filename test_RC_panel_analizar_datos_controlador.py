@@ -166,7 +166,7 @@ class PanelDataAnalisis(QMainWindow):
     
     def actualizar_condiciones_iniciales(self):
         nombre_data = self.registro_datos_box.currentText()
-        if nombre_data == "Todos":
+        if nombre_data == "Seleccione una opción":
             condiciones = self.CondicionesInicialesManejador.consultar()
         else:
             filtros = {'nombre_data': nombre_data}
@@ -189,9 +189,9 @@ class PanelDataAnalisis(QMainWindow):
         condicion_inicial_id = self.condiciones_iniciales_box.currentData()
 
         filtros = {}
-        if nombre_data and nombre_data != "Todos":
+        if nombre_data and nombre_data != "Seleccione una opción":
             filtros['nombre_data'] = nombre_data
-        if condicion_inicial_id and condicion_inicial_id != "Todos":
+        if condicion_inicial_id and condicion_inicial_id != "Seleccione una opción":
             filtros['id'] = condicion_inicial_id
 
         #condiciones = self.CondicionesInicialesManejador.consultar(filtros=filtros)
@@ -206,7 +206,7 @@ class PanelDataAnalisis(QMainWindow):
 
     def filtrar_datos_condiciones_iniciales(self):
         self.condiciones_iniciales_box.clear()
-        self.condiciones_iniciales_box.addItem("Todos")
+        self.condiciones_iniciales_box.addItem("Seleccione una opción")
 
         condiciones_iniciales = self.CondicionesInicialesManejador.consultar()
 
@@ -221,7 +221,7 @@ class PanelDataAnalisis(QMainWindow):
 
     def filtrar_datos(self):
         self.filtro_datos_box.clear()
-        self.filtro_datos_box.addItem("Todos")    
+        self.filtro_datos_box.addItem("Seleccione una opción")    
         datos_cineticos = self.DatosCineticosManejador.consultar()        
         if datos_cineticos:
             tipos_especie = set(registro.tipo_especie for registro in datos_cineticos)            
@@ -232,7 +232,7 @@ class PanelDataAnalisis(QMainWindow):
     
     def filtrar_especie_quimica(self):
         self.filtro_datos_box_2.clear()
-        self.filtro_datos_box_2.addItem("Todos")
+        self.filtro_datos_box_2.addItem("Seleccione una opción")
         datos_cineticos = self.DatosCineticosManejador.consultar()
         if datos_cineticos:
             especie_quimica = set(registro.especie_quimica for registro in datos_cineticos)
@@ -244,7 +244,7 @@ class PanelDataAnalisis(QMainWindow):
 
     def filtrar_datos_id_condiciones_iniciales(self):
         self.filtro_datos_box_3.clear()
-        self.filtro_datos_box_3.addItem("Todos")
+        self.filtro_datos_box_3.addItem("Seleccione una opción")
 
         datos_cineticos = self.DatosCineticosManejador.consultar()
 
@@ -273,9 +273,9 @@ class PanelDataAnalisis(QMainWindow):
         condicion_inicial_id = self.condiciones_iniciales_box.currentData()
 
         filtros = {}
-        if nombre_data and nombre_data != "Todos":
+        if nombre_data and nombre_data != "Seleccione una opción":
             filtros['nombre_data'] = nombre_data
-        if condicion_inicial_id and condicion_inicial_id != "Todos":
+        if condicion_inicial_id and condicion_inicial_id != "Seleccione una opción":
             filtros['id_condiciones_iniciales'] = condicion_inicial_id
 
         datos_cineticos = self.DatosCineticosManejador.consultar(filtros=filtros)
@@ -425,11 +425,11 @@ class PanelDataAnalisis(QMainWindow):
         datos_cineticos = self.DatosCineticosManejador.consultar(filtros=filtros_dc)
 
         # Filtrar datos cinéticos por tipo_especie si se selecciona uno específico
-        if tipo_especie != "Todos":
+        if tipo_especie != "Seleccione una opción":
             datos_cineticos = [dato for dato in datos_cineticos if dato.tipo_especie == tipo_especie]
         
         # Filtrar datos cinéticos por especie_quimica si se selecciona una específica
-        if especie_quimica != "Todos":
+        if especie_quimica != "Seleccione una opción":
             datos_cineticos = [dato for dato in datos_cineticos if dato.especie_quimica == especie_quimica]
 
         # Convertir los datos a un DataFrame de pandas
