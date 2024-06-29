@@ -75,9 +75,15 @@ class FlujoDatos(QMainWindow):
         #refactor direccion con datos json
         #json_tipo_especie = r"data\tipo_especie.json"
         #self.cargar_datos_json(r"data\tipo_especie.json")
-
+        self.json_unidades=r"data\unidades.json"
         self.cargar_datos_json_tipo_especie(r"data\tipo_especie.json")
-        self.cargar_datos_json_unidades_temperatura(r"data\unidades.json")
+        self.cargar_datos_json_unidades_temperatura(self.json_unidades)
+        self.cargar_datos_json_unidades_presion(self.json_unidades)
+        self.cargar_datos_json_unidades_tiempo(self.json_unidades)
+        self.cargar_datos_json_unidades_concentracion(self.json_unidades)
+        self.cargar_datos_json_unidades_energia(self.json_unidades)
+        self.cargar_datos_json_constante_r(r"data\constante_R.json")
+        
 
         #mensajes barra de estado
         self.statusbar=self.ui.statusbar
@@ -369,7 +375,14 @@ class FlujoDatos(QMainWindow):
         self.r_box=self.ui.r_box
 
         #conxiones box unidades
-        self.temperatura_box.currentIndexChanged.connect(self.actualizar_lineedit_unidades_temperatura) 
+        self.presion_box.currentIndexChanged.connect(self.actualizar_lineedit_unidades_presion)
+        self.temperatura_box.currentIndexChanged.connect(self.actualizar_lineedit_unidades_temperatura)
+        self.tiempo_box.currentIndexChanged.connect(self.actualizar_lineedit_unidades_tiempo)
+        self.concentracion_box.currentIndexChanged.connect(self.actualizar_lineedit_unidades_concentracion)
+        self.energia_box.currentIndexChanged.connect(self.actualizar_lineedit_unidades_energia)
+        #self.r_box.currentIndexChanged.connect(self.actualizar_lineedit_unidades_r)
+         
+        
 
 
     def init_control_botones_datos(self):
@@ -1134,9 +1147,46 @@ class FlujoDatos(QMainWindow):
     def cargar_datos_json_unidades_temperatura(self, archivo):
         self.metodos_comunes.cargar_datos_json_box(archivo, "unidades_temperatura", self.temperatura_box, "simbolo")
         #self.temperatura_box.addItem("otro") # Agregar la opción "otro" al final de la lista
+        
+    def cargar_datos_json_unidades_presion(self, archivo):
+        self.metodos_comunes.cargar_datos_json_box(archivo, "unidades_presion", self.presion_box, "simbolo")
+        #self.presion_box.addItem("otro") # Agregar la opción "otro" al final de la lista
+    
+    def cargar_datos_json_unidades_tiempo(self, archivo):
+        self.metodos_comunes.cargar_datos_json_box(archivo, "unidades_tiempo", self.tiempo_box, "simbolo")
+        #self.tiempo_box.addItem("otro") # Agregar la opción "otro" al final de la lista
+    
+    def cargar_datos_json_unidades_concentracion(self, archivo):
+        self.metodos_comunes.cargar_datos_json_box(archivo, "unidades_concentracion", self.concentracion_box, "simbolo")
+        #self.concentracion_box.addItem("otro") # Agregar la opción "otro" al final de la lista
+    
+    def cargar_datos_json_unidades_energia(self, archivo):
+        self.metodos_comunes.cargar_datos_json_box(archivo, "unidades_energia", self.energia_box, "simbolo")
+        #self.energia_box.addItem("otro") # Agregar la opción "otro" al final de la lista
+    
+    def cargar_datos_json_constante_r(self, archivo):
+        self.metodos_comunes.cargar_datos_json_box(archivo, "constante_R_gases", self.r_box, "valor")
+        #self.constante_r_box.addItem("otro") # Agregar la opción "otro" al final de la lista
     
     def actualizar_lineedit_unidades_temperatura(self):
         self.metodos_comunes.actualizar_lineedit(self.temperatura_box, self.temperatura_u_edit)
+        
+    def actualizar_lineedit_unidades_presion(self):
+        self.metodos_comunes.actualizar_lineedit(self.presion_box, self.presion_u_edit)
+    
+    def actualizar_lineedit_unidades_tiempo(self):
+        self.metodos_comunes.actualizar_lineedit(self.tiempo_box, self.tiempo_u_edit)
+    
+    def actualizar_lineedit_unidades_concentracion(self):
+        self.metodos_comunes.actualizar_lineedit(self.concentracion_box, self.concentracion_u_edit)
+    
+    def actualizar_lineedit_unidades_energia(self):
+        self.metodos_comunes.actualizar_lineedit(self.energia_box, self.energia_u_edit)
+    
+    def actualizar_lineedit_constante_r(self):
+        self.metodos_comunes.actualizar_lineedit(self.r_box, self.r_u_edit)
+    
+    
 
    
     #empuja la seleccion al line edit

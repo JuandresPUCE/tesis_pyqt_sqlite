@@ -7,3 +7,4 @@ PyKinetics
 PUCEKinetics
 
 pyuic6 -x .\panel_data_analisis.ui -o .\panel_data_analisis.py
+pyuic6 -x flujo_datos_gui_v4.ui -o flujo_datos_vista.py

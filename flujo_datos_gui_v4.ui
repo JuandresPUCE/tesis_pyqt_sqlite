@@ -957,22 +957,6 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QLabel" name="titulo_label_2">
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>60</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Flujo de datos</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QTabWidget" name="tabWidget_2">
               <property name="currentIndex">
                <number>4</number>
@@ -3221,16 +3205,16 @@
                <widget class="QGroupBox" name="groupBox_8">
                 <property name="geometry">
                  <rect>
-                  <x>50</x>
-                  <y>40</y>
-                  <width>153</width>
-                  <height>86</height>
+                  <x>20</x>
+                  <y>50</y>
+                  <width>181</width>
+                  <height>58</height>
                  </rect>
                 </property>
                 <property name="title">
                  <string>Presion</string>
                 </property>
-                <layout class="QVBoxLayout" name="verticalLayout_37">
+                <layout class="QHBoxLayout" name="horizontalLayout_66">
                  <item>
                   <widget class="QComboBox" name="presion_box"/>
                  </item>
@@ -3450,7 +3434,7 @@
                 </column>
                 <column>
                  <property name="text">
-                  <string>nombre_data</string>
+                  <string>tiempo</string>
                  </property>
                 </column>
                 <column>
@@ -4207,6 +4191,22 @@
                 </layout>
                </widget>
               </widget>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="titulo_label_2">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>60</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Flujo de datos</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
              </widget>
             </item>
            </layout>

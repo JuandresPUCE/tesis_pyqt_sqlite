@@ -24,13 +24,13 @@
     "unidades_concentracion": [
         {
             "id": 5,
-            "nombre_unidad": "mol/m³",
-            "simbolo": "mol/m³"
+            "nombre_unidad": "mol/m3",
+            "simbolo": "mol/m3"
         },
         {
             "id": 6,
-            "nombre_unidad": "lbmol/ft³",
-            "simbolo": "lbmol/ft³"
+            "nombre_unidad": "lbmol/ft3",
+            "simbolo": "lbmol/ft3"
         }
     ],
     "unidades_presion": [
