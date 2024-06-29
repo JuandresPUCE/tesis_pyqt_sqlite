@@ -217,19 +217,20 @@ class Servicios:
         except json.JSONDecodeError:
             QMessageBox.critical(self.parent, "Error", f"Error al leer el archivo {archivo}", QMessageBox.StandardButton.Ok)
 
-    def actualizar_lineedit(self, combo_box, line_edit):
-            try:
-                current_text = combo_box.currentText()
+    def actualizar_lineedit(self, combo_box, line_edit, sin_ocultar=None):
+        try:
+            current_text = combo_box.currentText()
+            line_edit.setText(current_text)
+            if current_text == "otro":
+                line_edit.show()
                 line_edit.setText(current_text)
-                if current_text == "otro":
-                    line_edit.show()
-                    line_edit.setText(current_text)
-                else:
+            else:
+                if not sin_ocultar:
                     line_edit.hide()
-                    #line_edit.clear()
-            except Exception as e:
-                QMessageBox.critical(self.parent, "Error", f"Error inesperado al actualizar el line edit: {e}", QMessageBox.StandardButton.Ok)
-         
+                #line_edit.clear()
+        except Exception as e:
+            QMessageBox.critical(self.parent, "Error", f"Error inesperado al actualizar el line edit: {e}", QMessageBox.StandardButton.Ok)
+    
 
     def actualizar_valor_celda(self, tabla, manejador, fila, columna):
         try:

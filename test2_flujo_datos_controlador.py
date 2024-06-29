@@ -186,7 +186,7 @@ class FlujoDatos(QMainWindow):
 
     def ocultar_elementos_vista(self):
         # Lista de nombres de elementos a ocultar
-        elementos_ocultar = ['label_20', 'nombre_data_rde_edit','nombre_reaccion_rq_edit','label_27','nombre_data_ci_edit','label_17','label_8','nombre_data_dc_edit','label_9','nombre_reaccion_dc_edit']
+        elementos_ocultar = ['label_20', 'nombre_data_rde_edit','nombre_reaccion_rq_edit','label_27','nombre_data_ci_edit','label_17','label_8','nombre_data_dc_edit','label_9','nombre_reaccion_dc_edit','label_32','nombre_data_u_edit']
         for nombre in elementos_ocultar:
             getattr(self.ui, nombre).hide()
 
@@ -380,7 +380,7 @@ class FlujoDatos(QMainWindow):
         self.tiempo_box.currentIndexChanged.connect(self.actualizar_lineedit_unidades_tiempo)
         self.concentracion_box.currentIndexChanged.connect(self.actualizar_lineedit_unidades_concentracion)
         self.energia_box.currentIndexChanged.connect(self.actualizar_lineedit_unidades_energia)
-        #self.r_box.currentIndexChanged.connect(self.actualizar_lineedit_unidades_r)
+        self.r_box.currentIndexChanged.connect(self.actualizar_lineedit_constante_r)
          
         
 
