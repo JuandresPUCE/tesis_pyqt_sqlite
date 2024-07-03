@@ -1169,19 +1169,19 @@ class FlujoDatos(QMainWindow):
         #self.constante_r_box.addItem("otro") # Agregar la opción "otro" al final de la lista
     
     def actualizar_lineedit_unidades_temperatura(self):
-        self.metodos_comunes.actualizar_lineedit(self.temperatura_box, self.temperatura_u_edit)
+        self.metodos_comunes.actualizar_lineedit(self.temperatura_box, self.temperatura_u_edit,True)
         
     def actualizar_lineedit_unidades_presion(self):
-        self.metodos_comunes.actualizar_lineedit(self.presion_box, self.presion_u_edit)
+        self.metodos_comunes.actualizar_lineedit(self.presion_box, self.presion_u_edit,True)
     
     def actualizar_lineedit_unidades_tiempo(self):
-        self.metodos_comunes.actualizar_lineedit(self.tiempo_box, self.tiempo_u_edit)
+        self.metodos_comunes.actualizar_lineedit(self.tiempo_box, self.tiempo_u_edit,True)
     
     def actualizar_lineedit_unidades_concentracion(self):
-        self.metodos_comunes.actualizar_lineedit(self.concentracion_box, self.concentracion_u_edit)
+        self.metodos_comunes.actualizar_lineedit(self.concentracion_box, self.concentracion_u_edit,True)
     
     def actualizar_lineedit_unidades_energia(self):
-        self.metodos_comunes.actualizar_lineedit(self.energia_box, self.energia_u_edit)
+        self.metodos_comunes.actualizar_lineedit(self.energia_box, self.energia_u_edit,True)
     
     def actualizar_lineedit_constante_r(self):
         self.metodos_comunes.actualizar_lineedit(self.r_box, self.r_u_edit)
