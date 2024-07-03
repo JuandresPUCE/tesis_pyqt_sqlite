@@ -142,6 +142,10 @@ class PanelDataAnalisis(QMainWindow):
         self.ingreso_datos_btn = self.ui.ingreso_datos_btn
         self.ingreso_datos_btn.clicked.connect(self.abrir_ingreso_datos)
 
+        # cambiar configuracion de la base de datos
+        self.cambiar_config_btn=self.ui.cambiar_config_btn
+        self.cambiar_config_btn.clicked.connect(self.cambiar_config_base_datos)
+
         # funciones de la barra de menu
     def init_panel_menu(self):
         self.menu_bar = self.ui.menu_btn
@@ -558,9 +562,8 @@ class PanelDataAnalisis(QMainWindow):
             logging.warning(f"No se encontró un registro con el nombre: {self.registro_datos_box.currentText()}")
             return None
         
-
-
-
+    def cambiar_config_base_datos(self):
+        self.metodos_comunes.cambiar_configuracion_db()
 
 
 class MatplotlibWidget(QWidget):

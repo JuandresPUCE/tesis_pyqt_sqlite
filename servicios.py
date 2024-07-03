@@ -231,6 +231,29 @@ class Servicios:
         except Exception as e:
             QMessageBox.critical(self.parent, "Error", f"Error inesperado al actualizar el line edit: {e}", QMessageBox.StandardButton.Ok)
     
+    def cargar_configuracion_json(self,archivo,catalogo):
+        try:
+            with open(archivo, 'r') as f:
+                configuracion = json.load(f)
+                
+                return configuracion.get(catalogo, 'Ruta por defecto si db_path no existe')
+        except FileNotFoundError:
+            raise Exception(f"No se encontró el archivo {archivo}")
+        except json.JSONDecodeError:
+            raise Exception(f"Error al leer el archivo {archivo}")
+        
+    def cambiar_configuracion_db(self):
+        # Abre un diálogo para seleccionar el nuevo archivo de base de datos
+        fileName, _ = QFileDialog.getOpenFileName(self.parent, "Selecciona el nuevo archivo de base de datos", "", "All Files (*);;SQLite Files (*.db)")
+        if fileName:
+            self.actualizar_configuracion_db(fileName)
+
+    def actualizar_configuracion_db(self, nueva_ruta):
+        # Actualiza el archivo JSON con la nueva ruta
+        config = {"db_path": nueva_ruta}
+        with open("config.json", "w") as f:
+            json.dump(config, f)
+        QMessageBox.information(self.parent, "Configuración Actualizada", "La ruta de la base de datos ha sido actualizada.")
 
     def actualizar_valor_celda(self, tabla, manejador, fila, columna):
         try:

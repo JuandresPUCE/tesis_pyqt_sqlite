@@ -561,8 +561,14 @@ class Ui_MainWindow(object):
         self.label_16.setGeometry(QtCore.QRect(310, 380, 146, 22))
         self.label_16.setObjectName("label_16")
         self.tabWidget.addTab(self.mi_tab, "")
+        self.tab = QtWidgets.QWidget()
+        self.tab.setObjectName("tab")
+        self.tabWidget.addTab(self.tab, "")
         self.tab_3 = QtWidgets.QWidget()
         self.tab_3.setObjectName("tab_3")
+        self.cambiar_config_btn = QtWidgets.QPushButton(parent=self.tab_3)
+        self.cambiar_config_btn.setGeometry(QtCore.QRect(70, 180, 181, 24))
+        self.cambiar_config_btn.setObjectName("cambiar_config_btn")
         self.tabWidget.addTab(self.tab_3, "")
         self.verticalLayout_6.addWidget(self.tabWidget)
         self.horizontalLayout.addWidget(self.panel_izquierdo)
@@ -570,7 +576,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(3)
         self.tabWidget_2.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -710,7 +716,9 @@ class Ui_MainWindow(object):
         self.label_15.setText(_translate("MainWindow", "k calculado"))
         self.label_16.setText(_translate("MainWindow", "Modelo utilizado"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.mi_tab), _translate("MainWindow", "método integral"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "Página"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Arrenius"))
+        self.cambiar_config_btn.setText(_translate("MainWindow", "Cambiar base de datos"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "Configuracion"))
 
 
 if __name__ == "__main__":

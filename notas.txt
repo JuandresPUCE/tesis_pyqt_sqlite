@@ -8,3 +8,4 @@ PUCEKinetics
 
 pyuic6 -x .\panel_data_analisis.ui -o .\panel_data_analisis.py
 pyuic6 -x flujo_datos_gui_v4.ui -o flujo_datos_vista.py
+pyuic6 -x .\pantalla_d_a_c_tipo_dashb_RC1_2.ui -o panel_data_analisis_alterno.py

@@ -7,6 +7,7 @@ import logging
 from sqlalchemy.exc import SQLAlchemyError
 import os
 from modelos import *
+from servicios import *
 
 # Obtén la ruta del directorio actual
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -18,7 +19,14 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Define la ruta relativa al archivo de la base de datos
 #db_path = r"data\data_reactor1.db"
-db_path = r"data\data_reactor4.db"
+#db_path = r"data\data_reactor4.db"
+#dir_db = r"config\config.json"
+metodos_comunes = Servicios()
+
+
+dir_db = r"config\config.json"       
+db_path=metodos_comunes.cargar_configuracion_json(dir_db,"db_path")
+
 engine = create_engine(f'sqlite:///{db_path}', poolclass=QueuePool, pool_size=20, max_overflow=0)
 
 # Crear todas las tablas

@@ -451,7 +451,7 @@
           <item>
            <widget class="QTabWidget" name="tabWidget">
             <property name="currentIndex">
-             <number>1</number>
+             <number>3</number>
             </property>
             <widget class="QWidget" name="data_tab">
              <attribute name="title">
@@ -1427,10 +1427,28 @@
               </property>
              </widget>
             </widget>
+            <widget class="QWidget" name="tab">
+             <attribute name="title">
+              <string>Arrenius</string>
+             </attribute>
+            </widget>
             <widget class="QWidget" name="tab_3">
              <attribute name="title">
-              <string>Página</string>
+              <string>Configuracion</string>
              </attribute>
+             <widget class="QPushButton" name="cambiar_config_btn">
+              <property name="geometry">
+               <rect>
+                <x>70</x>
+                <y>180</y>
+                <width>181</width>
+                <height>24</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Cambiar base de datos</string>
+              </property>
+             </widget>
             </widget>
            </widget>
           </item>

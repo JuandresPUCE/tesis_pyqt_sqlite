@@ -33,8 +33,7 @@ class FlujoDatos(QMainWindow):
 
         # Crear un atajo para la tecla F5
         shortcut = QShortcut(QKeySequence.StandardKey.Refresh, self)
-        shortcut.activated.connect(self.refrescar_datos_tabla)        
-        
+        shortcut.activated.connect(self.refrescar_datos_tabla) 
         # Inicializar elementos de la UI
         self.init_ui_elementos_dc()
         self.init_ui_elementos_rde()
