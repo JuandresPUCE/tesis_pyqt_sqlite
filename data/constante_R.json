@@ -4,7 +4,7 @@
     {"id": 2, "valor": 0.0821, "unidades": "atm*L/(mol K)", "presion": "atm", "temperatura_absoluta":"K", "temperatura":"C", "concentracion":"mol/L", "energia":"atm*L"},
     {"id": 3, "valor": 1.987, "unidades": "cal/(mol K)", "presion": "atm", "temperatura_absoluta":"K", "temperatura":"C", "concentracion":"mol/L", "energia":"cal"},
     {"id": 4, "valor": 10.73, "unidades": "PSIa*ft3/(lbmol R)", "presion": "PSIa", "temperatura_absoluta":"R", "temperatura":"F", "concentracion":"lbmol/ft3", "energia":"PSIa*ft3"},
-    {"id": 5, "valor": 0.008314, "unidades": "KJ/(mol K)", "presion": "Pa", "temperatura_absoluta":"K", "temperatura":"C", "concentracion":"mol/m3", "energia":"KJ"},
+    {"id": 5, "valor": 0.008314, "unidades": "KJ/(mol K)", "presion": "KPa", "temperatura_absoluta":"K", "temperatura":"C", "concentracion":"mol/m3", "energia":"KJ"},
     {"id": 6, "valor": 1.986, "unidades": "btu/(lbmol R)", "presion": "PSIa", "temperatura_absoluta":"R", "temperatura":"F", "concentracion":"lbmol/ft3", "energia":"btu"},
     {"id": 7, "valor": 0.08206, "unidades": "PSIa*ft3/(mol K)", "presion": "PSIa", "temperatura_absoluta":"K", "temperatura":"C", "concentracion":"mol/L","energia" : "PSIa*ft3"}
 ]

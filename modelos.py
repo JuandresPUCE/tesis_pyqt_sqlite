@@ -26,6 +26,7 @@ class CondicionesIniciales(Base):
 
     def __str__(self):
         return f"id: {self.id}, temperatura: {self.temperatura}, tiempo: {self.tiempo}, presion_total: {self.presion_total}, presion_parcial: {self.presion_parcial}, fraccion_molar: {self.fraccion_molar}, especie_quimica: {self.especie_quimica}, tipo_especie: {self.tipo_especie}, detalle: {self.detalle}, nombre_data: {self.nombre_data}"
+    
 
 
 # modelo datos cineticos ingresados
@@ -88,6 +89,17 @@ class RegistroUnidades(Base):
 
     def __str__(self):
         return f"id: {self.id}, presion: {self.presion}, temperatura: {self.temperatura}, tiempo: {self.tiempo}, concentracion: {self.concentracion}, energia: {self.energia}, nombre_data: {self.nombre_data}"
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'presion': self.presion,
+            'temperatura': self.temperatura,
+            'tiempo': self.tiempo,
+            'concentracion': self.concentracion,
+            'energia': self.energia,
+            'nombre_data': self.nombre_data
+        }
 
 # modelo de datos de salida
 class DatosSalida(Base):

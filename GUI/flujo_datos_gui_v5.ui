@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1024</width>
-    <height>789</height>
+    <height>851</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -201,6 +201,12 @@
              </property>
              <item>
               <widget class="QLabel" name="label">
+               <property name="minimumSize">
+                <size>
+                 <width>250</width>
+                 <height>0</height>
+                </size>
+               </property>
                <property name="maximumSize">
                 <size>
                  <width>16777215</width>
@@ -250,6 +256,12 @@
              </property>
              <item>
               <widget class="QFrame" name="frame_6">
+               <property name="maximumSize">
+                <size>
+                 <width>250</width>
+                 <height>16777215</height>
+                </size>
+               </property>
                <property name="frameShape">
                 <enum>QFrame::StyledPanel</enum>
                </property>
@@ -271,71 +283,48 @@
                 </property>
                 <item>
                  <widget class="QGroupBox" name="groupBox">
+                  <property name="maximumSize">
+                   <size>
+                    <width>250</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="title">
                    <string>Datos Globales</string>
                   </property>
-                  <layout class="QVBoxLayout" name="verticalLayout_26">
+                  <layout class="QVBoxLayout" name="verticalLayout_38">
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_10">
+                    <layout class="QVBoxLayout" name="verticalLayout_26">
                      <property name="spacing">
                       <number>0</number>
                      </property>
                      <item>
-                      <widget class="QLabel" name="label_21">
-                       <property name="text">
+                      <widget class="QGroupBox" name="groupBox_12">
+                       <property name="title">
                         <string>Nombre data</string>
                        </property>
+                       <layout class="QHBoxLayout" name="horizontalLayout_10">
+                        <item>
+                         <widget class="QLineEdit" name="nombre_data_general_edit">
+                          <property name="text">
+                           <string/>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
                       </widget>
                      </item>
                      <item>
-                      <spacer name="horizontalSpacer_21">
-                       <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>20</width>
-                         <height>19</height>
-                        </size>
-                       </property>
-                      </spacer>
-                     </item>
-                     <item>
-                      <widget class="QLineEdit" name="nombre_data_general_edit">
-                       <property name="text">
-                        <string/>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                   <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_22">
-                     <property name="spacing">
-                      <number>0</number>
-                     </property>
-                     <item>
-                      <widget class="QLabel" name="label_33">
-                       <property name="text">
+                      <widget class="QGroupBox" name="groupBox_13">
+                       <property name="title">
                         <string>Nombre reacción</string>
                        </property>
+                       <layout class="QHBoxLayout" name="horizontalLayout_75">
+                        <item>
+                         <widget class="QLineEdit" name="nombre_reaccion_general_edit"/>
+                        </item>
+                       </layout>
                       </widget>
-                     </item>
-                     <item>
-                      <spacer name="horizontalSpacer_22">
-                       <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>13</width>
-                         <height>19</height>
-                        </size>
-                       </property>
-                      </spacer>
-                     </item>
-                     <item>
-                      <widget class="QLineEdit" name="nombre_reaccion_general_edit"/>
                      </item>
                     </layout>
                    </item>
@@ -977,25 +966,9 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QLabel" name="titulo_label_2">
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>60</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Flujo de datos</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QTabWidget" name="tabWidget_2">
               <property name="currentIndex">
-               <number>4</number>
+               <number>0</number>
               </property>
               <widget class="QWidget" name="rde_tab">
                <attribute name="title">
@@ -3192,328 +3165,344 @@
                <attribute name="title">
                 <string>Configuracion unidades</string>
                </attribute>
-               <widget class="QGroupBox" name="groupBox_6">
-                <property name="geometry">
-                 <rect>
-                  <x>30</x>
-                  <y>90</y>
-                  <width>181</width>
-                  <height>58</height>
-                 </rect>
-                </property>
-                <property name="title">
-                 <string>Temperatura</string>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_67">
-                 <item>
-                  <widget class="QComboBox" name="temperatura_box"/>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="temperatura_u_edit"/>
-                 </item>
-                </layout>
-               </widget>
-               <widget class="QGroupBox" name="groupBox_7">
-                <property name="geometry">
-                 <rect>
-                  <x>460</x>
-                  <y>20</y>
-                  <width>228</width>
-                  <height>58</height>
-                 </rect>
-                </property>
-                <property name="title">
-                 <string>concentracion</string>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_70">
-                 <item>
-                  <widget class="QComboBox" name="concentracion_box"/>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="concentracion_u_edit">
-                   <property name="text">
-                    <string/>
+               <layout class="QVBoxLayout" name="verticalLayout_36">
+                <item>
+                 <spacer name="verticalSpacer_43">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_74">
+                  <item>
+                   <spacer name="horizontalSpacer_67">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_35">
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_72">
+                      <item>
+                       <widget class="QGroupBox" name="groupBox_8">
+                        <property name="title">
+                         <string>Presion</string>
+                        </property>
+                        <layout class="QHBoxLayout" name="horizontalLayout_66">
+                         <item>
+                          <widget class="QComboBox" name="presion_box"/>
+                         </item>
+                         <item>
+                          <widget class="QLineEdit" name="presion_u_edit"/>
+                         </item>
+                        </layout>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QGroupBox" name="groupBox_9">
+                        <property name="title">
+                         <string>tiempo</string>
+                        </property>
+                        <layout class="QHBoxLayout" name="horizontalLayout_68">
+                         <item>
+                          <widget class="QComboBox" name="tiempo_box"/>
+                         </item>
+                         <item>
+                          <widget class="QLineEdit" name="tiempo_u_edit">
+                           <property name="text">
+                            <string/>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QGroupBox" name="groupBox_7">
+                        <property name="title">
+                         <string>concentracion</string>
+                        </property>
+                        <layout class="QHBoxLayout" name="horizontalLayout_70">
+                         <item>
+                          <widget class="QComboBox" name="concentracion_box"/>
+                         </item>
+                         <item>
+                          <widget class="QLineEdit" name="concentracion_u_edit">
+                           <property name="text">
+                            <string/>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_73">
+                      <item>
+                       <widget class="QGroupBox" name="groupBox_6">
+                        <property name="title">
+                         <string>Temperatura</string>
+                        </property>
+                        <layout class="QHBoxLayout" name="horizontalLayout_67">
+                         <item>
+                          <widget class="QComboBox" name="temperatura_box"/>
+                         </item>
+                         <item>
+                          <widget class="QLineEdit" name="temperatura_u_edit"/>
+                         </item>
+                        </layout>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QGroupBox" name="groupBox_10">
+                        <property name="title">
+                         <string>energía</string>
+                        </property>
+                        <layout class="QHBoxLayout" name="horizontalLayout_69">
+                         <item>
+                          <widget class="QComboBox" name="energia_box"/>
+                         </item>
+                         <item>
+                          <widget class="QLineEdit" name="energia_u_edit">
+                           <property name="text">
+                            <string/>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QGroupBox" name="groupBox_11">
+                        <property name="title">
+                         <string>Constante universal de los gases</string>
+                        </property>
+                        <layout class="QHBoxLayout" name="horizontalLayout_71">
+                         <item>
+                          <widget class="QComboBox" name="r_box"/>
+                         </item>
+                         <item>
+                          <widget class="QLineEdit" name="r_u_edit">
+                           <property name="text">
+                            <string/>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <widget class="QGroupBox" name="groupBox_14">
+                      <property name="title">
+                       <string>Nombre data</string>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_37">
+                       <item>
+                        <widget class="QLineEdit" name="nombre_data_u_edit">
+                         <property name="text">
+                          <string/>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_58">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                     </layout>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_68">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <spacer name="verticalSpacer_42">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>72</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QFrame" name="funciones_frame_u">
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_59">
+                   <property name="spacing">
+                    <number>0</number>
                    </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-               <widget class="QGroupBox" name="groupBox_8">
-                <property name="geometry">
-                 <rect>
-                  <x>20</x>
-                  <y>20</y>
-                  <width>181</width>
-                  <height>58</height>
-                 </rect>
-                </property>
-                <property name="title">
-                 <string>Presion</string>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_66">
-                 <item>
-                  <widget class="QComboBox" name="presion_box"/>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="presion_u_edit"/>
-                 </item>
-                </layout>
-               </widget>
-               <widget class="QGroupBox" name="groupBox_9">
-                <property name="geometry">
-                 <rect>
-                  <x>220</x>
-                  <y>20</y>
-                  <width>228</width>
-                  <height>58</height>
-                 </rect>
-                </property>
-                <property name="title">
-                 <string>tiempo</string>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_68">
-                 <item>
-                  <widget class="QComboBox" name="tiempo_box"/>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="tiempo_u_edit">
-                   <property name="text">
-                    <string/>
+                   <property name="leftMargin">
+                    <number>0</number>
                    </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-               <widget class="QGroupBox" name="groupBox_10">
-                <property name="geometry">
-                 <rect>
-                  <x>230</x>
-                  <y>90</y>
-                  <width>228</width>
-                  <height>58</height>
-                 </rect>
-                </property>
-                <property name="title">
-                 <string>energía</string>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_69">
-                 <item>
-                  <widget class="QComboBox" name="energia_box"/>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="energia_u_edit">
-                   <property name="text">
-                    <string/>
+                   <property name="topMargin">
+                    <number>0</number>
                    </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-               <widget class="QWidget" name="layoutWidget">
-                <property name="geometry">
-                 <rect>
-                  <x>50</x>
-                  <y>180</y>
-                  <width>245</width>
-                  <height>24</height>
-                 </rect>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_58">
-                 <property name="spacing">
-                  <number>0</number>
-                 </property>
-                 <item>
-                  <widget class="QLabel" name="label_32">
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QPushButton" name="agregar_ru_btn">
+                     <property name="text">
+                      <string>Agregar</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="actualizar_ru_btn">
+                     <property name="text">
+                      <string>Actualizar</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="seleccionar_ru_btn">
+                     <property name="text">
+                      <string>Seleccionar</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="buscar_ru_btn">
+                     <property name="text">
+                      <string>Buscar</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="limpiar_ru_btn">
+                     <property name="text">
+                      <string>Limpiar</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="borrar_ru_btn">
+                     <property name="text">
+                      <string>Borrar</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="verticalSpacer_41">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>71</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QTableWidget" name="registro_unidades_tabla">
+                  <property name="focusPolicy">
+                   <enum>Qt::NoFocus</enum>
+                  </property>
+                  <property name="showGrid">
+                   <bool>false</bool>
+                  </property>
+                  <attribute name="horizontalHeaderMinimumSectionSize">
+                   <number>50</number>
+                  </attribute>
+                  <attribute name="horizontalHeaderDefaultSectionSize">
+                   <number>70</number>
+                  </attribute>
+                  <attribute name="horizontalHeaderStretchLastSection">
+                   <bool>true</bool>
+                  </attribute>
+                  <attribute name="verticalHeaderVisible">
+                   <bool>false</bool>
+                  </attribute>
+                  <column>
+                   <property name="text">
+                    <string>id</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>presion</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>temperatura</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>tiempo</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>concentracion</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>energia</string>
+                   </property>
+                  </column>
+                  <column>
                    <property name="text">
                     <string>nombre_data</string>
                    </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <spacer name="horizontalSpacer_59">
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>40</width>
-                     <height>20</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="nombre_data_u_edit">
-                   <property name="text">
-                    <string/>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-               <widget class="QFrame" name="funciones_frame_u">
-                <property name="geometry">
-                 <rect>
-                  <x>90</x>
-                  <y>290</y>
-                  <width>561</width>
-                  <height>26</height>
-                 </rect>
-                </property>
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_59">
-                 <property name="spacing">
-                  <number>0</number>
-                 </property>
-                 <property name="leftMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>0</number>
-                 </property>
-                 <item>
-                  <widget class="QPushButton" name="agregar_ru_btn">
-                   <property name="text">
-                    <string>Agregar</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="actualizar_ru_btn">
-                   <property name="text">
-                    <string>Actualizar</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="seleccionar_ru_btn">
-                   <property name="text">
-                    <string>Seleccionar</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="buscar_ru_btn">
-                   <property name="text">
-                    <string>Buscar</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="limpiar_ru_btn">
-                   <property name="text">
-                    <string>Limpiar</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="borrar_ru_btn">
-                   <property name="text">
-                    <string>Borrar</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-               <widget class="QTableWidget" name="registro_unidades_tabla">
-                <property name="geometry">
-                 <rect>
-                  <x>10</x>
-                  <y>400</y>
-                  <width>709</width>
-                  <height>192</height>
-                 </rect>
-                </property>
-                <property name="focusPolicy">
-                 <enum>Qt::NoFocus</enum>
-                </property>
-                <property name="showGrid">
-                 <bool>false</bool>
-                </property>
-                <attribute name="horizontalHeaderMinimumSectionSize">
-                 <number>50</number>
-                </attribute>
-                <attribute name="horizontalHeaderDefaultSectionSize">
-                 <number>70</number>
-                </attribute>
-                <attribute name="horizontalHeaderStretchLastSection">
-                 <bool>true</bool>
-                </attribute>
-                <attribute name="verticalHeaderVisible">
-                 <bool>false</bool>
-                </attribute>
-                <column>
-                 <property name="text">
-                  <string>id</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>presion</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>temperatura</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>tiempo</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>concentracion</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>energia</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>nombre_data</string>
-                 </property>
-                </column>
-               </widget>
-               <widget class="QGroupBox" name="groupBox_11">
-                <property name="geometry">
-                 <rect>
-                  <x>470</x>
-                  <y>90</y>
-                  <width>228</width>
-                  <height>58</height>
-                 </rect>
-                </property>
-                <property name="title">
-                 <string>Constante universal de los gases</string>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_71">
-                 <item>
-                  <widget class="QComboBox" name="r_box"/>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="r_u_edit">
-                   <property name="text">
-                    <string/>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
+                  </column>
+                 </widget>
+                </item>
+               </layout>
               </widget>
               <widget class="QWidget" name="cal_tab">
                <attribute name="title">

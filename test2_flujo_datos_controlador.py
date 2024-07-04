@@ -191,7 +191,7 @@ class FlujoDatos(QMainWindow):
 
     def ocultar_elementos_vista(self):
         # Lista de nombres de elementos a ocultar
-        elementos_ocultar = ['label_20', 'nombre_data_rde_edit','nombre_reaccion_rq_edit','label_27','nombre_data_ci_edit','label_17','label_8','nombre_data_dc_edit','label_9','nombre_reaccion_dc_edit','label_32','nombre_data_u_edit']
+        elementos_ocultar = ['label_20', 'nombre_data_rde_edit','nombre_reaccion_rq_edit','label_27','nombre_data_ci_edit','label_17','label_8','nombre_data_dc_edit','label_9','nombre_reaccion_dc_edit','groupBox_14','groupBox_2', 'groupBox_3', 'groupBox_4', 'groupBox_5']
         for nombre in elementos_ocultar:
             getattr(self.ui, nombre).hide()
 
@@ -1145,6 +1145,8 @@ class FlujoDatos(QMainWindow):
         # Asignar fecha_rde_edit a fecha_data_experimental
         self.fecha_data_experimental = self.ui.fecha_rde_edit
 
+        self.fecha_ds_edit.setText(fecha_str)
+
 # se requiere inyectar el catálogo y a donde dirigir la información
     def cargar_datos_json_tipo_especie(self, archivo):
         self.metodos_comunes.cargar_datos_json_box(archivo, "tipo_especie_catalogo", self.tipo_especie_rq_box, "Descripcion")
@@ -1757,6 +1759,38 @@ class FlujoDatos(QMainWindow):
             self.boton_activado()
             return
 
+        # Si hay campos vacíos, mostrar un mensaje para completarlos con '0' o 'N/A'
+        campos_vacios = False
+        if not nombre_data_salida or not fecha_ds or not id_nombre_data or not id_condiciones_iniciales or not id_registro_unidades or not r_utilizada or not nombre_data or not delta_n_reaccion or not epsilon_reactivo_limitante:
+            campos_vacios = True
+
+        if campos_vacios:
+            msg_box = QMessageBox()
+            msg_box.setIcon(QMessageBox.Icon.Warning)
+            msg_box.setWindowTitle("Advertencia")
+            msg_box.setText("Algunos campos están vacíos. ¿Desea completarlos con '0' o 'N/A'?")
+            msg_box.setStandardButtons(QMessageBox.StandardButton.Cancel | QMessageBox.StandardButton.Ignore)
+            msg_box.button(QMessageBox.StandardButton.Cancel).setText("Cancelar")
+            msg_box.button(QMessageBox.StandardButton.Ignore).setText("Completar con 0/N/A")
+            result = msg_box.exec()
+
+            if result == QMessageBox.StandardButton.Ignore:
+                # Completar campos vacíos con 0 o 'N/A'
+                nombre_data_salida = nombre_data_salida or 'N/A'
+                fecha_ds = fecha_ds or 'N/A'
+                id_nombre_data = id_nombre_data or '0'
+                id_condiciones_iniciales = id_condiciones_iniciales or '0'
+                id_registro_unidades = id_registro_unidades or '0'
+                r_utilizada = r_utilizada or '0'
+                nombre_data = nombre_data or 'N/A'
+                nombre_reaccion = nombre_reaccion or 'N/A'
+                delta_n_reaccion = delta_n_reaccion or '0'
+                epsilon_reactivo_limitante = epsilon_reactivo_limitante or '0'
+            else:
+                # Cancelar la operación si el usuario no desea completar los campos vacíos
+                self.boton_activado()
+                return
+
         # Crear el objeto datos_salida
         datos_salida = DatosSalida(
             nombre_data_salida=nombre_data_salida,
@@ -1787,6 +1821,7 @@ class FlujoDatos(QMainWindow):
             QMessageBox.critical(self, "Error", f"Se produjo un error al agregar los datos de salida: {e}", QMessageBox.StandardButton.Ok)
 
         self.boton_activado()
+
 
     def actualizar_datos_salida(self):
         self.boton_desactivado()

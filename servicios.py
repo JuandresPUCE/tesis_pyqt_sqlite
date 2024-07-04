@@ -8,6 +8,35 @@ class Servicios:
         self.parent = parent  # Guardar referencia al widget padre
         self.mensaje = "Metodos comunes del controlador"
     
+    # refactor mostrar datos en tabla
+    def mostrar_datos_en_tabla(self, tabla, datos, columnas):
+        try:
+            # Definir la tabla
+            self.tabla = tabla
+            self.tabla.clearContents()
+            self.tabla.setRowCount(0)
+
+            # Verificar que hay datos
+            if datos:
+                self.tabla.setRowCount(len(datos))
+                self.tabla.setColumnCount(len(columnas))
+
+                for fila, dato in enumerate(datos):
+                    for columna, columna_nombre in enumerate(columnas):
+                        self.tabla.setItem(fila, columna, QTableWidgetItem(str(getattr(dato, columna_nombre))))
+
+            else:
+                self.tabla.setRowCount(0)
+                QMessageBox.information(self.parent, "No hay registros", "No se encontraron registros en la base de datos.", QMessageBox.StandardButton.Ok)
+
+        except AttributeError as ae:
+            print(f"Error de atributo: {ae}")
+            QMessageBox.critical(self.parent, "Error", f"Error al mostrar datos: {ae}", QMessageBox.StandardButton.Ok)
+        except Exception as e:
+            print(f"Error inesperado: {e}")
+            QMessageBox.critical(self.parent, "Error", f"Error inesperado al mostrar datos: {e}", QMessageBox.StandardButton.Ok)
+
+
     #mostar tablas
     
     def mostrar_datos_tabla_salida(self, tabla_datos_salida, resultados):
@@ -33,9 +62,7 @@ class Servicios:
     def mostrar_unidades(self, unidades_tabla, unidades):
         columnas = ["id","presion","temperatura","tiempo","concentracion","energia","nombre_data"]
         self.mostrar_datos_en_tabla(unidades_tabla, unidades, columnas)
-        
-
-                  
+         
 
     #funciones refactorizadas
     def borrar_elemento(self, tabla, borrar_resultado, mensaje_confirmacion, mensaje_exito, mensaje_error, metodo_consultar, metodo_refescar, metodo_buscar):
@@ -245,34 +272,6 @@ class Servicios:
             logging.error(f"Error al actualizar el valor de la celda: {e}")
             QMessageBox.critical(self.parent, "Error", f"Se produjo un error al actualizar el valor de la celda: {e}", QMessageBox.StandardButton.Ok)
 
-# refactor mostrar datos en tabla
-    def mostrar_datos_en_tabla(self, tabla, datos, columnas):
-        try:
-            # Definir la tabla
-            self.tabla = tabla
-            self.tabla.clearContents()
-            self.tabla.setRowCount(0)
-
-            # Verificar que hay datos
-            if datos:
-                self.tabla.setRowCount(len(datos))
-                self.tabla.setColumnCount(len(columnas))
-
-                for fila, dato in enumerate(datos):
-                    for columna, columna_nombre in enumerate(columnas):
-                        self.tabla.setItem(fila, columna, QTableWidgetItem(str(getattr(dato, columna_nombre))))
-
-            else:
-                self.tabla.setRowCount(0)
-                QMessageBox.information(self.parent, "No hay registros", "No se encontraron registros en la base de datos.", QMessageBox.StandardButton.Ok)
-
-        except AttributeError as ae:
-            print(f"Error de atributo: {ae}")
-            QMessageBox.critical(self.parent, "Error", f"Error al mostrar datos: {ae}", QMessageBox.StandardButton.Ok)
-        except Exception as e:
-            print(f"Error inesperado: {e}")
-            QMessageBox.critical(self.parent, "Error", f"Error inesperado al mostrar datos: {e}", QMessageBox.StandardButton.Ok)
-
 
 # refactor json
 
@@ -305,3 +304,30 @@ class Servicios:
 
     # En algún lugar donde necesites actualizar el line edit basado en el combo box
     #self.actualizar_lineedit_desde_combo_box(self.tipo_especie_rq_box, self.tipo_especie_rq)
+
+
+    def agregar_objeto_db(self, objeto, manejador, limpiar_funcion, buscar_funcion):
+
+        try:
+            # Asegurarse de que objeto es un diccionario o tiene una forma de iterar sobre sus campos
+            if not hasattr(objeto, 'items'):
+                raise AttributeError(f"El objeto de tipo '{type(objeto).__name__}' no tiene el método 'items'.")
+            # Validar que todos los campos estén llenos
+            for campo, valor in objeto.items():
+                if not valor:
+                    raise ValueError(f"El campo '{campo}' está vacío. Por favor, llénelo.")
+
+            # Intentar agregar el objeto a la base de datos
+            agregar_resultado = manejador.agregar(objeto)
+
+            if agregar_resultado:
+                QMessageBox.information(self.parent, "Datos agregados correctamente")
+                limpiar_funcion()
+                buscar_funcion()  # Refrescar la tabla con los nuevos datos
+            else:
+                QMessageBox.critical(self.parent, "Error", "Hubo un problema al agregar los datos")
+
+        except ValueError as e:
+            QMessageBox.warning(self.parent, "Advertencia", f"Datos inválidos o incompletos: {e}")
+        except Exception as e:
+            QMessageBox.critical(self.parent, "Error", f"Se produjo un error: {e}")
