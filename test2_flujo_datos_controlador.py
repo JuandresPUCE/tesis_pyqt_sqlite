@@ -149,6 +149,8 @@ class FlujoDatos(QMainWindow):
         self.concentracion_reactivo_limitante_calculo_2=self.ui.concentracion_reactivo_limitante_calculo_2
         self.agregar_dc_archivo_btn=self.ui.agregar_dc_archivo_btn
 
+        self.calculos_adicionales_btn=self.ui.calculos_adicionales_btn
+
         #objetos test rq
 
         #box en calculos rq
@@ -172,12 +174,16 @@ class FlujoDatos(QMainWindow):
         self.calculo6.clicked.connect(self.calcular_concentracion_producto_dado_conversion)
         self.calculo7.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_epsilon_a_presion)
         self.calculo8.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_concentracion_gas)
+        
 
         self.agregar_dc_archivo_btn.clicked.connect(self.cargar_datos_btn_click)
+        self.calculos_adicionales_btn.clicked.connect(self.calculos_adicionales)
             
         self.epsilon_a_btn.clicked.connect(self.calcular_epsilon_reactivo_limitante)
         #calculos reaccion quimica
         self.calcular_delta_n.clicked.connect(self.calculo_delta_n)
+
+
 
         #elementos ocultos
         #self.ui.label_20.hide()
@@ -1164,7 +1170,8 @@ class FlujoDatos(QMainWindow):
         #self.energia_box.addItem("otro") # Agregar la opción "otro" al final de la lista
     
     def cargar_datos_json_constante_r(self, archivo):
-        self.metodos_comunes.cargar_datos_json_box(archivo, "constante_R_gases", self.r_box, "valor")
+        #self.metodos_comunes.cargar_datos_json_box(archivo, "constante_R_gases", self.r_box, "valor")
+        self.metodos_comunes.cargar_datos_json_box_group_box(archivo, "constante_R_gases", self.r_box, "valor",self.ui.groupBox_11)
         #self.constante_r_box.addItem("otro") # Agregar la opción "otro" al final de la lista
     
     def actualizar_lineedit_unidades_temperatura(self):
@@ -1184,6 +1191,24 @@ class FlujoDatos(QMainWindow):
     
     def actualizar_lineedit_constante_r(self):
         self.metodos_comunes.actualizar_lineedit(self.r_box, self.r_u_edit)
+        self.actualizar_lineedit_unidades()
+
+    def actualizar_lineedit_unidades(self):
+        # Obtener el objeto JSON seleccionado en el QComboBox de la constante R
+        elemento_seleccionado = self.r_box.currentData()
+
+        if isinstance(elemento_seleccionado, dict):
+            # Actualizar los QLineEdit con las unidades correspondientes
+            self.presion_u_edit.setText(elemento_seleccionado.get('presion', ''))
+            self.concentracion_u_edit.setText(elemento_seleccionado.get('concentracion', ''))
+            self.energia_u_edit.setText(elemento_seleccionado.get('energia', ''))
+        else:
+            # Limpiar los QLineEdit si no hay selección o datos
+            self.energia_u_edit.clear()
+            self.concentracion_u_edit.clear()
+            self.presion_u_edit.clear()
+
+
     
     
 
@@ -1501,23 +1526,49 @@ class FlujoDatos(QMainWindow):
 
     def agregar_unidades(self):
         self.boton_desactivado()
-        #validar que todos los campos esten llenos
+
+        # Validar que todos los campos estén llenos
         try:
-            presion=self.presion_u_edit.text()
-            temperatura=self.temperatura_u_edit.text()
-            tiempo=self.tiempo_u_edit.text()
-            concentracion=self.concentracion_u_edit.text()
-            energia=self.energia_u_edit.text()
-            nombre_data=self.nombre_data_u_edit.text()
-        
+            presion = self.presion_u_edit.text()
+            temperatura = self.temperatura_u_edit.text()
+            tiempo = self.tiempo_u_edit.text()
+            concentracion = self.concentracion_u_edit.text()
+            energia = self.energia_u_edit.text()
+            nombre_data = self.nombre_data_u_edit.text()
+            
             if not presion or not temperatura or not tiempo or not concentracion or not energia or not nombre_data:
                 raise ValueError("Todos los campos de texto deben estar llenos")
         except ValueError as e:
-            QMessageBox.warning(self, "Advertencia", f"Datos inválidos o incompletos: {e}", QMessageBox.StandardButton.Ok)
-            self.boton_activado()
-            return
-        #crear el objeto unidades
-        unidades=RegistroUnidades(
+            # Crear un QMessageBox con opciones de Cancelar, Aceptar, y Completar con 0
+            msg_box = QMessageBox()
+            msg_box.setIcon(QMessageBox.Icon.Warning)
+            msg_box.setWindowTitle("Advertencia")
+            msg_box.setText(f"Datos inválidos o incompletos: {e}")
+            msg_box.setStandardButtons(QMessageBox.StandardButton.Cancel | QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Ignore)
+            msg_box.button(QMessageBox.StandardButton.Cancel).setText("Cancelar")
+            msg_box.button(QMessageBox.StandardButton.Ok).setText("Aceptar")
+            msg_box.button(QMessageBox.StandardButton.Ignore).setText("Completar con 0")
+
+            result = msg_box.exec()
+
+            if result == QMessageBox.StandardButton.Cancel:
+                self.boton_activado()
+                return
+            elif result == QMessageBox.StandardButton.Ignore:
+                # Completar campos vacíos con 0 o 'N/A'
+                presion = presion or '0'
+                temperatura = temperatura or '0'
+                tiempo = tiempo or '0'
+                concentracion = concentracion or '0'
+                energia = energia or '0'
+                nombre_data = nombre_data or 'N/A'
+            else:
+                # Si se selecciona "Aceptar", simplemente se reintenta la operación
+                self.boton_activado()
+                return
+
+        # Crear el objeto RegistroUnidades
+        unidades = RegistroUnidades(
             presion=presion,
             temperatura=temperatura,
             tiempo=tiempo,
@@ -1526,7 +1577,7 @@ class FlujoDatos(QMainWindow):
             nombre_data=nombre_data
         )
 
-        #intentar agregar las unidades a la base de datos
+        # Intentar agregar las unidades a la base de datos
         try:
             print("Intentando agregar unidades:", unidades)
             agregar_resultado = self.RegistroUnidadesManejador.agregar(unidades)
@@ -1969,6 +2020,17 @@ class FlujoDatos(QMainWindow):
         if ruta_archivo:
             # Llamar a tu función con la ruta del archivo seleccionado
             self.insertar_datos_cineticos_archivo(ruta_archivo)
+
+    def calculos_adicionales(self):
+        # Lista de nombres de elementos a alternar visibilidad
+        elementos_ocultos = ['groupBox_2', 'groupBox_3', 'groupBox_4', 'groupBox_5']
+        
+        for nombre_elemento in elementos_ocultos:
+            elemento = getattr(self.ui, nombre_elemento)  # Obtiene el objeto del elemento por su nombre
+            if elemento.isVisible():
+                elemento.hide()  # Oculta el elemento si está visible
+            else:
+                elemento.show()  # Muestra el elemento si está oculto
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

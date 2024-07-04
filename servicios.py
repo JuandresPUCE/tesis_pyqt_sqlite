@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import *
 import json
 import logging
+import os
 
 class Servicios:
     def __init__(self, parent=None):
@@ -8,156 +9,30 @@ class Servicios:
         self.mensaje = "Metodos comunes del controlador"
     
     #mostar tablas
-    def mostrar_datos_tabla(self, tabla_datos_cineticos, resultados):
-        try:
-            # Definir la tabla
-            self.tabla = tabla_datos_cineticos
-            self.tabla.clearContents()
-            # Verificar que hay resultados
-            if resultados:
-                self.tabla.setRowCount(len(resultados))  # Establecer el número de filas según los resultados
-                self.tabla.setColumnCount(10)  # Establecer el número de columnas
-
-                # Rellenar la tabla con los resultados
-                for fila, dato in enumerate(resultados):
-                    self.tabla.setItem(fila, 0, QTableWidgetItem(str(dato.id)))
-                    self.tabla.setItem(fila, 1, QTableWidgetItem(str(dato.tiempo)))
-                    self.tabla.setItem(fila, 2, QTableWidgetItem(str(dato.concentracion)))
-                    self.tabla.setItem(fila, 3, QTableWidgetItem(str(dato.otra_propiedad)))
-                    self.tabla.setItem(fila, 4, QTableWidgetItem(str(dato.conversion_reactivo_limitante)))
-                    self.tabla.setItem(fila, 5, QTableWidgetItem(str(dato.tipo_especie)))
-                    self.tabla.setItem(fila, 6, QTableWidgetItem(str(dato.id_condiciones_iniciales)))
-                    self.tabla.setItem(fila, 7, QTableWidgetItem(str(dato.nombre_data)))
-                    self.tabla.setItem(fila, 8, QTableWidgetItem(str(dato.nombre_reaccion)))
-                    self.tabla.setItem(fila, 9, QTableWidgetItem(str(dato.especie_quimica)))
-            else:
-                self.tabla.setRowCount(0)
-                QMessageBox.information(self.parent, "Información", "No se encontraron datos", QMessageBox.StandardButton.Ok)
-
-        except AttributeError as ae:
-            print(f"Error de atributo: {ae}")
-            QMessageBox.critical(self.parent, "Error", f"Error al mostrar datos: {ae}", QMessageBox.StandardButton.Ok)
-        except Exception as e:
-            print(f"Error inesperado: {e}")
-            QMessageBox.critical(self.parent, "Error", f"Error inesperado al mostrar datos: {e}", QMessageBox.StandardButton.Ok)      
-            
-    def mostrar_registros(self,registro_datos_tabla, registros):
-        self.tabla = registro_datos_tabla
-        if registros:
-            self.tabla.setRowCount(len(registros))
-            self.tabla.setColumnCount(4)
-
-            for fila, registro in enumerate(registros):
-                self.tabla.setItem(fila, 0, QTableWidgetItem(str(registro.id)))
-                self.tabla.setItem(fila, 1, QTableWidgetItem(str(registro.nombre_data)))
-                self.tabla.setItem(fila, 2, QTableWidgetItem(str(registro.fecha)))
-                self.tabla.setItem(fila, 3, QTableWidgetItem(str(registro.detalle)))
-        else:
-            self.tabla.setRowCount(0)
-            QMessageBox.information(self.parent, "No hay registros", "No se encontraron registros en la base de datos.", QMessageBox.StandardButton.Ok)
-
+    
+    def mostrar_datos_tabla_salida(self, tabla_datos_salida, resultados):
+        columnas = ["id","nombre_data_salida","fecha","id_nombre_data","id_condiciones_iniciales","id_registro_unidades","r_utilizada","nombre_data","nombre_reaccion","delta_n_reaccion","epsilon_reactivo_limitante","tipo_especie","especie_quimica","constante_cinetica","orden_reaccion","modelo_cinetico","tipo_calculo","energia_activacion","detalles"]
+        self.mostrar_datos_en_tabla(tabla_datos_salida, resultados, columnas)
+    
     def mostrar_condiciones_iniciales(self, condiciones_iniciales_tabla, condiciones):
-            try:
-                self.tabla = condiciones_iniciales_tabla
-                self.tabla.clearContents()
-                self.tabla.setRowCount(0)
-
-                if condiciones:
-                    self.tabla.setRowCount(len(condiciones))
-                    self.tabla.setColumnCount(10)
-
-                    for fila, condicion in enumerate(condiciones):
-                        self.tabla.setItem(fila, 0, QTableWidgetItem(str(condicion.id)))
-                        self.tabla.setItem(fila, 1, QTableWidgetItem(str(condicion.temperatura)))
-                        self.tabla.setItem(fila, 2, QTableWidgetItem(str(condicion.tiempo)))
-                        self.tabla.setItem(fila, 3, QTableWidgetItem(str(condicion.presion_total)))
-                        self.tabla.setItem(fila, 4, QTableWidgetItem(str(condicion.presion_parcial)))
-                        self.tabla.setItem(fila, 5, QTableWidgetItem(str(condicion.fraccion_molar)))
-                        self.tabla.setItem(fila, 6, QTableWidgetItem(str(condicion.especie_quimica)))
-                        self.tabla.setItem(fila, 7, QTableWidgetItem(str(condicion.tipo_especie)))
-                        self.tabla.setItem(fila, 8, QTableWidgetItem(str(condicion.detalle)))
-                        self.tabla.setItem(fila, 9, QTableWidgetItem(str(condicion.nombre_data)))
-                else:
-                    self.tabla.setRowCount(0)
-                    QMessageBox.information(self.parent, "No hay registros", "No se encontraron registros en la base de datos.", QMessageBox.StandardButton.Ok)
-
-            except AttributeError as ae:
-                print(f"Error de atributo: {ae}")
-                QMessageBox.critical(self.parent, "Error", f"Error al mostrar datos: {ae}", QMessageBox.StandardButton.Ok)
-            except Exception as e:
-                print(f"Error inesperado: {e}")
-                QMessageBox.critical(self.parent, "Error", f"Error inesperado al mostrar datos: {e}", QMessageBox.StandardButton.Ok)
+        columnas = ["id","temperatura","tiempo","presion_total","presion_parcial","fraccion_molar","especie_quimica","tipo_especie","detalle","nombre_data"]
+        self.mostrar_datos_en_tabla(condiciones_iniciales_tabla, condiciones, columnas)
+    
+    def mostrar_datos_tabla(self, tabla_datos_cineticos, resultados):
+        columnas = ["id","tiempo","concentracion","otra_propiedad","conversion_reactivo_limitante","tipo_especie","id_condiciones_iniciales","nombre_data","nombre_reaccion","especie_quimica"]
+        self.mostrar_datos_en_tabla(tabla_datos_cineticos, resultados, columnas)
 
     def mostrar_reacciones(self, reacciones_tabla, reacciones):
-        try:
-            # Definir la tabla
-            self.tabla = reacciones_tabla
-            self.tabla.clearContents()
-            self.tabla.setRowCount(0)
-
-            # Verificar que hay reacciones
-            if reacciones:
-                self.tabla.setRowCount(len(reacciones))
-                self.tabla.setColumnCount(7)
-
-                for fila, reaccion in enumerate(reacciones):
-                    self.tabla.setItem(fila, 0, QTableWidgetItem(str(reaccion.id)))
-                    self.tabla.setItem(fila, 1, QTableWidgetItem(str(reaccion.especie_quimica)))
-                    self.tabla.setItem(fila, 2, QTableWidgetItem(str(reaccion.formula)))
-                    self.tabla.setItem(fila, 3, QTableWidgetItem(str(reaccion.coeficiente_estequiometrico)))
-                    self.tabla.setItem(fila, 4, QTableWidgetItem(str(reaccion.detalle)))
-                    self.tabla.setItem(fila, 5, QTableWidgetItem(str(reaccion.tipo_especie)))
-                    self.tabla.setItem(fila, 6, QTableWidgetItem(str(reaccion.nombre_reaccion)))
-            else:
-                self.tabla.setRowCount(0)
-                QMessageBox.information(self.parent, "No hay registros", "No se encontraron registros en la base de datos.", QMessageBox.StandardButton.Ok)
-
-        except AttributeError as ae:
-            print(f"Error de atributo: {ae}")
-            QMessageBox.critical(self.parent, "Error", f"Error al mostrar reacciones: {ae}", QMessageBox.StandardButton.Ok)
-        except Exception as e:
-            print(f"Error inesperado: {e}")
-            QMessageBox.critical(self.parent, "Error", f"Error inesperado al mostrar reacciones: {e}", QMessageBox.StandardButton.Ok)
-
+        columnas = ["id","especie_quimica","formula","coeficiente_estequiometrico","detalle","tipo_especie","nombre_reaccion"]
+        self.mostrar_datos_en_tabla(reacciones_tabla, reacciones, columnas)
+    
+    def mostrar_registros(self, registro_datos_tabla, registros):
+        columnas = ["id","nombre_data","fecha","detalle"]
+        self.mostrar_datos_en_tabla(registro_datos_tabla, registros, columnas)
+    
     def mostrar_unidades(self, unidades_tabla, unidades):
-        try:
-            # Definir la tabla
-            self.tabla = unidades_tabla
-            self.tabla.clearContents()
-            self.tabla.setRowCount(0)
-
-            # Verificar que hay unidades
-            if unidades:
-                self.tabla.setRowCount(len(unidades))
-                self.tabla.setColumnCount(7)
-
-                for fila, unidad in enumerate(unidades):
-                    self.tabla.setItem(fila, 0, QTableWidgetItem(str(unidad.id)))
-                    self.tabla.setItem(fila, 1, QTableWidgetItem(str(unidad.presion)))
-                    self.tabla.setItem(fila, 2, QTableWidgetItem(str(unidad.temperatura)))
-                    self.tabla.setItem(fila, 3, QTableWidgetItem(str(unidad.tiempo)))
-                    self.tabla.setItem(fila, 4, QTableWidgetItem(str(unidad.concentracion)))
-                    self.tabla.setItem(fila, 5, QTableWidgetItem(str(unidad.energia)))
-                    self.tabla.setItem(fila, 6, QTableWidgetItem(str(unidad.nombre_data)))
-
-                    
-            else:
-                self.tabla.setRowCount(0)
-                QMessageBox.information(self.parent, "No hay registros", "No se encontraron registros en la base de datos.", QMessageBox.StandardButton.Ok)
-        
-        except AttributeError as ae:
-            print(f"Error de atributo: {ae}")
-            QMessageBox.critical(self.parent, "Error", f"Error al mostrar unidades: {ae}", QMessageBox.StandardButton.Ok)
-        except Exception as e:
-            print(f"Error inesperado: {e}")
-            QMessageBox.critical(self.parent, "Error", f"Error inesperado al mostrar unidades: {e}", QMessageBox.StandardButton.Ok)
-
-    def mostrar_datos_salida(self, datos_salida_tabla, datos_salida):
-        self.mostrar_datos_en_tabla(datos_salida_tabla,datos_salida, ['id', 'nombre_data_salida', 'fecha', 'id_nombre_data', 'id_condiciones_iniciales',
-    'id_registro_unidades', 'r_utilizada', 'nombre_data', 'nombre_reaccion',
-    'delta_n_reaccion', 'epsilon_reactivo_limitante', 'tipo_especie', 'especie_quimica',
-    'constante_cinetica', 'orden_reaccion', 'modelo_cinetico', 'tipo_calculo',
-    'energia_activacion', 'detalles'])
+        columnas = ["id","presion","temperatura","tiempo","concentracion","energia","nombre_data"]
+        self.mostrar_datos_en_tabla(unidades_tabla, unidades, columnas)
         
 
                   
@@ -217,6 +92,74 @@ class Servicios:
         except json.JSONDecodeError:
             QMessageBox.critical(self.parent, "Error", f"Error al leer el archivo {archivo}", QMessageBox.StandardButton.Ok)
 
+    def cargar_datos_json_box_group_box(self, archivo, catalogo, combo_box, tipo_elemento_catalogo, group_box):
+            try:
+                with open(archivo, 'r') as f:
+                    data = json.load(f)
+                    elementos = data.get(catalogo, [])
+
+                    # Limpiar el combo_box antes de insertar nuevos datos
+                    combo_box.clear()
+                    combo_box.addItem("Seleccione una opción",-1)
+                    combo_box.addItem("otro") # Agregar la opción "otro" al final de la lista
+                    
+                    # Insertar los valores en el combo_box
+                    for elemento in elementos:
+                        combo_box.addItem(str(elemento[tipo_elemento_catalogo]), elemento)
+
+                    # Conectar la señal de cambio de índice para actualizar el título del group_box
+                    combo_box.currentIndexChanged.connect(lambda: self.actualizar_titulo_group_box(combo_box, group_box))
+
+
+                    # Actualizar el título del group_box con el primer elemento (si existe)
+                    if elementos:
+                        self.actualizar_titulo_group_box(combo_box, group_box)
+                    else:
+                        group_box.setTitle("No se encontraron datos en el archivo JSON.")
+            except FileNotFoundError:
+                QMessageBox.critical(self.parent, "Error", f"No se encontró el archivo {archivo}", QMessageBox.StandardButton.Ok)
+            except json.JSONDecodeError:
+                QMessageBox.critical(self.parent, "Error", f"Error al leer el archivo {archivo}", QMessageBox.StandardButton.Ok)
+
+    def actualizar_titulo_group_box(self, combo_box, group_box):
+        try:
+            index = combo_box.currentIndex()
+            if index != -1:
+                elemento = combo_box.itemData(index)
+                if isinstance(elemento, dict):
+                    unidades = elemento.get('unidades', 'No se encontraron unidades')
+                    group_box.setTitle(f"R ({unidades})")
+                elif elemento == "otro":
+                    group_box.setTitle("R (Otro)")
+                else:
+                    group_box.setTitle("R (Seleccione una opción)")
+            else:
+                group_box.setTitle("R")
+        except Exception as e:
+            # Manejar cualquier excepción inesperada
+            QMessageBox.critical(self.parent, "Error", f"Error al actualizar el título del GroupBox: {e}", QMessageBox.StandardButton.Ok)
+            group_box.setTitle("R (Error)")
+
+    def actualizar_titulo_group_box_generico(self, combo_box, group_box, default_title="R", error_title="R (Error)", not_found_title="R (Seleccione una opción)", other_title="R (Otro)", units_not_found="No se encontraron unidades"):
+        try:
+            index = combo_box.currentIndex()
+            if index != -1:
+                elemento = combo_box.itemData(index)
+                if isinstance(elemento, dict):
+                    unidades = elemento.get('unidades', units_not_found)
+                    group_box.setTitle(f"{default_title} ({unidades})")
+                elif elemento == "otro":
+                    group_box.setTitle(other_title)
+                else:
+                    group_box.setTitle(not_found_title)
+            else:
+                group_box.setTitle(default_title)
+        except Exception as e:
+            # Manejar cualquier excepción inesperada
+            QMessageBox.critical(self.parent, "Error", f"Error al actualizar el título del GroupBox: {e}", QMessageBox.StandardButton.Ok)
+            group_box.setTitle(error_title)
+
+
     def actualizar_lineedit(self, combo_box, line_edit, sin_ocultar=None):
         try:
             current_text = combo_box.currentText()
@@ -249,9 +192,11 @@ class Servicios:
             self.actualizar_configuracion_db(fileName)
 
     def actualizar_configuracion_db(self, nueva_ruta):
+        # Define la ruta completa al archivo config.json dentro de la carpeta main/config
+        config_path = os.path.join('config', 'config.json')
         # Actualiza el archivo JSON con la nueva ruta
         config = {"db_path": nueva_ruta}
-        with open("config.json", "w") as f:
+        with open(config_path, "w") as f:
             json.dump(config, f)
         QMessageBox.information(self.parent, "Configuración Actualizada", "La ruta de la base de datos ha sido actualizada.")
 
@@ -327,25 +272,7 @@ class Servicios:
         except Exception as e:
             print(f"Error inesperado: {e}")
             QMessageBox.critical(self.parent, "Error", f"Error inesperado al mostrar datos: {e}", QMessageBox.StandardButton.Ok)
-    #test de refactorizacion de mostrar datos en tabla
-    #def mostrar_unidades(self, unidades_tabla, unidades):
-    #    self.mostrar_datos_en_tabla(unidades_tabla, unidades, ['id', 'presion', 'temperatura', 'tiempo', 'concentracion', 'energia', 'nombre_data'])
 
-    #def mostrar_reacciones(self, reacciones_tabla, reacciones):
-    #    self.mostrar_datos_en_tabla(reacciones_tabla, reacciones, ['id', 'especie_quimica', 'formula', 'coeficiente_estequiometrico', 'detalle', 'tipo_especie', 'nombre_reaccion'])
-
-    #def mostrar_condiciones_iniciales(self, condiciones_iniciales_tabla, condiciones):
-    #    self.mostrar_datos_en_tabla(condiciones_iniciales_tabla, condiciones, ['id', 'nombre_data', 'fecha', 'detalle'])
-
-    #def mostrar_registros(self, registro_datos_tabla, registros):
-    #    self.mostrar_datos_en_tabla(registro_datos_tabla, registros, ['id', 'nombre_data', 'fecha', 'detalle'])
-
-    #def mostrar_datos_tabla(self, tabla_datos_cineticos, resultados):
-    #    self.mostrar_datos_en_tabla(tabla_datos_cineticos, resultados, ['id', 'nombre_data', 'fecha', 'detalle'])
-
-    def mostrar_datos_tabla_salida(self, tabla_datos_salida, resultados):
-        columnas = ["id","nombre_data_salida","fecha","id_nombre_data","id_condiciones_iniciales","id_registro_unidades","r_utilizada","nombre_data","nombre_reaccion","delta_n_reaccion","epsilon_reactivo_limitante","tipo_especie","especie_quimica","constante_cinetica","orden_reaccion","modelo_cinetico","tipo_calculo","energia_activacion","detalles"]
-        self.mostrar_datos_en_tabla(tabla_datos_salida, resultados, columnas)
 
 # refactor json
 
