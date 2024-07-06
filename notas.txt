@@ -8,6 +8,12 @@ PUCEKinetics
 
 pyuic6 -x .\panel_data_analisis.ui -o .\panel_data_analisis.py
 pyuic6 -x flujo_datos_gui_v4.ui -o flujo_datos_vista.py
-pyuic6 -x .\pantalla_d_a_c_tipo_dashb_RC1_2.ui -o panel_data_analisis_alterno.py
+pyuic6 -x .\pantalla_d_a_c_tipo_dashb_RC1_.ui -o panel_data_analisis_alterno.py
 
 pyuic6 -x flujo_datos_gui_v5.ui -o flujo_datos_vista.py
+
+pyuic6 -x .\crud_db_gui_v4.ui -o crud_db_vista.py
+
+pyuic6 -x .\pantalla_d_a_c_tipo_dashb_RC1_3.ui -o panel_data_analisis_alterno.py
+
+pyuic6 -x .\dashboard_v1.ui -o panel_data_analisis_alterno.py

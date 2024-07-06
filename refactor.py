@@ -24,11 +24,9 @@ class TuClase:
         msg_box.exec()
 
     def agregar_a_db(self, objeto, manejador, limpiar_funcion, buscar_funcion):
-        self.boton_desactivado()
 
-        try:
             # Validar que todos los campos estén llenos
-            for campo, valor in objeto.items():
+            for campo, valor in objeto:
                 if not valor:
                     raise ValueError(f"El campo '{campo}' está vacío. Por favor, llénelo.")
 
@@ -42,12 +40,6 @@ class TuClase:
             else:
                 self.mostrar_mensaje('error', "Error", "Hubo un problema al agregar los datos")
 
-        except ValueError as e:
-            self.mostrar_mensaje('advertencia', "Advertencia", f"Datos inválidos o incompletos: {e}")
-        except Exception as e:
-            self.mostrar_mensaje('error', "Error", f"Se produjo un error: {e}")
-
-        self.boton_activado()
 
     def agregar_dato(self):
         objeto = {
@@ -153,3 +145,83 @@ class TuClase:
         finally:
             self.boton_activado()
 """
+
+def agregar_a_db(self, objeto, manejador, limpiar_funcion, buscar_funcion):
+    self.boton_desactivado()
+    
+    # Validar que todos los campos del objeto estén llenos
+    for campo, valor in objeto.__dict__.items():
+        if campo != '_sa_instance_state' and not valor:
+            QMessageBox.warning(self, "Advertencia", f"El campo '{campo}' está vacío. Por favor, llénelo.", QMessageBox.StandardButton.Ok)
+            self.boton_activado()
+            return
+    
+    # Intentar agregar el objeto a la base de datos
+    try:
+        agregar_resultado = manejador.agregar(objeto)
+
+        if agregar_resultado:
+            QMessageBox.information(self, "Información", "Datos agregados correctamente", QMessageBox.StandardButton.Ok)
+            limpiar_funcion()
+            buscar_funcion()  # Refrescar la tabla con los nuevos datos
+        else:
+            QMessageBox.critical(self, "Error", "Hubo un problema al agregar los datos", QMessageBox.StandardButton.Ok)
+    except Exception as e:
+        QMessageBox.critical(self, "Error", f"Se produjo un error al agregar los datos: {e}", QMessageBox.StandardButton.Ok)
+    
+    self.boton_activado()
+
+
+def agregar_dato(self):
+    try:
+        dato = DatosIngresadosCineticos(
+            tiempo=float(self.tiempo.text()),
+            concentracion=float(self.concentracion.text()),
+            otra_propiedad=float(self.otra_propiedad.text()),
+            conversion_reactivo_limitante=float(self.conversion_reactivo_limitante.text()),
+            tipo_especie=self.tipo_especie.text(),
+            id_condiciones_iniciales=int(self.id_condiciones_iniciales.text()),
+            nombre_data=self.nombre_data.text(),
+            nombre_reaccion=self.nombre_reaccion.text(),
+            especie_quimica=self.especie_quimica.text()
+        )
+    except ValueError as e:
+        QMessageBox.warning(self, "Advertencia", f"Datos inválidos o incompletos: {e}", QMessageBox.StandardButton.Ok)
+        self.boton_activado()
+        return
+
+    self.agregar_a_db(dato, self.DatosCineticosManejador, self.limpiar_formulario, self.buscar_dato)
+
+def agregar_registro_data_experimental(self):
+    try:
+        registro = RegistroDataExperimental(
+            nombre_data=self.nombre_data_experimental.text(),
+            fecha=self.fecha_data_experimental.text(),
+            detalle=self.detalle_data_experimental.text()
+        )
+    except ValueError as e:
+        QMessageBox.warning(self, "Advertencia", f"Datos inválidos o incompletos: {e}", QMessageBox.StandardButton.Ok)
+        self.boton_activado()
+        return
+
+    self.agregar_a_db(registro, self.RegistroDataExperimentalManejador, self.limpiar_formulario_registro_data_experimental, self.buscar_registros)
+
+def agregar_condiciones_iniciales(self):
+    try:
+        condiciones_iniciales = CondicionesIniciales(
+            temperatura=self.temperatura_ci.text(),
+            tiempo=self.tiempo_ci.text(),
+            presion_total=self.presion_total_ci.text(),
+            presion_parcial=self.presion_parcial_ci.text(),
+            fraccion_molar=self.fraccion_molar_ci.text(),
+            especie_quimica=self.especie_quimica_ci.text(),
+            tipo_especie=self.tipo_especie_ci.text(),
+            detalle=self.detalle_ci.text(),
+            nombre_data=self.nombre_data_ci.text()
+        )
+    except ValueError as e:
+        QMessageBox.warning(self, "Advertencia", f"Datos inválidos o incompletos: {e}", QMessageBox.StandardButton.Ok)
+        self.boton_activado()
+        return
+
+    self.agregar_a_db(condiciones_iniciales, self.CondicionesInicialesManejador, self.limpiar_formulario_ci, self.buscar_condiciones_iniciales)

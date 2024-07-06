@@ -1,0 +1,935 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1263</width>
+    <height>855</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="label_40">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>20</y>
+      <width>151</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>cte cinetica</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>50</y>
+      <width>245</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_61">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label_34">
+       <property name="text">
+        <string>nombre_data_salida</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_61">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="label_42">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>120</y>
+      <width>111</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>modelo_cinetico</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_48">
+    <property name="geometry">
+     <rect>
+      <x>510</x>
+      <y>290</y>
+      <width>41</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>R </string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_36">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>140</y>
+      <width>122</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>id condiciones iniciales</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_3">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>90</y>
+      <width>216</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_62">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label_35">
+       <property name="text">
+        <string>fecha</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_62">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="label_46">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>270</y>
+      <width>141</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>delta n</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_6">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>410</y>
+      <width>225</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_65">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label_51">
+       <property name="text">
+        <string>Nombre data</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_65">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>19</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="label_41">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>70</y>
+      <width>111</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>orden_reaccion</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_44">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>210</y>
+      <width>111</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>energia_activacion</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_45">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>250</y>
+      <width>111</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>detalles</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_43">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>170</y>
+      <width>111</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>tipo_calculo</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_5">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>410</y>
+      <width>240</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_64">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label_50">
+       <property name="text">
+        <string>Nombre reacción</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_64">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>13</width>
+         <height>19</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="label_49">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>330</y>
+      <width>111</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>id_nombre_data</string>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="datos_salida_tabla">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>450</y>
+      <width>709</width>
+      <height>192</height>
+     </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="showGrid">
+     <bool>false</bool>
+    </property>
+    <attribute name="horizontalHeaderMinimumSectionSize">
+     <number>50</number>
+    </attribute>
+    <attribute name="horizontalHeaderDefaultSectionSize">
+     <number>70</number>
+    </attribute>
+    <attribute name="horizontalHeaderStretchLastSection">
+     <bool>true</bool>
+    </attribute>
+    <attribute name="verticalHeaderVisible">
+     <bool>false</bool>
+    </attribute>
+    <column>
+     <property name="text">
+      <string>id</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>nombre_data_salida</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>fecha</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>id_nombre_data</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>id_condiciones_iniciales</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>id_registro_unidades</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>r_utilizada</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>nombre_data</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>nombre_reaccion</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>delta_n_reaccion</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>epsilon_reactivo_limitante</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>tipo_especie</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>especie_quimica</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>constante_cinetica</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>orden_reaccion</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>modelo_cinetico</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>tipo_calculo</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>energia_activacion</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>detalles</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QLabel" name="label_37">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>170</y>
+      <width>122</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>id_registro_unidades</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_39">
+    <property name="geometry">
+     <rect>
+      <x>74</x>
+      <y>240</y>
+      <width>111</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>especie_quimica</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_47">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>300</y>
+      <width>141</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>epsilon reactivo limitante</string>
+    </property>
+   </widget>
+   <widget class="QFrame" name="funciones_frame_ds">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>360</y>
+      <width>661</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_60">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QPushButton" name="agregar_ds_btn">
+       <property name="text">
+        <string>Agregar</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="actualizar_ds_btn">
+       <property name="text">
+        <string>Actualizar</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="seleccionar_ds_btn">
+       <property name="text">
+        <string>Seleccionar</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buscar_ds_btn">
+       <property name="text">
+        <string>Buscar</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="limpiar_ds_btn">
+       <property name="text">
+        <string>Limpiar</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="borrar_ds_btn">
+       <property name="text">
+        <string>Borrar</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_4">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>200</y>
+      <width>218</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_63">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label_38">
+       <property name="text">
+        <string>Tipo Especie</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_63">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>18</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>30</y>
+      <width>153</width>
+      <height>58</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Nombre data salida</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLineEdit" name="nombre_ds_edit">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_2">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>100</y>
+      <width>153</width>
+      <height>58</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Fecha</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QLineEdit" name="fecha_ds_edit"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_3">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>680</y>
+      <width>120</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>GroupBox</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_4">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>170</y>
+      <width>153</width>
+      <height>58</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>id condiciones iniciales</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <item>
+      <widget class="QLineEdit" name="id_condiciones_iniciales_ds_edit"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_5">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>240</y>
+      <width>153</width>
+      <height>58</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>id registro unidades</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_4">
+     <item>
+      <widget class="QLineEdit" name="id_registro_unidades_ds_edit"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_6">
+    <property name="geometry">
+     <rect>
+      <x>810</x>
+      <y>320</y>
+      <width>153</width>
+      <height>58</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Tipo Especie</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_5">
+     <item>
+      <widget class="QLineEdit" name="tipo_especie_ds_edit"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_7">
+    <property name="geometry">
+     <rect>
+      <x>820</x>
+      <y>400</y>
+      <width>153</width>
+      <height>58</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Especie quimica</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_6">
+     <item>
+      <widget class="QLineEdit" name="especie_quimica_ds_edit"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_8">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>480</y>
+      <width>153</width>
+      <height>58</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>delta n</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_7">
+     <item>
+      <widget class="QLineEdit" name="delta_n_ds_edit"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_9">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>560</y>
+      <width>153</width>
+      <height>58</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>epsilon reactivo limitante</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_8">
+     <item>
+      <widget class="QLineEdit" name="epsilon_rl_ds_edit"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_10">
+    <property name="geometry">
+     <rect>
+      <x>1010</x>
+      <y>40</y>
+      <width>153</width>
+      <height>58</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>id_nombre_data</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_9">
+     <item>
+      <widget class="QLineEdit" name="id_nombre_data_ds_edit"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_11">
+    <property name="geometry">
+     <rect>
+      <x>1020</x>
+      <y>130</y>
+      <width>153</width>
+      <height>58</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Nombre reacción</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_10">
+     <item>
+      <widget class="QLineEdit" name="nombre_reaccion_ds_edit"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_12">
+    <property name="geometry">
+     <rect>
+      <x>1040</x>
+      <y>220</y>
+      <width>153</width>
+      <height>58</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Nombre data</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_11">
+     <item>
+      <widget class="QLineEdit" name="nombre_data_ds_edit">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_13">
+    <property name="geometry">
+     <rect>
+      <x>1040</x>
+      <y>300</y>
+      <width>153</width>
+      <height>58</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>constante cinetica</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_12">
+     <item>
+      <widget class="QLineEdit" name="constante_cinetica_ds_edit"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_14">
+    <property name="geometry">
+     <rect>
+      <x>1040</x>
+      <y>370</y>
+      <width>153</width>
+      <height>58</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Orden reaccion</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_13">
+     <item>
+      <widget class="QLineEdit" name="orden_reaccion_ds_edit"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_15">
+    <property name="geometry">
+     <rect>
+      <x>1040</x>
+      <y>440</y>
+      <width>153</width>
+      <height>58</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Modelo cinetico</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_14">
+     <item>
+      <widget class="QLineEdit" name="modelo_cinetico_ds_edit"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_16">
+    <property name="geometry">
+     <rect>
+      <x>1050</x>
+      <y>510</y>
+      <width>153</width>
+      <height>58</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Tipo calculo</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_15">
+     <item>
+      <widget class="QLineEdit" name="tipo_calculo_ds_edit">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_17">
+    <property name="geometry">
+     <rect>
+      <x>1070</x>
+      <y>580</y>
+      <width>153</width>
+      <height>58</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Energia Activacion</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_16">
+     <item>
+      <widget class="QLineEdit" name="energia_activacion_ds_edit">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_18">
+    <property name="geometry">
+     <rect>
+      <x>1070</x>
+      <y>650</y>
+      <width>153</width>
+      <height>58</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>detalles</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_17">
+     <item>
+      <widget class="QLineEdit" name="detalles_ds_edit">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_19">
+    <property name="geometry">
+     <rect>
+      <x>900</x>
+      <y>670</y>
+      <width>153</width>
+      <height>58</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>R</string>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_18">
+     <item>
+      <widget class="QLineEdit" name="r_ds_edit">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1263</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
