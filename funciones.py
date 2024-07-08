@@ -242,6 +242,40 @@ class Funciones:
     
         return Energia_activacion
     
+    def arrenius_n_puntos(self, T, k, escala_temp='C', unidades='J', R_custom=None):
+        if escala_temp == 'C':
+            T_absoluta = T + 273.15  # Convertir a Kelvin
+        elif escala_temp == 'F':
+            T_absoluta = T + 459.67
+        elif escala_temp == 'K':
+            T_absoluta = T
+        elif escala_temp == 'R':
+            T_absoluta = T
+        else:
+            raise ValueError("Escala de temperatura no reconocida. Elija entre 'C', 'F', 'K' o 'R'.")
+        # cambiar temperatura_absoluta a su reciproco
+        reciproco_T = (1/T_absoluta)
+
+        if R_custom is not None:
+            R = R_custom
+        else:
+            if unidades == 'J':
+                R = 8.314
+            elif unidades == 'atm':
+                R = 0.0821
+            elif unidades == 'cal':
+                R = 1.987
+            elif unidades == 'psia*ft3':
+                R = 10.73
+            else:
+                raise ValueError("Unidades no reconocidas. Elija entre 'J', 'atm', 'cal' o 'psia*ft3'.")
+        
+        # Calcular la energía de activación
+        Energia_activacion = -R * reciproco_T * np.log(k)
+
+        return Energia_activacion
+                          
+    
     def gas_concentracion_componente(self,coeficiente_gas_Z,y_A0,Presion_total,R,Temperatura,escala_temp=None):
         
         R_gas = float(R.text())  # Convertir el valor de R a un float     

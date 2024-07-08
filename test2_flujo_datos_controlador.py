@@ -520,46 +520,21 @@ class FlujoDatos(QMainWindow):
             QMessageBox.critical(self, "Error", f"Se produjo un error al agregar los datos: {e}", QMessageBox.StandardButton.Ok)
 
         self.boton_activado()
-
+        
     def limpiar_formulario(self):
-        # Limpiar formulario
-        self.tiempo.clear()
-        self.concentracion.clear()
-        self.otra_propiedad.clear()
-        self.conversion_reactivo_limitante.clear()
-        self.tipo_especie.clear()
-        self.id_condiciones_iniciales.clear()
-        self.nombre_data.clear()
-        self.nombre_reaccion.clear()
-        self.especie_quimica.clear()
-
+        elementos_visuales = [self.tiempo, self.concentracion, self.otra_propiedad, self.conversion_reactivo_limitante, self.tipo_especie, self.id_condiciones_iniciales, self.nombre_data, self.nombre_reaccion, self.especie_quimica]
+        self.metodos_comunes.limpiar_elementos_visuales(elementos_visuales)
+    
     def seleccionar_dato(self):
-        seleccionar_fila = self.tabla_datos.currentRow()
-        if seleccionar_fila != -1:
-            id = self.tabla_datos.item(seleccionar_fila, 0).text().strip()
-            tiempo = self.tabla_datos.item(seleccionar_fila, 1).text().strip()
-            concentracion = self.tabla_datos.item(seleccionar_fila, 2).text().strip()
-            otra_propiedad = self.tabla_datos.item(seleccionar_fila, 3).text().strip()
-            conversion_reactivo_limitante = self.tabla_datos.item(seleccionar_fila, 4).text().strip()
-            tipo_especie = self.tabla_datos.item(seleccionar_fila, 5).text().strip()
-            id_condiciones_iniciales = self.tabla_datos.item(seleccionar_fila, 6).text().strip()
-            nombre_data = self.tabla_datos.item(seleccionar_fila, 7).text().strip()
-            nombre_reaccion = self.tabla_datos.item(seleccionar_fila, 8).text().strip()
-            especie_quimica = self.tabla_datos.item(seleccionar_fila, 9).text().strip()
-
-            self.tiempo.setText(tiempo)
-            self.concentracion.setText(concentracion)
-            self.otra_propiedad.setText(otra_propiedad)
-            self.conversion_reactivo_limitante.setText(conversion_reactivo_limitante)
-            self.tipo_especie.setText(tipo_especie)
-            self.id_condiciones_iniciales.setText(id_condiciones_iniciales)
-            self.nombre_data.setText(nombre_data)
-            self.nombre_reaccion.setText(nombre_reaccion)
-            self.especie_quimica.setText(especie_quimica)
+        columnas = ["id", "tiempo", "concentracion", "otra_propiedad", "conversion_reactivo_limitante", "tipo_especie", "id_condiciones_iniciales", "nombre_data", "nombre_reaccion", "especie_quimica"]
+        elementos_visuales = [self.tiempo, self.concentracion, self.otra_propiedad, self.conversion_reactivo_limitante, self.tipo_especie, self.id_condiciones_iniciales, self.nombre_data, self.nombre_reaccion, self.especie_quimica]
+        datos = self.metodos_comunes.seleccionar_datos_visuales(self.tabla_datos, columnas, elementos_visuales)
+        if datos:
+            self.statusbar.showMessage(f"Dato seleccionado id: {datos['id']}", 5000)
         else:
             QMessageBox.information(self, "Información", "Seleccione una fila", QMessageBox.StandardButton.Ok)
             return
-
+        
     def actualizar_dato(self):
         self.boton_desactivado()
 
@@ -696,25 +671,19 @@ class FlujoDatos(QMainWindow):
         self.boton_activado()
     
     def limpiar_formulario_registro_data_experimental(self):
-        self.nombre_data_experimental.clear()
-        self.fecha_data_experimental.clear()
-        self.detalle_data_experimental.clear()
+        elementos_visuales = [self.nombre_data_experimental, self.fecha_data_experimental, self.detalle_data_experimental]
+        self.metodos_comunes.limpiar_elementos_visuales(elementos_visuales)
     
     def seleccionar_registro_data_experimental(self):
-        seleccionar_fila = self.tabla_registro_data_experimental.currentRow()
-        if seleccionar_fila != -1:
-            id = self.tabla_registro_data_experimental.item(seleccionar_fila, 0).text().strip()
-            nombre_data = self.tabla_registro_data_experimental.item(seleccionar_fila, 1).text().strip()
-            fecha = self.tabla_registro_data_experimental.item(seleccionar_fila, 2).text().strip()
-            detalle = self.tabla_registro_data_experimental.item(seleccionar_fila, 3).text().strip()
-
-            self.nombre_data_experimental.setText(nombre_data)
-            self.fecha_data_experimental.setText(fecha)
-            self.detalle_data_experimental.setText(detalle)
+        columnas = ["id", "nombre_data", "fecha", "detalle"]
+        elementos_visuales = [self.nombre_data_experimental, self.fecha_data_experimental, self.detalle_data_experimental]
+        datos = self.metodos_comunes.seleccionar_datos_visuales(self.tabla_registro_data_experimental, columnas, elementos_visuales)
+        if datos:
+            self.statusbar.showMessage(f"Registro seleccionado id: {datos['id']}", 5000)
         else:
             QMessageBox.information(self, "Información", "Seleccione una fila", QMessageBox.StandardButton.Ok)
             return
-        
+           
     def actualizar_registro_data_experimental(self):
         self.boton_desactivado()
         try:
@@ -845,42 +814,19 @@ class FlujoDatos(QMainWindow):
         self.boton_activado()
 
     def limpiar_formulario_ci(self):
-        self.temperatura_ci.clear()
-        self.tiempo_ci.clear()
-        self.presion_total_ci.clear()
-        self.presion_parcial_ci.clear()
-        self.fraccion_molar_ci.clear()
-        self.especie_quimica_ci.clear()
-        self.tipo_especie_ci.clear()
-        self.detalle_ci.clear()
-        self.nombre_data_ci.clear()
-    
-    def seleccionar_condiciones_iniciales(self):
-        seleccionar_fila = self.tabla_condiciones_iniciales.currentRow()
-        if seleccionar_fila != -1:
-            id = self.tabla_condiciones_iniciales.item(seleccionar_fila, 0).text().strip()
-            temperatura = self.tabla_condiciones_iniciales.item(seleccionar_fila, 1).text().strip()
-            tiempo = self.tabla_condiciones_iniciales.item(seleccionar_fila, 2).text().strip()
-            presion_total = self.tabla_condiciones_iniciales.item(seleccionar_fila, 3).text().strip()
-            presion_parcial = self.tabla_condiciones_iniciales.item(seleccionar_fila, 4).text().strip()
-            fraccion_molar = self.tabla_condiciones_iniciales.item(seleccionar_fila, 5).text().strip()
-            especie_quimica = self.tabla_condiciones_iniciales.item(seleccionar_fila, 6).text().strip()
-            tipo_especie = self.tabla_condiciones_iniciales.item(seleccionar_fila, 7).text().strip()
-            detalle = self.tabla_condiciones_iniciales.item(seleccionar_fila, 8).text().strip()
-            nombre_data = self.tabla_condiciones_iniciales.item(seleccionar_fila, 9).text().strip()
+        elementos_visuales = [self.temperatura_ci, self.tiempo_ci, self.presion_total_ci, self.presion_parcial_ci, self.fraccion_molar_ci, self.especie_quimica_ci, self.tipo_especie_ci, self.detalle_ci, self.nombre_data_ci]
+        self.metodos_comunes.limpiar_elementos_visuales(elementos_visuales)
 
-            self.temperatura_ci.setText(temperatura)
-            self.tiempo_ci.setText(tiempo)
-            self.presion_total_ci.setText(presion_total)
-            self.presion_parcial_ci.setText(presion_parcial)
-            self.fraccion_molar_ci.setText(fraccion_molar)
-            self.especie_quimica_ci.setText(especie_quimica)
-            self.tipo_especie_ci.setText(tipo_especie)
-            self.detalle_ci.setText(detalle)
-            self.nombre_data_ci.setText(nombre_data)
+    def seleccionar_condiciones_iniciales(self):
+        columnas = ["id", "temperatura", "tiempo", "presion_total", "presion_parcial", "fraccion_molar", "especie_quimica", "tipo_especie", "detalle", "nombre_data"]
+        elementos_visuales = [self.temperatura_ci, self.tiempo_ci, self.presion_total_ci, self.presion_parcial_ci, self.fraccion_molar_ci, self.especie_quimica_ci, self.tipo_especie_ci, self.detalle_ci, self.nombre_data_ci]
+        datos = self.metodos_comunes.seleccionar_datos_visuales(self.tabla_condiciones_iniciales, columnas, elementos_visuales)
+        if datos:
+            self.statusbar.showMessage(f"Condiciones iniciales seleccionadas id: {datos['id']}", 5000)
         else:
             QMessageBox.information(self, "Información", "Seleccione una fila", QMessageBox.StandardButton.Ok)
             return
+
     def actualizar_condiciones_iniciales(self):
         self.boton_desactivado()
         try:
@@ -1020,32 +966,17 @@ class FlujoDatos(QMainWindow):
             QMessageBox.critical(self, "Error", f"Se produjo un error al agregar la reacción química: {e}", QMessageBox.StandardButton.Ok)
         
         self.boton_activado()
-
-    def limpiar_formulario_rq(self):
-        self.especie_quimica_rq.clear()
-        self.formula_rq.clear()
-        self.coeficiente_estequiometro_rq.clear()
-        self.detalle_rq.clear()
-        self.tipo_especie_rq.clear()
-        self.nombre_reaccion_rq.clear()
     
-    def seleccionar_reaccion_quimica(self):
-        seleccionar_fila = self.tabla_reaccion_quimica.currentRow()
-        if seleccionar_fila != -1:
-            id = self.tabla_reaccion_quimica.item(seleccionar_fila, 0).text().strip()
-            especie_quimica = self.tabla_reaccion_quimica.item(seleccionar_fila, 1).text().strip()
-            formula = self.tabla_reaccion_quimica.item(seleccionar_fila, 2).text().strip()
-            coeficiente_estequiometrico = self.tabla_reaccion_quimica.item(seleccionar_fila, 3).text().strip()
-            detalle = self.tabla_reaccion_quimica.item(seleccionar_fila, 4).text().strip()
-            tipo_especie = self.tabla_reaccion_quimica.item(seleccionar_fila, 5).text().strip()
-            nombre_reaccion = self.tabla_reaccion_quimica.item(seleccionar_fila, 6).text().strip()
+    def limpiar_formulario_rq(self):
+        elementos_visuales = [self.especie_quimica_rq, self.formula_rq, self.coeficiente_estequiometro_rq, self.detalle_rq, self.tipo_especie_rq, self.nombre_reaccion_rq]
+        self.metodos_comunes.limpiar_elementos_visuales(elementos_visuales)
 
-            self.especie_quimica_rq.setText(especie_quimica)
-            self.formula_rq.setText(formula)
-            self.coeficiente_estequiometro_rq.setText(coeficiente_estequiometrico)
-            self.detalle_rq.setText(detalle)
-            self.tipo_especie_rq.setText(tipo_especie)
-            self.nombre_reaccion_rq.setText(nombre_reaccion)
+    def seleccionar_reaccion_quimica(self):
+        columnas = ["id", "especie_quimica", "formula", "coeficiente_estequiometrico", "detalle", "tipo_especie", "nombre_reaccion"]
+        elementos_visuales = [self.especie_quimica_rq, self.formula_rq, self.coeficiente_estequiometro_rq, self.detalle_rq, self.tipo_especie_rq, self.nombre_reaccion_rq]
+        datos = self.metodos_comunes.seleccionar_datos_visuales(self.tabla_reaccion_quimica, columnas, elementos_visuales)
+        if datos:
+            self.statusbar.showMessage(f"Reacción química seleccionada id: {datos['id']}", 5000)
         else:
             QMessageBox.information(self, "Información", "Seleccione una fila", QMessageBox.StandardButton.Ok)
             return
@@ -1647,29 +1578,16 @@ class FlujoDatos(QMainWindow):
         finally:
             self.boton_activado()
 
-
-        
-
     def seleccionar_unidades(self):
-        seleccionar_fila = self.tabla_registro_unidades.currentRow()
-        if seleccionar_fila != -1:
-            id=self.tabla_registro_unidades.item(seleccionar_fila, 0).text().strip()
-            presion=self.tabla_registro_unidades.item(seleccionar_fila, 1).text().strip()
-            temperatura=self.tabla_registro_unidades.item(seleccionar_fila, 2).text().strip()
-            tiempo=self.tabla_registro_unidades.item(seleccionar_fila, 3).text().strip()
-            concentracion=self.tabla_registro_unidades.item(seleccionar_fila, 4).text().strip()
-            energia=self.tabla_registro_unidades.item(seleccionar_fila, 5).text().strip()
-            nombre_data=self.tabla_registro_unidades.item(seleccionar_fila, 6).text().strip()
-
-            self.presion_u_edit.setText(presion)
-            self.temperatura_u_edit.setText(temperatura)
-            self.tiempo_u_edit.setText(tiempo)
-            self.concentracion_u_edit.setText(concentracion)
-            self.energia_u_edit.setText(energia)
-            self.nombre_data_u_edit.setText(nombre_data)
+        columnas = ["id", "presion", "temperatura", "tiempo", "concentracion", "energia", "nombre_data"]
+        elementos_visuales = [self.presion_u_edit, self.temperatura_u_edit, self.tiempo_u_edit, self.concentracion_u_edit, self.energia_u_edit, self.nombre_data_u_edit]
+        datos=self.metodos_comunes.seleccionar_datos_visuales(self.tabla_registro_unidades, columnas, elementos_visuales)
+        if datos:
+            self.statusbar.showMessage(f"Set de Unidades seleccionada id: {datos['id']}", 5000)
         else:
             QMessageBox.information(self, "Información", "Seleccione una fila", QMessageBox.StandardButton.Ok)
             return
+        
     
     def borrar_unidades(self):
         fila_seleccionada = self.tabla_registro_unidades.currentRow()
@@ -1703,14 +1621,10 @@ class FlujoDatos(QMainWindow):
  
     def mostrar_unidades(self,unidades):
         self.metodos_comunes.mostrar_unidades(self.tabla_registro_unidades, unidades)
-
+    
     def limpiar_formulario_unidades(self):
-        self.presion_u_edit.clear()
-        self.temperatura_u_edit.clear()
-        self.tiempo_u_edit.clear()
-        self.concentracion_u_edit.clear()
-        self.energia_u_edit.clear()
-        self.nombre_data_u_edit.clear()
+        elementos_visuales = [self.presion_u_edit, self.temperatura_u_edit, self.tiempo_u_edit, self.concentracion_u_edit, self.energia_u_edit, self.nombre_data_u_edit]
+        self.metodos_comunes.limpiar_elementos_visuales(elementos_visuales)
 
     def agregar_datos_salida(self):
             self.boton_desactivado()
@@ -1860,51 +1774,15 @@ class FlujoDatos(QMainWindow):
     #refactor de tabla salida
     def mostrar_datos_tabla_salida(self, resultados):
         self.metodos_comunes.mostrar_datos_tabla_salida(self.tabla_datos_salida, resultados)
-
+    
     def seleccionar_datos_salida(self):
-        seleccionar_fila = self.tabla_datos_salida.currentRow()
-        if seleccionar_fila != -1:
-            id = self.tabla_datos_salida.item(seleccionar_fila, 0).text().strip()
-            nombre_data_salida = self.tabla_datos_salida.item(seleccionar_fila, 1).text().strip()
-            fecha = self.tabla_datos_salida.item(seleccionar_fila, 2).text().strip()
-            id_nombre_data = self.tabla_datos_salida.item(seleccionar_fila, 3).text().strip()
-            id_condiciones_iniciales = self.tabla_datos_salida.item(seleccionar_fila, 4).text().strip()
-            id_registro_unidades = self.tabla_datos_salida.item(seleccionar_fila, 5).text().strip()
-            r_utilizada = self.tabla_datos_salida.item(seleccionar_fila, 6).text().strip()
-            nombre_data = self.tabla_datos_salida.item(seleccionar_fila, 7).text().strip()
-            nombre_reaccion = self.tabla_datos_salida.item(seleccionar_fila, 8).text().strip()
-            delta_n_reaccion = self.tabla_datos_salida.item(seleccionar_fila, 9).text().strip()
-            epsilon_reactivo_limitante = self.tabla_datos_salida.item(seleccionar_fila, 10).text().strip()
-            tipo_especie = self.tabla_datos_salida.item(seleccionar_fila, 11).text().strip()
-            especie_quimica = self.tabla_datos_salida.item(seleccionar_fila, 12).text().strip()
-            constante_cinetica = self.tabla_datos_salida.item(seleccionar_fila, 13).text().strip()
-            orden_reaccion = self.tabla_datos_salida.item(seleccionar_fila, 14).text().strip()
-            modelo_cinetico = self.tabla_datos_salida.item(seleccionar_fila, 15).text().strip()
-            tipo_calculo = self.tabla_datos_salida.item(seleccionar_fila, 16).text().strip()
-            energia_activacion = self.tabla_datos_salida.item(seleccionar_fila, 17).text().strip()
-            detalles = self.tabla_datos_salida.item(seleccionar_fila, 18).text().strip()
-
-            self.nombre_ds_edit.setText(nombre_data_salida)
-            self.fecha_ds_edit.setText(fecha)
-            self.id_nombre_data_ds_edit.setText(id_nombre_data)
-            self.id_condiciones_iniciales_ds_edit.setText(id_condiciones_iniciales)
-            self.id_registro_unidades_ds_edit.setText(id_registro_unidades)
-            self.r_ds_edit.setText(r_utilizada)
-            self.nombre_data_ds_edit.setText(nombre_data)
-            self.nombre_reaccion_ds_edit.setText(nombre_reaccion)
-            self.delta_n_ds_edit.setText(delta_n_reaccion)
-            self.epsilon_rl_ds_edit.setText(epsilon_reactivo_limitante)
-            self.tipo_especie_ds_edit.setText(tipo_especie)
-            self.especie_quimica_ds_edit.setText(especie_quimica)
-            self.constante_cinetica_ds_edit.setText(constante_cinetica)
-            self.orden_reaccion_ds_edit.setText(orden_reaccion)
-            self.modelo_cinetico_ds_edit.setText(modelo_cinetico)
-            self.tipo_calculo_ds_edit.setText(tipo_calculo)
-            self.energia_activacion_ds_edit.setText(energia_activacion)
-            self.detalles_ds_edit.setText(detalles)
+        columnas = ["id", "nombre_data_salida", "fecha", "id_nombre_data", "id_condiciones_iniciales", "id_registro_unidades", "r_utilizada", "nombre_data", "nombre_reaccion", "delta_n_reaccion", "epsilon_reactivo_limitante", "tipo_especie", "especie_quimica", "constante_cinetica", "orden_reaccion", "modelo_cinetico", "tipo_calculo", "energia_activacion", "detalles"]
+        elementos_visuales = [self.nombre_ds_edit, self.fecha_ds_edit, self.id_nombre_data_ds_edit, self.id_condiciones_iniciales_ds_edit, self.id_registro_unidades_ds_edit, self.r_ds_edit, self.nombre_data_ds_edit, self.nombre_reaccion_ds_edit, self.delta_n_ds_edit, self.epsilon_rl_ds_edit, self.tipo_especie_ds_edit, self.especie_quimica_ds_edit, self.constante_cinetica_ds_edit, self.orden_reaccion_ds_edit, self.modelo_cinetico_ds_edit, self.tipo_calculo_ds_edit, self.energia_activacion_ds_edit, self.detalles_ds_edit]
+        datos=self.metodos_comunes.seleccionar_datos_visuales(self.tabla_datos_salida, columnas, elementos_visuales)
+        if datos:
+            self.statusbar.showMessage(f"Set de Datos de Salida seleccionados id: {datos['id']}", 5000)
         else:
             QMessageBox.information(self, "Información", "Seleccione una fila", QMessageBox.StandardButton.Ok)
-            return
         
     def borrar_datos_salida(self):
         fila_seleccionada = self.tabla_datos_salida.currentRow()
@@ -1944,26 +1822,10 @@ class FlujoDatos(QMainWindow):
         }
         datos_salida = self.RegistroDatosSalidaManejador.consultar(filtros, "like")
         self.mostrar_datos_tabla_salida(datos_salida)
-
+    
     def limpiar_formulario_datos_salida(self):
-        self.nombre_ds_edit.clear()
-        self.fecha_ds_edit.clear()
-        self.id_nombre_data_ds_edit.clear()
-        self.id_condiciones_iniciales_ds_edit.clear()
-        self.id_registro_unidades_ds_edit.clear()
-        self.r_ds_edit.clear()
-        self.nombre_data_ds_edit.clear()
-        self.nombre_reaccion_ds_edit.clear()
-        self.delta_n_ds_edit.clear()
-        self.epsilon_rl_ds_edit.clear()
-        self.tipo_especie_ds_edit.clear()
-        self.especie_quimica_ds_edit.clear()
-        self.constante_cinetica_ds_edit.clear()
-        self.orden_reaccion_ds_edit.clear()
-        self.modelo_cinetico_ds_edit.clear()
-        self.tipo_calculo_ds_edit.clear()
-        self.energia_activacion_ds_edit.clear()
-        self.detalles_ds_edit.clear()
+        elementos_visuales = [self.nombre_ds_edit, self.fecha_ds_edit, self.id_nombre_data_ds_edit, self.id_condiciones_iniciales_ds_edit, self.id_registro_unidades_ds_edit, self.r_ds_edit, self.nombre_data_ds_edit, self.nombre_reaccion_ds_edit, self.delta_n_ds_edit, self.epsilon_rl_ds_edit, self.tipo_especie_ds_edit, self.especie_quimica_ds_edit, self.constante_cinetica_ds_edit, self.orden_reaccion_ds_edit, self.modelo_cinetico_ds_edit, self.tipo_calculo_ds_edit, self.energia_activacion_ds_edit, self.detalles_ds_edit]
+        self.metodos_comunes.limpiar_elementos_visuales(elementos_visuales)
 
     def actualizar_valor_celda_datos_salida(self, fila, columna):
         self.metodos_comunes.actualizar_valor_celda(self.tabla_datos_salida, self.RegistroDatosSalidaManejador, fila, columna)
@@ -2025,6 +1887,7 @@ class FlujoDatos(QMainWindow):
                 elemento.hide()  # Oculta el elemento si está visible
             else:
                 elemento.show()  # Muestra el elemento si está oculto
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

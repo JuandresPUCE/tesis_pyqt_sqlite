@@ -62,7 +62,42 @@ class Servicios:
     def mostrar_unidades(self, unidades_tabla, unidades):
         columnas = ["id","presion","temperatura","tiempo","concentracion","energia","nombre_data"]
         self.mostrar_datos_en_tabla(unidades_tabla, unidades, columnas)
-         
+    
+    #seleccionar informacion de la tabla
+    def seleccionar_datos(self, tabla, columnas):
+        seleccionar_fila = tabla.currentRow()
+        if seleccionar_fila != -1:
+            datos = {}
+            for i, columna in enumerate(columnas):
+                datos[columna] = tabla.item(seleccionar_fila, i).text().strip()
+            return datos
+        return None
+    
+    def seleccionar_datos_visuales(self, tabla, columnas, elementos_visuales, excluir_id=None):
+        seleccionar_fila = tabla.currentRow()
+        if seleccionar_fila != -1:
+            datos = {}
+            for i, columna in enumerate(columnas):
+                datos[columna] = tabla.item(seleccionar_fila, i).text().strip()
+
+            # Excluir 'id' de los elementos visuales por defecto
+            if excluir_id is None or excluir_id:
+                columnas_visuales = columnas[1:]
+            else:
+                columnas_visuales = columnas
+
+            for columna, elemento_visual in zip(columnas_visuales, elementos_visuales):
+                elemento_visual.setText(datos[columna])
+
+            return datos
+        return None
+    
+    def limpiar_elementos_visuales(self, elementos_visuales):
+        for elemento in elementos_visuales:
+            try:
+                elemento.clear()
+            except AttributeError:
+                print(f"El elemento {elemento} no esta presente.")
 
     #funciones refactorizadas
     def borrar_elemento(self, tabla, borrar_resultado, mensaje_confirmacion, mensaje_exito, mensaje_error, metodo_consultar, metodo_refescar, metodo_buscar):

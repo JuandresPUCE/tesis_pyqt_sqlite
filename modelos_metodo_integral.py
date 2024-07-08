@@ -122,7 +122,7 @@ class MetodoIntegralAjustador:
         print('n_optimo:', n)
 
         return k_optimo, A_0_optimo, n
-
+#ämetodo ocupado dashboard
 class MetodoIntegralGraficador:
     @staticmethod
     def graficar_modelo_salida_opcional(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, k_ord_n_optimo, A_0_optimo, n_optimo, data_producto=None, columna_concentracion_producto=None, grafico=None, ax=None, canvas=None):

@@ -19,6 +19,7 @@ from repositorios import *
 
 from funciones import *
 from modelos_metodo_integral import *
+from modelos_metodo_arrhenius import *
 
 #otras ventanas
 from test_crud_db_controlador import PantallaCrud
@@ -56,6 +57,7 @@ class PanelDataAnalisis(QMainWindow):
         self.buscar_registros()
         self.buscar_dato()
         self.buscar_condiciones_iniciales()
+        self.buscar_datos_salida()
         self.crud_db = PantallaCrud()
         self.flujo_datos = FlujoDatos()
         self.init_panel_menu()
@@ -75,6 +77,16 @@ class PanelDataAnalisis(QMainWindow):
         # Tabla de condiciones iniciales
         self.condiciones_iniciales_tabla = self.ui.condiciones_iniciales_tabla
         self.condiciones_iniciales_tabla.setSortingEnabled(False)
+
+        #tabla de datos de salida
+        self.tabla_datos_salida = self.ui.datos_salida_tabla
+        self.tabla_datos_salida.setSortingEnabled(False)
+        
+        #cambio de columnas para la tabla de datos de salida
+        # Lista de títulos de columnas, con saltos de línea si es necesario
+        #titulos_columnas = ["Primera\nColumna", "Segunda\nColumna", "Tercera Columna"]
+        # Aplicar los títulos a la tabla
+        #self.tabla_datos_salida.setHorizontalHeaderLabels(titulos_columnas)
 
         # Combobox de registro datos experimentales
         self.registro_datos_box = self.ui.registro_datos_box
@@ -108,6 +120,10 @@ class PanelDataAnalisis(QMainWindow):
         # Agregar el widget de Matplotlib al QVBoxLayout vista_grafica
         self.ui.vista_grafica.addWidget(self.matplotlib_widget)
 
+
+
+
+
         #combo box de ajustar_modelo_box
         self.ajustar_modelo_box=self.ui.ajustar_modelo_box
             # Poblar el combobox
@@ -129,6 +145,8 @@ class PanelDataAnalisis(QMainWindow):
         self.k_calculado = self.ui.k_calculado
         self.n_calculado = self.ui.n_calculado
         self.modelo_utilizado = self.ui.modelo_utilizado
+        self.guardar_caso_btn = self.ui.guardar_caso_btn
+        self.guardar_caso_btn.clicked.connect(self.actualizar_datos_salida)    
 
         #boton de ejecutar modelo
         self.ejecutar_modelo_button = self.ui.graficar_btn
@@ -145,6 +163,13 @@ class PanelDataAnalisis(QMainWindow):
         # cambiar configuracion de la base de datos
         self.cambiar_config_btn=self.ui.cambiar_config_btn
         self.cambiar_config_btn.clicked.connect(self.cambiar_config_base_datos)
+
+        #tabla de dataframe
+        #self.vista_tabla_df=self.ui.vista_tabla_df
+
+        self.vista_tabla_df = DataFrameWidget(self)
+        #self.ui.vista_tabla_df.addWidget(self.vista_tabla_df)
+        self.ui.vista_tabla_df.layout().addWidget(self.vista_tabla_df)
 
         # funciones de la barra de menu
     def init_panel_menu(self):
@@ -182,6 +207,10 @@ class PanelDataAnalisis(QMainWindow):
     def buscar_condiciones_iniciales(self):
         condiciones = self.CondicionesInicialesManejador.consultar()
         self.mostrar_condiciones_iniciales(condiciones) 
+    
+    def buscar_datos_salida(self):
+        condiciones = self.RegistroDatosSalidaManejador.consultar()
+        self.mostrar_datos_tabla_salida(condiciones)
 
     def mostrar_condiciones_iniciales(self,condiciones):
         self.mensaje_error = "No se encontraron condiciones iniciales en la base de datos."
@@ -270,6 +299,9 @@ class PanelDataAnalisis(QMainWindow):
         tabla = self.reaccion_quimica_tabla
         tabla.clearContents()
         self.metodos_comunes.mostrar_reacciones(self.reaccion_quimica_tabla, resultados)
+    
+    def mostrar_datos_tabla_salida(self, resultados):
+        self.metodos_comunes.mostrar_datos_tabla_salida(self.tabla_datos_salida, resultados)
     
 
     def actualizar_datos_cineticos(self):
@@ -507,13 +539,27 @@ class PanelDataAnalisis(QMainWindow):
             print(f"Error: {e}. La columna no existe en el DataFrame.")
             
     def calcular_arrenius(self):
+        # Obtener los datos de la base de datos del combo box registro_datos_box
         filtros = {'nombre_data': self.registro_datos_box.currentText()}
+        #consultar datos experimentales
         resultados= self.RegistroDataExperimentalManejador.consultar(filtros=filtros)
+        # Verificar si se encontraron resultados
         if resultados:
             filtros_datos_salida= {'id_registro_data_experimental': resultados[0].id}
+            #consultar datos en condiciones iniciales
             resultados_a_ci = self.CondicionesInicialesManejador.consultar(filtros=filtros)
+            #pasar a dataframe las condiciones iniciales
             df_resultados_a_ci = pd.DataFrame.from_records([condicion.__dict__ for condicion in resultados_a_ci])
+            #imprimir condiciones iniciales
             print("Condiciones iniciales:", df_resultados_a_ci[['id', 'temperatura']])
+            #consultar unidades
+            resultados_unidades = self.RegistroUnidadesManejador.consultar(filtros=filtros)
+            #pasar a dataframe las unidades
+            df_resultados_unidades = pd.DataFrame.from_records([condicion.__dict__ for condicion in resultados_unidades])
+            #imprimir unidades
+            print("Unidades:", df_resultados_unidades)
+
+
             fitro_salida={'id_nombre_data': resultados[0].id,'id_condiciones_iniciales': df_resultados_a_ci["id"].to_string(index=False)}
             print(fitro_salida)
             resultados_ds = self.RegistroDatosSalidaManejador.consultar(filtros=fitro_salida)
@@ -531,39 +577,88 @@ class PanelDataAnalisis(QMainWindow):
 
             # Renombra las columnas del nuevo DataFrame para reflejar el contenido.
             df_combinado.columns = ['temperatura', 'constante_cinetica']
+            df_combinado.dropna(inplace=True)
 
             # Finalmente, imprime el DataFrame combinado.
             print(df_combinado.to_string(index=False))
             
-            #ejecutar modelo de 2 puntos
-            # Para acceder a los valores de la primera fila (índice 0)
-            temperatura_primera_fila = df_combinado.iloc[0]['temperatura']
-            constante_cinetica_primera_fila = df_combinado.iloc[0]['constante_cinetica']
-
-            # Para acceder a los valores de la segunda fila (índice 1)
-            temperatura_segunda_fila = df_combinado.iloc[1]['temperatura']
-            constante_cinetica_segunda_fila = df_combinado.iloc[1]['constante_cinetica']
-            
-            # Llamar a la función calcular_energia_activacion con los valores obtenidos
-            #calcular_energia_activacion(k1, T1, k2, T2, escala_temp='K', unidades='J', R_custom=None)
-            resultado = Funciones.calcular_energia_activacion(
-                k1=constante_cinetica_primera_fila,
-                T1=temperatura_primera_fila,
-                k2=constante_cinetica_segunda_fila,
-                T2=temperatura_segunda_fila,escala_temp='K', unidades='cal'
-            )
+            #ejecutar modelo de n puntos
+            resultado=ArrheniusAjustador.ajustar_modelo_arrhenius_lineal_multiple(df_combinado, "temperatura", "constante_cinetica","C")
 
             # Imprimir el resultado
             print("El resultado de la energía de activación es:", resultado)
 
-            
-            
+
+            self.vista_tabla_df.set_data(df_combinado)
+                   
         else:
             logging.warning(f"No se encontró un registro con el nombre: {self.registro_datos_box.currentText()}")
             return None
         
     def cambiar_config_base_datos(self):
         self.metodos_comunes.cambiar_configuracion_db()
+
+    def actualizar_datos_salida(self):
+
+        try:
+            # Obtener el ID de los datos de salida seleccionados
+            fila_seleccionada = self.tabla_datos_salida.currentRow()
+            if fila_seleccionada == -1:
+                QMessageBox.warning(self, "Advertencia", "Seleccione una fila para actualizar", QMessageBox.StandardButton.Ok)
+                return
+            id = int(self.tabla_datos_salida.item(fila_seleccionada, 0).text().strip())
+
+            # Validaciones
+            #nombre_data_salida=self.nombre_ds_edit.text()
+            #fecha_ds=self.fecha_ds_edit.text()
+            #id_nombre_data=int(self.id_nombre_data_ds_edit.text())
+            #id_condiciones_iniciales=int(self.id_condiciones_iniciales_ds_edit.text())
+            #id_registro_unidades=int(self.id_registro_unidades_ds_edit.text())
+            #r_utilizada=float(self.r_ds_edit.text())
+            #nombre_data=self.nombre_data_ds_edit.text()
+            #nombre_reaccion=self.nombre_reaccion_ds_edit.text()
+            #delta_n_reaccion=float(self.delta_n_ds_edit.text())
+            #epsilon_reactivo_limitante=float(self.epsilon_rl_ds_edit.text())
+            #tipo_especie=self.tipo_especie_ds_edit.text()
+            #especie_quimica=self.especie_quimica_ds_edit.text()
+            constante_cinetica=float(self.k_calculado.text())
+            orden_reaccion=float(self.n_calculado.text())
+            modelo_cinetico=self.modelo_utilizado.text()
+            #tipo_calculo=self.tipo_calculo_ds_edit.text()
+            #energia_activacion=float(self.energia_activacion_ds_edit.text())
+            #detalles_ds=self.detalles_ds_edit.text()
+
+            #if not nombre_data_salida or not fecha_ds or not id_nombre_data or not id_condiciones_iniciales or not id_registro_unidades or not r_utilizada or not nombre_data or not delta_n_reaccion or not epsilon_reactivo_limitante or not tipo_especie or not especie_quimica or not constante_cinetica or not orden_reaccion or not modelo_cinetico or not tipo_calculo or not energia_activacion or not detalles_ds:
+            #    raise ValueError("Todos los campos de texto deben estar llenos")
+        
+            # Crear el objeto de datos de salida actualizados
+            nuevos_datos_salida = {
+
+                "constante_cinetica": constante_cinetica,
+                "orden_reaccion": orden_reaccion,
+                "modelo_cinetico": modelo_cinetico,
+
+            }
+
+            # Intentar actualizar los datos de salida en la base de datos
+            actualizar_resultado = self.RegistroDatosSalidaManejador.actualizar(id, nuevos_datos_salida)
+
+            if actualizar_resultado:
+                QMessageBox.information(self, "Información", "Datos de salida actualizados correctamente", QMessageBox.StandardButton.Ok)
+                #self.limpiar_formulario_datos_salida()
+                self.buscar_datos_salida()
+            else:
+                QMessageBox.critical(self, "Error", "Hubo un problema al actualizar los datos de salida", QMessageBox.StandardButton.Ok)
+            
+        except ValueError as ve:
+            QMessageBox.warning(self, "Advertencia", f"Datos inválidos o incompletos: {ve}", QMessageBox.StandardButton.Ok)
+
+        except Exception as e:
+            logging.error("Error al actualizar los datos de salida: %s", str(e))
+            QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar los datos de salida: {e}", QMessageBox.StandardButton.Ok)
+        
+        finally:
+            QMessageBox.information(self, "Información", "Datos de salida actualizados correctamente", QMessageBox.StandardButton.Ok)
 
 
 class MatplotlibWidget(QWidget):
@@ -595,6 +690,40 @@ class MatplotlibWidget(QWidget):
         self.ax.axis('off')  # Ocultar los ejes
         self.canvas.draw()
 
+class DataFrameWidget(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        # Crear la tabla de datos
+        self.tableWidget = QTableWidget()
+
+        # Configurar el layout
+        layout = QVBoxLayout()
+        layout.addWidget(self.tableWidget)
+        self.setLayout(layout)
+
+    def set_data(self, df):
+        # Limpiar la tabla antes de actualizarla
+        self.tableWidget.clear()
+
+        # Establecer el número de filas y columnas
+        self.tableWidget.setRowCount(df.shape[0])
+        self.tableWidget.setColumnCount(df.shape[1])
+
+        # Establecer las etiquetas de las columnas
+        self.tableWidget.setHorizontalHeaderLabels(df.columns)
+
+        # Llenar la tabla con los datos del DataFrame
+        for row in range(df.shape[0]):
+            for col in range(df.shape[1]):
+                item = QTableWidgetItem(str(df.iloc[row, col]))
+                self.tableWidget.setItem(row, col, item)
+
+        # Ajustar tamaño de las columnas para que se ajusten al contenido
+        self.tableWidget.resizeColumnsToContents()
+
+        # Opcional: Ajustar tamaño de las filas para que se ajusten al contenido
+        self.tableWidget.resizeRowsToContents()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

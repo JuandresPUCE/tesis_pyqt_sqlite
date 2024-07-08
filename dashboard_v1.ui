@@ -451,7 +451,7 @@
           <item>
            <widget class="QTabWidget" name="tabWidget">
             <property name="currentIndex">
-             <number>1</number>
+             <number>2</number>
             </property>
             <widget class="QWidget" name="data_tab">
              <attribute name="title">
@@ -553,7 +553,7 @@
                  <item>
                   <widget class="QTabWidget" name="tabWidget_2">
                    <property name="currentIndex">
-                    <number>4</number>
+                    <number>0</number>
                    </property>
                    <widget class="QWidget" name="datos_cineticos_tab">
                     <attribute name="title">
@@ -1347,6 +1347,28 @@
              <attribute name="title">
               <string>Arrenius</string>
              </attribute>
+             <widget class="QWidget" name="verticalLayoutWidget">
+              <property name="geometry">
+               <rect>
+                <x>90</x>
+                <y>40</y>
+                <width>511</width>
+                <height>161</height>
+               </rect>
+              </property>
+              <layout class="QVBoxLayout" name="vista_grafico"/>
+             </widget>
+             <widget class="QWidget" name="verticalLayoutWidget_2">
+              <property name="geometry">
+               <rect>
+                <x>90</x>
+                <y>270</y>
+                <width>511</width>
+                <height>161</height>
+               </rect>
+              </property>
+              <layout class="QVBoxLayout" name="vista_tabla_df"/>
+             </widget>
             </widget>
             <widget class="QWidget" name="tab_3">
              <attribute name="title">
