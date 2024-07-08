@@ -120,10 +120,6 @@ class PanelDataAnalisis(QMainWindow):
         # Agregar el widget de Matplotlib al QVBoxLayout vista_grafica
         self.ui.vista_grafica.addWidget(self.matplotlib_widget)
 
-
-
-
-
         #combo box de ajustar_modelo_box
         self.ajustar_modelo_box=self.ui.ajustar_modelo_box
             # Poblar el combobox
@@ -369,29 +365,31 @@ class PanelDataAnalisis(QMainWindow):
             self.reactivo_limitante_calculado.setText(str(resultado[1]))
             self.k_calculado.setText(str(resultado[0]))
             self.n_calculado.setText(str(resultado[2]))
-            self.modelo_utilizado.setText(nombre_metodo)
-            
+            #self.modelo_utilizado.setText(nombre_metodo)
+            self.modelo_utilizado.setText(str(resultado[3]))
             # Graficar utilizando el resultado obtenido
 
-            MetodoIntegralGraficador.graficar_modelo_salida_opcional(
+            MetodoIntegralGraficador.graficar_modelo_salida_opcional_ecuacion(
             dataframe,
             "tiempo",
             "concentracion",
             resultado[0],  # Suponiendo que el primer valor retornado es k_ord_n_optimo
             dataframe['concentracion'].iloc[0],  # Suponiendo que el segundo valor retornado es A_0_optimo
             resultado[2],  # Suponiendo que el tercer valor retornado es n_optimo
+            resultado[3],
             data_producto=None,
             columna_concentracion_producto=None,
 
             )
 
-            MetodoIntegralGraficador.graficar_modelo_salida_opcional(
+            MetodoIntegralGraficador.graficar_modelo_salida_opcional_ecuacion(
             dataframe,
             "tiempo",
             "concentracion",
             resultado[0],  # Suponiendo que el primer valor retornado es k_ord_n_optimo
             dataframe['concentracion'].iloc[0],  # Suponiendo que el segundo valor retornado es A_0_optimo
             resultado[2],  # Suponiendo que el tercer valor retornado es n_optimo
+            resultado[3],
             data_producto=None,
             columna_concentracion_producto=None,
             grafico="MatplotlibWidget", 
@@ -507,7 +505,7 @@ class PanelDataAnalisis(QMainWindow):
         etiqueta_horizontal = "tiempo"
         etiqueta_vertical = "concentracion"
         titulo = "concentracion vs tiempo"
-        componente = "reactivo_limitate"
+        componente = f"{tipo_especie} - {especie_quimica}"
         try:
             # Limpiar la figura por completo
             self.matplotlib_widget.canvas.figure.clf()

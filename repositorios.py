@@ -12,17 +12,7 @@ from servicios import *
 # Obtén la ruta del directorio actual
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
-#db_path = relative_path
-#absoluto
-#db_path = r"D:\candidatos_proyectof\tesis_tec\dataReactor\tesis_GUI_sqlite\tesis_pyqt_sqlite\data\data_reactor1.db"
-#realtivo
-
-# Define la ruta relativa al archivo de la base de datos
-#db_path = r"data\data_reactor1.db"
-#db_path = r"data\data_reactor4.db"
-#dir_db = r"config\config.json"
 metodos_comunes = Servicios()
-
 
 dir_db = r"config\config.json"       
 db_path=metodos_comunes.cargar_configuracion_json(dir_db,"db_path")

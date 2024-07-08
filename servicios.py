@@ -60,7 +60,7 @@ class Servicios:
         self.mostrar_datos_en_tabla(registro_datos_tabla, registros, columnas)
     
     def mostrar_unidades(self, unidades_tabla, unidades):
-        columnas = ["id","presion","temperatura","tiempo","concentracion","energia","nombre_data"]
+        columnas = ["id","presion","temperatura","tiempo","concentracion","energia","r","nombre_data"]
         self.mostrar_datos_en_tabla(unidades_tabla, unidades, columnas)
     
     #seleccionar informacion de la tabla
@@ -278,7 +278,7 @@ class Servicios:
             # Verificar el tipo de datos esperado según el encabezado de la columna
             header_text = tabla.horizontalHeaderItem(columna).text().lower()
             if header_text in ['temperatura', 'tiempo', 'presion_total', 'presion_parcial', 'fraccion_molar',
-                               'concentracion', 'otra_propiedad', 'conversion_reactivo_limitante','coeficiente_estequiometrico']:
+                               'concentracion', 'otra_propiedad', 'conversion_reactivo_limitante','coeficiente_estequiometrico','r']:
                 # Verificar si el valor puede convertirse a float
                 try:
                     nuevo_valor = float(nuevo_valor)

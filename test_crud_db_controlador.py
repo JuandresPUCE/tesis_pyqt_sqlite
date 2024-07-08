@@ -978,32 +978,61 @@ class PantallaCrud(QMainWindow):
 
     def agregar_unidades(self):
         self.boton_desactivado()
-        #validar que todos los campos esten llenos
+
+        # Validar que todos los campos estén llenos
         try:
-            presion=self.presion_u_edit.text()
-            temperatura=self.temperatura_u_edit.text()
-            tiempo=self.tiempo_u_edit.text()
-            concentracion=self.concentracion_u_edit.text()
-            energia=self.energia_u_edit.text()
-            nombre_data=self.nombre_data_u_edit.text()
-        
+            presion = self.presion_u_edit.text()
+            temperatura = self.temperatura_u_edit.text()
+            tiempo = self.tiempo_u_edit.text()
+            concentracion = self.concentracion_u_edit.text()
+            energia = self.energia_u_edit.text()
+            r = float(self.r_u_edit.text())
+            nombre_data = self.nombre_data_u_edit.text()
+            
             if not presion or not temperatura or not tiempo or not concentracion or not energia or not nombre_data:
                 raise ValueError("Todos los campos de texto deben estar llenos")
         except ValueError as e:
-            QMessageBox.warning(self, "Advertencia", f"Datos inválidos o incompletos: {e}", QMessageBox.StandardButton.Ok)
-            self.boton_activado()
-            return
-        #crear el objeto unidades
-        unidades=RegistroUnidades(
+            # Crear un QMessageBox con opciones de Cancelar, Aceptar, y Completar con 0
+            msg_box = QMessageBox()
+            msg_box.setIcon(QMessageBox.Icon.Warning)
+            msg_box.setWindowTitle("Advertencia")
+            msg_box.setText(f"Datos inválidos o incompletos: {e}")
+            msg_box.setStandardButtons(QMessageBox.StandardButton.Cancel | QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Ignore)
+            msg_box.button(QMessageBox.StandardButton.Cancel).setText("Cancelar")
+            msg_box.button(QMessageBox.StandardButton.Ok).setText("Aceptar")
+            msg_box.button(QMessageBox.StandardButton.Ignore).setText("Completar con 0")
+
+            result = msg_box.exec()
+
+            if result == QMessageBox.StandardButton.Cancel:
+                self.boton_activado()
+                return
+            elif result == QMessageBox.StandardButton.Ignore:
+                # Completar campos vacíos con 0 o 'N/A'
+                presion = presion or '0'
+                temperatura = temperatura or '0'
+                tiempo = tiempo or '0'
+                concentracion = concentracion or '0'
+                energia = energia or '0'
+                r = r or '0'
+                nombre_data = nombre_data or 'N/A'
+            else:
+                # Si se selecciona "Aceptar", simplemente se reintenta la operación
+                self.boton_activado()
+                return
+
+        # Crear el objeto RegistroUnidades
+        unidades = RegistroUnidades(
             presion=presion,
             temperatura=temperatura,
             tiempo=tiempo,
             concentracion=concentracion,
             energia=energia,
+            r=r,
             nombre_data=nombre_data
         )
 
-        #intentar agregar las unidades a la base de datos
+        # Intentar agregar las unidades a la base de datos
         try:
             print("Intentando agregar unidades:", unidades)
             agregar_resultado = self.RegistroUnidadesManejador.agregar(unidades)
@@ -1036,6 +1065,7 @@ class PantallaCrud(QMainWindow):
             tiempo = self.tiempo_u_edit.text()
             concentracion = self.concentracion_u_edit.text()
             energia = self.energia_u_edit.text()
+            r= float(self.r_u_edit.text())
             nombre_data = self.nombre_data_u_edit.text()
 
             if not presion or not temperatura or not tiempo or not concentracion or not energia or not nombre_data:
@@ -1048,6 +1078,7 @@ class PantallaCrud(QMainWindow):
                 "tiempo": tiempo,
                 "concentracion": concentracion,
                 "energia": energia,
+                "r": r,
                 "nombre_data": nombre_data,
             }
 
@@ -1075,22 +1106,12 @@ class PantallaCrud(QMainWindow):
         
 
     def seleccionar_unidades(self):
-        seleccionar_fila = self.tabla_registro_unidades.currentRow()
-        if seleccionar_fila != -1:
-            id=self.tabla_registro_unidades.item(seleccionar_fila, 0).text().strip()
-            presion=self.tabla_registro_unidades.item(seleccionar_fila, 1).text().strip()
-            temperatura=self.tabla_registro_unidades.item(seleccionar_fila, 2).text().strip()
-            tiempo=self.tabla_registro_unidades.item(seleccionar_fila, 3).text().strip()
-            concentracion=self.tabla_registro_unidades.item(seleccionar_fila, 4).text().strip()
-            energia=self.tabla_registro_unidades.item(seleccionar_fila, 5).text().strip()
-            nombre_data=self.tabla_registro_unidades.item(seleccionar_fila, 6).text().strip()
-
-            self.presion_u_edit.setText(presion)
-            self.temperatura_u_edit.setText(temperatura)
-            self.tiempo_u_edit.setText(tiempo)
-            self.concentracion_u_edit.setText(concentracion)
-            self.energia_u_edit.setText(energia)
-            self.nombre_data_u_edit.setText(nombre_data)
+        columnas = ["id", "presion", "temperatura", "tiempo", "concentracion", "energia", "r", "nombre_data"]
+        elementos_visuales = [self.presion_u_edit, self.temperatura_u_edit, self.tiempo_u_edit, self.concentracion_u_edit, self.energia_u_edit, self.r_u_edit,self.nombre_data_u_edit]
+        datos=self.metodos_comunes.seleccionar_datos_visuales(self.tabla_registro_unidades, columnas, elementos_visuales)
+        if datos:
+            #self.statusbar.showMessage(f"Set de Unidades seleccionada id: {datos['id']}", 5000)
+            print(f"Set de Unidades seleccionada id: {datos['id']}", 5000)
         else:
             QMessageBox.information(self, "Información", "Seleccione una fila", QMessageBox.StandardButton.Ok)
             return
@@ -1117,7 +1138,9 @@ class PantallaCrud(QMainWindow):
             "tiempo": self.tiempo_u_edit.text(),
             "concentracion": self.concentracion_u_edit.text(),
             "energia": self.energia_u_edit.text(),
+            "r": self.r_u_edit.text(),
             "nombre_data": self.nombre_data_u_edit.text()
+
         }
         unidades = self.RegistroUnidadesManejador.consultar(filtros, "like")
         self.mostrar_unidades(unidades)
@@ -1129,12 +1152,8 @@ class PantallaCrud(QMainWindow):
         self.metodos_comunes.mostrar_unidades(self.tabla_registro_unidades, unidades)
 
     def limpiar_formulario_unidades(self):
-        self.presion_u_edit.clear()
-        self.temperatura_u_edit.clear()
-        self.tiempo_u_edit.clear()
-        self.concentracion_u_edit.clear()
-        self.energia_u_edit.clear()
-        self.nombre_data_u_edit.clear()
+        elementos_visuales = [self.presion_u_edit, self.temperatura_u_edit, self.tiempo_u_edit, self.concentracion_u_edit, self.energia_u_edit, self.nombre_data_u_edit]
+        self.metodos_comunes.limpiar_elementos_visuales(elementos_visuales)
 
     
     def actualizar_valor_celda_datos_salida(self, fila, columna):

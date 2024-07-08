@@ -184,17 +184,11 @@ class FlujoDatos(QMainWindow):
         self.calcular_delta_n.clicked.connect(self.calculo_delta_n)
 
 
-
-        #elementos ocultos
-        #self.ui.label_20.hide()
-        #self.ui.nombre_data_rde_edit.hide()
-
     def ocultar_elementos_vista(self):
         # Lista de nombres de elementos a ocultar
-        elementos_ocultar = ['label_20', 'nombre_data_rde_edit','nombre_reaccion_rq_edit','label_27','nombre_data_ci_edit','label_17','label_8','nombre_data_dc_edit','label_9','nombre_reaccion_dc_edit','groupBox_14','groupBox_2', 'groupBox_3', 'groupBox_4', 'groupBox_5','groupBox_23','groupBox_21','groupBox_17','groupBox_22','groupBox_24','groupBox_25','groupBox_26','groupBox_29','groupBox_30','groupBox_31','groupBox_32']
+        elementos_ocultar = ['groupBox_33', 'nombre_data_rde_edit','nombre_reaccion_rq_edit','groupBox_41','nombre_data_ci_edit','label_17','label_8','nombre_data_dc_edit','label_9','nombre_reaccion_dc_edit','groupBox_14','groupBox_2', 'groupBox_3', 'groupBox_4', 'groupBox_5','groupBox_23','groupBox_21','groupBox_17','groupBox_22','groupBox_24','groupBox_25','groupBox_26','groupBox_29','groupBox_30','groupBox_31','groupBox_32']
         for nombre in elementos_ocultar:
             getattr(self.ui, nombre).hide()
-
 
     def init_ui_elementos_dc(self):
         # Datos cinéticos
@@ -1123,7 +1117,7 @@ class FlujoDatos(QMainWindow):
         self.metodos_comunes.actualizar_lineedit(self.energia_box, self.energia_u_edit,True)
     
     def actualizar_lineedit_constante_r(self):
-        self.metodos_comunes.actualizar_lineedit(self.r_box, self.r_u_edit)
+        self.metodos_comunes.actualizar_lineedit(self.r_box, self.r_u_edit,True)
         self.actualizar_lineedit_unidades()
 
     def actualizar_lineedit_unidades(self):
@@ -1148,7 +1142,7 @@ class FlujoDatos(QMainWindow):
    
     #empuja la seleccion al line edit
     def actualizar_lineedit_tipo_especie(self):
-        self.metodos_comunes.actualizar_lineedit(self.tipo_especie_rq_box, self.tipo_especie_rq)
+        self.metodos_comunes.actualizar_lineedit(self.tipo_especie_rq_box, self.tipo_especie_rq,True)
 
     def marcar_quimico_inicial(self):
         # Definir los filtros para la consulta
@@ -1467,6 +1461,7 @@ class FlujoDatos(QMainWindow):
             tiempo = self.tiempo_u_edit.text()
             concentracion = self.concentracion_u_edit.text()
             energia = self.energia_u_edit.text()
+            r = float(self.r_u_edit.text())
             nombre_data = self.nombre_data_u_edit.text()
             
             if not presion or not temperatura or not tiempo or not concentracion or not energia or not nombre_data:
@@ -1494,6 +1489,7 @@ class FlujoDatos(QMainWindow):
                 tiempo = tiempo or '0'
                 concentracion = concentracion or '0'
                 energia = energia or '0'
+                r = r or '0'
                 nombre_data = nombre_data or 'N/A'
             else:
                 # Si se selecciona "Aceptar", simplemente se reintenta la operación
@@ -1507,6 +1503,7 @@ class FlujoDatos(QMainWindow):
             tiempo=tiempo,
             concentracion=concentracion,
             energia=energia,
+            r=r,
             nombre_data=nombre_data
         )
 
@@ -1543,6 +1540,7 @@ class FlujoDatos(QMainWindow):
             tiempo = self.tiempo_u_edit.text()
             concentracion = self.concentracion_u_edit.text()
             energia = self.energia_u_edit.text()
+            r= float(self.r_u_edit.text())
             nombre_data = self.nombre_data_u_edit.text()
 
             if not presion or not temperatura or not tiempo or not concentracion or not energia or not nombre_data:
@@ -1555,6 +1553,7 @@ class FlujoDatos(QMainWindow):
                 "tiempo": tiempo,
                 "concentracion": concentracion,
                 "energia": energia,
+                "r": r,
                 "nombre_data": nombre_data,
             }
 
@@ -1579,8 +1578,8 @@ class FlujoDatos(QMainWindow):
             self.boton_activado()
 
     def seleccionar_unidades(self):
-        columnas = ["id", "presion", "temperatura", "tiempo", "concentracion", "energia", "nombre_data"]
-        elementos_visuales = [self.presion_u_edit, self.temperatura_u_edit, self.tiempo_u_edit, self.concentracion_u_edit, self.energia_u_edit, self.nombre_data_u_edit]
+        columnas = ["id", "presion", "temperatura", "tiempo", "concentracion", "energia", "r", "nombre_data"]
+        elementos_visuales = [self.presion_u_edit, self.temperatura_u_edit, self.tiempo_u_edit, self.concentracion_u_edit, self.energia_u_edit, self.r_u_edit,self.nombre_data_u_edit]
         datos=self.metodos_comunes.seleccionar_datos_visuales(self.tabla_registro_unidades, columnas, elementos_visuales)
         if datos:
             self.statusbar.showMessage(f"Set de Unidades seleccionada id: {datos['id']}", 5000)
@@ -1611,6 +1610,7 @@ class FlujoDatos(QMainWindow):
             "tiempo": self.tiempo_u_edit.text(),
             "concentracion": self.concentracion_u_edit.text(),
             "energia": self.energia_u_edit.text(),
+            "r": self.r_u_edit.text(),
             "nombre_data": self.nombre_data_u_edit.text()
         }
         unidades = self.RegistroUnidadesManejador.consultar(filtros, "like")

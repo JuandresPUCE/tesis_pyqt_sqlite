@@ -451,7 +451,7 @@
           <item>
            <widget class="QTabWidget" name="tabWidget">
             <property name="currentIndex">
-             <number>2</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="data_tab">
              <attribute name="title">
@@ -553,7 +553,7 @@
                  <item>
                   <widget class="QTabWidget" name="tabWidget_2">
                    <property name="currentIndex">
-                    <number>0</number>
+                    <number>3</number>
                    </property>
                    <widget class="QWidget" name="datos_cineticos_tab">
                     <attribute name="title">
@@ -834,18 +834,17 @@
                        </column>
                        <column>
                         <property name="text">
+                         <string>r</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
                          <string>nombre_data</string>
                         </property>
                        </column>
                       </widget>
                      </item>
                     </layout>
-                   </widget>
-                   <widget class="QWidget" name="tab_5">
-                    <attribute name="title">
-                     <string>salida</string>
-                    </attribute>
-                    <layout class="QVBoxLayout" name="verticalLayout_12"/>
                    </widget>
                   </widget>
                  </item>

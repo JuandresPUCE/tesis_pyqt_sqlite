@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_61">
     <item>
      <widget class="QFrame" name="panel_comando_superior">
       <property name="maximumSize">
@@ -968,7 +968,7 @@
             <item>
              <widget class="QTabWidget" name="tabWidget_2">
               <property name="currentIndex">
-               <number>5</number>
+               <number>3</number>
               </property>
               <widget class="QWidget" name="rde_tab">
                <attribute name="title">
@@ -1036,11 +1036,24 @@
                         <property name="spacing">
                          <number>0</number>
                         </property>
+                       </layout>
+                      </item>
+                      <item>
+                       <layout class="QHBoxLayout" name="horizontalLayout_13">
                         <item>
-                         <widget class="QLabel" name="label_20">
-                          <property name="text">
-                           <string>nombre_data</string>
+                         <widget class="QGroupBox" name="groupBox_33">
+                          <property name="title">
+                           <string>Nombre data</string>
                           </property>
+                          <layout class="QVBoxLayout" name="verticalLayout">
+                           <item>
+                            <widget class="QLineEdit" name="nombre_data_rde_edit">
+                             <property name="text">
+                              <string/>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
                          </widget>
                         </item>
                         <item>
@@ -1057,38 +1070,19 @@
                          </spacer>
                         </item>
                         <item>
-                         <widget class="QLineEdit" name="nombre_data_rde_edit">
-                          <property name="text">
-                           <string/>
+                         <widget class="QGroupBox" name="groupBox_35">
+                          <property name="title">
+                           <string>Fecha</string>
                           </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </item>
-                      <item>
-                       <spacer name="horizontalSpacer_13">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>18</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                      <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_13">
-                        <item>
-                         <widget class="QLabel" name="label_29">
-                          <property name="text">
-                           <string>detalle</string>
-                          </property>
+                          <layout class="QVBoxLayout" name="verticalLayout_60">
+                           <item>
+                            <widget class="QLineEdit" name="fecha_rde_edit"/>
+                           </item>
+                          </layout>
                          </widget>
                         </item>
                         <item>
-                         <spacer name="horizontalSpacer_14">
+                         <spacer name="horizontalSpacer_13">
                           <property name="orientation">
                            <enum>Qt::Horizontal</enum>
                           </property>
@@ -1101,49 +1095,21 @@
                          </spacer>
                         </item>
                         <item>
-                         <widget class="QLineEdit" name="detalle_rde_edit"/>
-                        </item>
-                       </layout>
-                      </item>
-                      <item>
-                       <spacer name="horizontalSpacer_15">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>18</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                      <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_14">
-                        <item>
-                         <widget class="QLabel" name="label_30">
-                          <property name="text">
-                           <string>fecha</string>
+                         <widget class="QGroupBox" name="groupBox_34">
+                          <property name="title">
+                           <string>Detalle</string>
                           </property>
+                          <layout class="QVBoxLayout" name="verticalLayout_59">
+                           <item>
+                            <widget class="QLineEdit" name="detalle_rde_edit"/>
+                           </item>
+                          </layout>
                          </widget>
                         </item>
-                        <item>
-                         <spacer name="horizontalSpacer_16">
-                          <property name="orientation">
-                           <enum>Qt::Horizontal</enum>
-                          </property>
-                          <property name="sizeHint" stdset="0">
-                           <size>
-                            <width>40</width>
-                            <height>20</height>
-                           </size>
-                          </property>
-                         </spacer>
-                        </item>
-                        <item>
-                         <widget class="QLineEdit" name="fecha_rde_edit"/>
-                        </item>
                        </layout>
+                      </item>
+                      <item>
+                       <layout class="QHBoxLayout" name="horizontalLayout_14"/>
                       </item>
                      </layout>
                     </item>
@@ -1389,142 +1355,6 @@
                       </spacer>
                      </item>
                      <item>
-                      <layout class="QVBoxLayout" name="verticalLayout_12">
-                       <property name="spacing">
-                        <number>0</number>
-                       </property>
-                       <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_24">
-                         <property name="spacing">
-                          <number>0</number>
-                         </property>
-                         <item>
-                          <widget class="QLabel" name="label_28">
-                           <property name="text">
-                            <string>Especie química</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <spacer name="horizontalSpacer_23">
-                           <property name="orientation">
-                            <enum>Qt::Horizontal</enum>
-                           </property>
-                           <property name="sizeHint" stdset="0">
-                            <size>
-                             <width>28</width>
-                             <height>20</height>
-                            </size>
-                           </property>
-                          </spacer>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="especie_quimica_rq_edit"/>
-                         </item>
-                        </layout>
-                       </item>
-                       <item>
-                        <spacer name="verticalSpacer_9">
-                         <property name="orientation">
-                          <enum>Qt::Vertical</enum>
-                         </property>
-                         <property name="sizeHint" stdset="0">
-                          <size>
-                           <width>20</width>
-                           <height>13</height>
-                          </size>
-                         </property>
-                        </spacer>
-                       </item>
-                       <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_25">
-                         <property name="spacing">
-                          <number>0</number>
-                         </property>
-                         <item>
-                          <widget class="QLabel" name="label_25">
-                           <property name="text">
-                            <string>Fórmula</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <spacer name="horizontalSpacer_24">
-                           <property name="orientation">
-                            <enum>Qt::Horizontal</enum>
-                           </property>
-                           <property name="sizeHint" stdset="0">
-                            <size>
-                             <width>28</width>
-                             <height>20</height>
-                            </size>
-                           </property>
-                          </spacer>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="formula_rq_edit"/>
-                         </item>
-                        </layout>
-                       </item>
-                       <item>
-                        <spacer name="verticalSpacer_14">
-                         <property name="orientation">
-                          <enum>Qt::Vertical</enum>
-                         </property>
-                         <property name="sizeHint" stdset="0">
-                          <size>
-                           <width>20</width>
-                           <height>18</height>
-                          </size>
-                         </property>
-                        </spacer>
-                       </item>
-                       <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_26">
-                         <property name="spacing">
-                          <number>0</number>
-                         </property>
-                         <item>
-                          <widget class="QLabel" name="label_23">
-                           <property name="text">
-                            <string>Coeficiente estequiometrico</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <spacer name="horizontalSpacer_25">
-                           <property name="orientation">
-                            <enum>Qt::Horizontal</enum>
-                           </property>
-                           <property name="sizeHint" stdset="0">
-                            <size>
-                             <width>28</width>
-                             <height>20</height>
-                            </size>
-                           </property>
-                          </spacer>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="coeficiente_estequiometrico_rq_edit"/>
-                         </item>
-                        </layout>
-                       </item>
-                      </layout>
-                     </item>
-                     <item>
-                      <spacer name="horizontalSpacer_26">
-                       <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>40</width>
-                         <height>20</height>
-                        </size>
-                       </property>
-                      </spacer>
-                     </item>
-                     <item>
                       <layout class="QVBoxLayout" name="verticalLayout_13">
                        <property name="spacing">
                         <number>0</number>
@@ -1535,116 +1365,163 @@
                           <number>0</number>
                          </property>
                          <item>
-                          <widget class="QLabel" name="label_26">
-                           <property name="text">
-                            <string>Detalle</string>
-                           </property>
-                          </widget>
+                          <layout class="QVBoxLayout" name="verticalLayout_12"/>
                          </item>
                          <item>
-                          <spacer name="horizontalSpacer_27">
-                           <property name="orientation">
-                            <enum>Qt::Horizontal</enum>
-                           </property>
-                           <property name="sizeHint" stdset="0">
-                            <size>
-                             <width>40</width>
-                             <height>20</height>
-                            </size>
-                           </property>
-                          </spacer>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="detalle_rq_edit"/>
-                         </item>
-                        </layout>
-                       </item>
-                       <item>
-                        <spacer name="verticalSpacer_15">
-                         <property name="orientation">
-                          <enum>Qt::Vertical</enum>
-                         </property>
-                         <property name="sizeHint" stdset="0">
-                          <size>
-                           <width>20</width>
-                           <height>18</height>
-                          </size>
-                         </property>
-                        </spacer>
-                       </item>
-                       <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_28">
-                         <property name="spacing">
-                          <number>0</number>
-                         </property>
-                         <item>
-                          <widget class="QLabel" name="label_24">
-                           <property name="text">
-                            <string>Tipo de especie</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <spacer name="horizontalSpacer_28">
-                           <property name="orientation">
-                            <enum>Qt::Horizontal</enum>
-                           </property>
-                           <property name="sizeHint" stdset="0">
-                            <size>
-                             <width>40</width>
-                             <height>20</height>
-                            </size>
-                           </property>
-                          </spacer>
-                         </item>
-                         <item>
-                          <widget class="QComboBox" name="tipo_especie_rq_box"/>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="tipo_especie_rq_edit"/>
-                         </item>
-                        </layout>
-                       </item>
-                       <item>
-                        <spacer name="verticalSpacer_16">
-                         <property name="orientation">
-                          <enum>Qt::Vertical</enum>
-                         </property>
-                         <property name="sizeHint" stdset="0">
-                          <size>
-                           <width>20</width>
-                           <height>18</height>
-                          </size>
-                         </property>
-                        </spacer>
-                       </item>
-                       <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_29">
-                         <property name="spacing">
-                          <number>0</number>
-                         </property>
-                         <item>
-                          <widget class="QLabel" name="label_27">
-                           <property name="text">
-                            <string>Nombre reacción</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <spacer name="horizontalSpacer_29">
-                           <property name="orientation">
-                            <enum>Qt::Horizontal</enum>
-                           </property>
-                           <property name="sizeHint" stdset="0">
-                            <size>
-                             <width>40</width>
-                             <height>20</height>
-                            </size>
-                           </property>
-                          </spacer>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="nombre_reaccion_rq_edit"/>
+                          <layout class="QVBoxLayout" name="verticalLayout_62">
+                           <item>
+                            <layout class="QHBoxLayout" name="horizontalLayout_24">
+                             <item>
+                              <widget class="QGroupBox" name="groupBox_36">
+                               <property name="title">
+                                <string>Especie química</string>
+                               </property>
+                               <layout class="QVBoxLayout" name="verticalLayout_63">
+                                <item>
+                                 <widget class="QLineEdit" name="especie_quimica_rq_edit"/>
+                                </item>
+                               </layout>
+                              </widget>
+                             </item>
+                             <item>
+                              <spacer name="horizontalSpacer_14">
+                               <property name="orientation">
+                                <enum>Qt::Horizontal</enum>
+                               </property>
+                               <property name="sizeHint" stdset="0">
+                                <size>
+                                 <width>40</width>
+                                 <height>20</height>
+                                </size>
+                               </property>
+                              </spacer>
+                             </item>
+                             <item>
+                              <widget class="QGroupBox" name="groupBox_37">
+                               <property name="title">
+                                <string>Fórmula</string>
+                               </property>
+                               <layout class="QVBoxLayout" name="verticalLayout_64">
+                                <item>
+                                 <widget class="QLineEdit" name="formula_rq_edit"/>
+                                </item>
+                               </layout>
+                              </widget>
+                             </item>
+                            </layout>
+                           </item>
+                           <item>
+                            <spacer name="verticalSpacer_9">
+                             <property name="orientation">
+                              <enum>Qt::Vertical</enum>
+                             </property>
+                             <property name="sizeHint" stdset="0">
+                              <size>
+                               <width>20</width>
+                               <height>40</height>
+                              </size>
+                             </property>
+                            </spacer>
+                           </item>
+                           <item>
+                            <layout class="QHBoxLayout" name="horizontalLayout_25">
+                             <item>
+                              <widget class="QGroupBox" name="groupBox_38">
+                               <property name="title">
+                                <string>Coeficiente estequiometrico</string>
+                               </property>
+                               <layout class="QVBoxLayout" name="verticalLayout_65">
+                                <item>
+                                 <widget class="QLineEdit" name="coeficiente_estequiometrico_rq_edit"/>
+                                </item>
+                               </layout>
+                              </widget>
+                             </item>
+                             <item>
+                              <spacer name="horizontalSpacer_15">
+                               <property name="orientation">
+                                <enum>Qt::Horizontal</enum>
+                               </property>
+                               <property name="sizeHint" stdset="0">
+                                <size>
+                                 <width>40</width>
+                                 <height>20</height>
+                                </size>
+                               </property>
+                              </spacer>
+                             </item>
+                             <item>
+                              <widget class="QGroupBox" name="groupBox_39">
+                               <property name="title">
+                                <string>Detalle</string>
+                               </property>
+                               <layout class="QVBoxLayout" name="verticalLayout_66">
+                                <item>
+                                 <widget class="QLineEdit" name="detalle_rq_edit"/>
+                                </item>
+                               </layout>
+                              </widget>
+                             </item>
+                            </layout>
+                           </item>
+                           <item>
+                            <spacer name="verticalSpacer_14">
+                             <property name="orientation">
+                              <enum>Qt::Vertical</enum>
+                             </property>
+                             <property name="sizeHint" stdset="0">
+                              <size>
+                               <width>20</width>
+                               <height>40</height>
+                              </size>
+                             </property>
+                            </spacer>
+                           </item>
+                           <item>
+                            <layout class="QHBoxLayout" name="horizontalLayout_26">
+                             <item>
+                              <widget class="QGroupBox" name="groupBox_41">
+                               <property name="title">
+                                <string>Nombre reacción</string>
+                               </property>
+                               <layout class="QVBoxLayout" name="verticalLayout_67">
+                                <item>
+                                 <widget class="QLineEdit" name="nombre_reaccion_rq_edit"/>
+                                </item>
+                               </layout>
+                              </widget>
+                             </item>
+                             <item>
+                              <spacer name="horizontalSpacer_16">
+                               <property name="orientation">
+                                <enum>Qt::Horizontal</enum>
+                               </property>
+                               <property name="sizeHint" stdset="0">
+                                <size>
+                                 <width>40</width>
+                                 <height>20</height>
+                                </size>
+                               </property>
+                              </spacer>
+                             </item>
+                             <item>
+                              <widget class="QGroupBox" name="groupBox_40">
+                               <property name="title">
+                                <string>Tipo de especie</string>
+                               </property>
+                               <layout class="QHBoxLayout" name="horizontalLayout_28">
+                                <item>
+                                 <widget class="QComboBox" name="tipo_especie_rq_box"/>
+                                </item>
+                                <item>
+                                 <widget class="QLineEdit" name="tipo_especie_rq_edit"/>
+                                </item>
+                               </layout>
+                              </widget>
+                             </item>
+                            </layout>
+                           </item>
+                          </layout>
                          </item>
                         </layout>
                        </item>
@@ -3493,6 +3370,11 @@
                   <column>
                    <property name="text">
                     <string>energia</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>r</string>
                    </property>
                   </column>
                   <column>

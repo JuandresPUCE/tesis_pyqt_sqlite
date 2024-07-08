@@ -315,7 +315,7 @@ class Ui_MainWindow(object):
         self.registro_unidades_tabla.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         self.registro_unidades_tabla.setShowGrid(False)
         self.registro_unidades_tabla.setObjectName("registro_unidades_tabla")
-        self.registro_unidades_tabla.setColumnCount(7)
+        self.registro_unidades_tabla.setColumnCount(8)
         self.registro_unidades_tabla.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.registro_unidades_tabla.setHorizontalHeaderItem(0, item)
@@ -331,6 +331,8 @@ class Ui_MainWindow(object):
         self.registro_unidades_tabla.setHorizontalHeaderItem(5, item)
         item = QtWidgets.QTableWidgetItem()
         self.registro_unidades_tabla.setHorizontalHeaderItem(6, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.registro_unidades_tabla.setHorizontalHeaderItem(7, item)
         self.registro_unidades_tabla.horizontalHeader().setDefaultSectionSize(70)
         self.registro_unidades_tabla.horizontalHeader().setMinimumSectionSize(50)
         self.registro_unidades_tabla.horizontalHeader().setStretchLastSection(True)
@@ -567,8 +569,8 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(2)
-        self.tabWidget_2.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget_2.setCurrentIndex(3)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -654,6 +656,8 @@ class Ui_MainWindow(object):
         item = self.registro_unidades_tabla.horizontalHeaderItem(5)
         item.setText(_translate("MainWindow", "energia"))
         item = self.registro_unidades_tabla.horizontalHeaderItem(6)
+        item.setText(_translate("MainWindow", "r"))
+        item = self.registro_unidades_tabla.horizontalHeaderItem(7)
         item.setText(_translate("MainWindow", "nombre_data"))
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_4), _translate("MainWindow", "Unidades"))
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_5), _translate("MainWindow", "salida"))

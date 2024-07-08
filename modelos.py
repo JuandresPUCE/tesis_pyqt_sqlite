@@ -84,11 +84,13 @@ class RegistroUnidades(Base):
     tiempo = Column(String)
     concentracion = Column(String)
     energia= Column(String)
+    r = Column(Float)
 
     nombre_data = Column(String)
 
     def __str__(self):
-        return f"id: {self.id}, presion: {self.presion}, temperatura: {self.temperatura}, tiempo: {self.tiempo}, concentracion: {self.concentracion}, energia: {self.energia}, nombre_data: {self.nombre_data}"
+        return f"id: {self.id}, presion: {self.presion}, temperatura: {self.temperatura}, tiempo: {self.tiempo}, concentracion: {self.concentracion}, energia: {self.energia}, r: {self.r}, nombre_data: {self.nombre_data}"
+        
     
     def to_dict(self):
         return {
@@ -98,6 +100,7 @@ class RegistroUnidades(Base):
             'tiempo': self.tiempo,
             'concentracion': self.concentracion,
             'energia': self.energia,
+            'r': self.r,
             'nombre_data': self.nombre_data
         }
 
