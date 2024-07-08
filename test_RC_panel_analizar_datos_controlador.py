@@ -377,6 +377,7 @@ class PanelDataAnalisis(QMainWindow):
             dataframe['concentracion'].iloc[0],  # Suponiendo que el segundo valor retornado es A_0_optimo
             resultado[2],  # Suponiendo que el tercer valor retornado es n_optimo
             resultado[3],
+            resultado[4], #ecuacion
             data_producto=None,
             columna_concentracion_producto=None,
 
@@ -390,6 +391,7 @@ class PanelDataAnalisis(QMainWindow):
             dataframe['concentracion'].iloc[0],  # Suponiendo que el segundo valor retornado es A_0_optimo
             resultado[2],  # Suponiendo que el tercer valor retornado es n_optimo
             resultado[3],
+            resultado[4], #ecuacion
             data_producto=None,
             columna_concentracion_producto=None,
             grafico="MatplotlibWidget", 

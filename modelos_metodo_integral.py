@@ -39,11 +39,15 @@ class MetodoIntegralAjustador:
         # Los valores óptimos de k_ord_n, A_0 y n
         k_ord_n_optimo, A_0_optimo, n_optimo = params
 
+        # Generar la cadena de texto con la ecuación del modelo ajustado
+        ecuacion_texto = f'$A(t) = \\left(\\left({A_0_optimo:.4e}^{{(1-{n_optimo:.4f})}}\\right) - (1-{n_optimo:.4f}) \cdot {k_ord_n_optimo:.4e} \cdot t\\right)^{{\\frac{{1}}{{1-{n_optimo:.4f}}}}}$'
+
         print('k_ord_n_optimo:', k_ord_n_optimo)
         print('A_0_optimo:', A_0_optimo)
         print('n_optimo:', n_optimo)
 
-        return k_ord_n_optimo, A_0_optimo, n_optimo, 'modelo_n_orden'
+
+        return k_ord_n_optimo, A_0_optimo, n_optimo, 'modelo_n_orden' , ecuacion_texto
     
     @staticmethod
     def ajustar_modelo_primer_orden(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, estimacion_inicial_k, n, estimacion_inicial_A0=None):
@@ -62,11 +66,15 @@ class MetodoIntegralAjustador:
         k_ord_1_optimo, A_0_optimo = params
 
         n=1
+
+        # Generar la cadena de texto con la ecuación del modelo ajustado
+        ecuacion_texto = f'$A(t) = {A_0_optimo:.4e} \cdot e^{{-{k_ord_1_optimo:.4e} \cdot t}}$'
+
         print('k_ord_n_optimo:', k_ord_1_optimo)
         print('A_0_optimo:', A_0_optimo)
         print('n_optimo:', n)
 
-        return k_ord_1_optimo, A_0_optimo, n, 'modelo_primer_orden' 
+        return k_ord_1_optimo, A_0_optimo, n, 'modelo_primer_orden' , ecuacion_texto
     
     @staticmethod
     def ajustar_modelo_segundo_orden(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, estimacion_inicial_k,n, estimacion_inicial_A0=None):
@@ -85,11 +93,14 @@ class MetodoIntegralAjustador:
         k_ord_2_optimo, A_0_optimo = params
 
         n=2
+        # Generar la cadena de texto con la ecuación del modelo ajustado
+        ecuacion_texto = (f'$A(t) = \\frac{{1}}{{\\left(\\frac{{1}}{{{A_0_optimo:.4e}}}\\right) + {k_ord_2_optimo:.4e} \cdot t}}$')
+
         print('k_ord_n_optimo:', k_ord_2_optimo)
         print('A_0_optimo:', A_0_optimo)
         print('n_optimo:', n)
 
-        return k_ord_2_optimo, A_0_optimo, n , 'modelo_segundo_orden'
+        return k_ord_2_optimo, A_0_optimo, n , 'modelo_segundo_orden', ecuacion_texto
     
     @staticmethod
     def ajustar_modelo(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, estimacion_inicial_k, n, estimacion_inicial_A0=None):
@@ -120,11 +131,21 @@ class MetodoIntegralAjustador:
         # Los valores óptimos de k_ord_n y A_0
         k_optimo, A_0_optimo = params
 
+        if nombre_modelo == 'modelo_n_orden':
+            ecuacion_texto = f'$A(t) = \\left(\\left({A_0_optimo:.4e}^{{(1-{n:.4e})}}\\right) - (1-{n}) \cdot {k_optimo:.4e} \cdot t\\right)^{{\\frac{{1}}{{1-{n:.4e}}}}}$'
+        elif nombre_modelo == 'modelo_cero_orden':
+            ecuacion_texto = f'$A(t) = {A_0_optimo:.4e} - {k_optimo:.4e} \cdot t$'
+        elif nombre_modelo == 'modelo_primer_orden':
+            ecuacion_texto = f'$A(t) = {A_0_optimo:.4e} \cdot e^{{-{k_optimo:.4e} \cdot t}}$'
+        elif nombre_modelo == 'modelo_segundo_orden':
+            ecuacion_texto = (f'$A(t) = \\frac{{1}}{{\\left(\\frac{{1}}{{{A_0_optimo:.4e}}}\\right) + {k_optimo:.4e} \cdot t}}$')
+            
+
         print('k_ord_n_optimo:', k_optimo)
         print('A_0_optimo:', A_0_optimo)
         print('n_optimo:', n)
 
-        return k_optimo, A_0_optimo, n , nombre_modelo
+        return k_optimo, A_0_optimo, n , nombre_modelo , ecuacion_texto
 #ämetodo ocupado dashboard
 class MetodoIntegralGraficador:
     @staticmethod
@@ -200,7 +221,7 @@ class MetodoIntegralGraficador:
 
 
     @staticmethod
-    def graficar_modelo_salida_opcional_ecuacion(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, k_ord_n_optimo, A_0_optimo, n_optimo, modelo_tipo, data_producto=None, columna_concentracion_producto=None, grafico=None, ax=None, canvas=None):
+    def graficar_modelo_salida_opcional_ecuacion(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, k_ord_n_optimo, A_0_optimo, n_optimo, modelo_tipo,ecuacion_texto=None, data_producto=None, columna_concentracion_producto=None, grafico=None, ax=None, canvas=None):
         # Graficos de los datos
         if grafico == "MatplotlibWidget":
             print("Iniciando graficado con MatplotlibWidget")
@@ -229,8 +250,10 @@ class MetodoIntegralGraficador:
             t_data_graf = data_cinetica[columna_tiempo]
             A_funcion = modelo_funcion(t_data_graf, k_ord_n_optimo, A_0_optimo, n_optimo)
             print(f"Valores calculados para la función {modelo_tipo}:", A_funcion)
-
+           
             ax.plot(t_data_graf, A_funcion, label=f'{modelo_tipo.replace("_", " ")}', color='green')
+            # Agregar la ecuación al gráfico
+            ax.text(0.05, 0.95, ecuacion_texto, transform=ax.transAxes, fontsize=12, verticalalignment='top', bbox=dict(facecolor='white', alpha=0.5))
             ax.set_xlabel('Tiempo')
             ax.set_ylabel('Concentración')
             ax.set_title(f'Modelo de datos: Reactivo limitante vs Tiempo ({modelo_tipo.replace("_", " ")})')
@@ -260,6 +283,7 @@ class MetodoIntegralGraficador:
             A_funcion = modelo_funcion(t_data_graf, k_ord_n_optimo, A_0_optimo, n_optimo)
 
             plt.plot(t_data_graf, A_funcion, label=f'{modelo_tipo.replace("_", " ")}', color='green')
+            plt.text(0.05, 0.95, ecuacion_texto, transform=plt.gca().transAxes, fontsize=12, verticalalignment='top', bbox=dict(facecolor='white', alpha=0.5))
             plt.xlabel('Tiempo')
             plt.ylabel('Concentración')
             plt.title(f'Modelo de datos: A vs Tiempo ({modelo_tipo.replace("_", " ")})')
