@@ -44,6 +44,7 @@ class PanelDataAnalisis(QMainWindow):
         #traer funciones
         self.funciones = Funciones()
         self.modelos_metodo_integral = MetodoIntegralGraficador()
+        self.modelos_metodo_arrhenius = ArrheniusGraficador()
 
         # Inicializar la variable para almacenar el DataFrame
         self.df_datos_cineticos_listos = None
@@ -64,6 +65,10 @@ class PanelDataAnalisis(QMainWindow):
 
         # Definir panel_izquierdo para cambios
         self.panel_izquierdo = self.ui.tab_3
+
+        #mensajes barra de estado
+        self.statusbar=self.ui.statusbar
+        self.statusbar.showMessage("Bienvenido al panel para modelar datos")
 
     def iniciar_iu_elementos(self):
         # Tabla de datos cineticos
@@ -116,9 +121,11 @@ class PanelDataAnalisis(QMainWindow):
         
         # Crear un widget para el gráfico de Matplotlib
         self.matplotlib_widget = MatplotlibWidget(self)
+        self.matplotlib_widget_1 = MatplotlibWidget(self)
 
         # Agregar el widget de Matplotlib al QVBoxLayout vista_grafica
         self.ui.vista_grafica.addWidget(self.matplotlib_widget)
+        self.ui.vista_grafico.addWidget(self.matplotlib_widget_1)
 
         #combo box de ajustar_modelo_box
         self.ajustar_modelo_box=self.ui.ajustar_modelo_box
@@ -160,12 +167,20 @@ class PanelDataAnalisis(QMainWindow):
         self.cambiar_config_btn=self.ui.cambiar_config_btn
         self.cambiar_config_btn.clicked.connect(self.cambiar_config_base_datos)
 
+        #nuevo archivo de base de datos
+        self.nuevo_archivo_btn=self.ui.nuevo_archivo_btn
+        self.nuevo_archivo_btn.clicked.connect(self.crear_base_datos)
+
         #tabla de dataframe
         #self.vista_tabla_df=self.ui.vista_tabla_df
 
         self.vista_tabla_df = DataFrameWidget(self)
         #self.ui.vista_tabla_df.addWidget(self.vista_tabla_df)
         self.ui.vista_tabla_df.layout().addWidget(self.vista_tabla_df)
+
+        self.ea_r_final=self.ui.ea_r_final
+        self.k_0_calculado=self.ui.k_0_calculado
+        self.ln_k_0_calculado=self.ui.ln_k_0_calculado
 
         # funciones de la barra de menu
     def init_panel_menu(self):
@@ -359,7 +374,8 @@ class PanelDataAnalisis(QMainWindow):
             else:
                 resultado = metodo(dataframe, "tiempo", "concentracion", estimacion_inicial_k, estimacion_inicial_n)
 
-            QMessageBox.information(self, "Resultado", f"El modelo se ajustó. Resultado: {resultado}", QMessageBox.StandardButton.Ok)
+            QMessageBox.information(self, "Resultado", f"El modelo se ajustó. Resultado: {resultado[0],resultado[2],resultado[3]}", QMessageBox.StandardButton.Ok)
+            self.statusbar.showMessage(f"El modelo se ajustó. Resultado: {resultado[0],resultado[2],resultado[3]}",5000)
             print(resultado)
             #colocar en un box para enviar a la base de datos
             self.reactivo_limitante_calculado.setText(str(resultado[1]))
@@ -537,66 +553,125 @@ class PanelDataAnalisis(QMainWindow):
             self.matplotlib_widget.canvas.draw()
         except KeyError as e:
             print(f"Error: {e}. La columna no existe en el DataFrame.")
-            
+                
     def calcular_arrenius(self):
-        # Obtener los datos de la base de datos del combo box registro_datos_box
-        filtros = {'nombre_data': self.registro_datos_box.currentText()}
-        #consultar datos experimentales
-        resultados= self.RegistroDataExperimentalManejador.consultar(filtros=filtros)
-        # Verificar si se encontraron resultados
-        if resultados:
-            filtros_datos_salida= {'id_registro_data_experimental': resultados[0].id}
-            #consultar datos en condiciones iniciales
-            resultados_a_ci = self.CondicionesInicialesManejador.consultar(filtros=filtros)
-            #pasar a dataframe las condiciones iniciales
-            df_resultados_a_ci = pd.DataFrame.from_records([condicion.__dict__ for condicion in resultados_a_ci])
-            #imprimir condiciones iniciales
-            print("Condiciones iniciales:", df_resultados_a_ci[['id', 'temperatura']])
-            #consultar unidades
-            resultados_unidades = self.RegistroUnidadesManejador.consultar(filtros=filtros)
-            #pasar a dataframe las unidades
-            df_resultados_unidades = pd.DataFrame.from_records([condicion.__dict__ for condicion in resultados_unidades])
-            #imprimir unidades
-            print("Unidades:", df_resultados_unidades)
+        try:
+            # Obtener los datos de la base de datos del combo box registro_datos_box
+            filtros = {'nombre_data': self.registro_datos_box.currentText()}
+            #consultar datos experimentales
+            resultados= self.RegistroDataExperimentalManejador.consultar(filtros=filtros)
+            # Verificar si se encontraron resultados
+            if resultados:
+                filtros_datos_salida= {'id_registro_data_experimental': resultados[0].id}
+                #consultar datos en condiciones iniciales
+                resultados_a_ci = self.CondicionesInicialesManejador.consultar(filtros=filtros)
+                #pasar a dataframe las condiciones iniciales
+                df_resultados_a_ci = pd.DataFrame.from_records([condicion.__dict__ for condicion in resultados_a_ci])
+                #imprimir condiciones iniciales
+                print("Condiciones iniciales:", df_resultados_a_ci[['id', 'temperatura']])
+                #consultar unidades
+                resultados_unidades = self.RegistroUnidadesManejador.consultar(filtros=filtros)
+                #pasar a dataframe las unidades
+                df_resultados_unidades = pd.DataFrame.from_records([condicion.__dict__ for condicion in resultados_unidades])
+                #imprimir unidades
+                print("Unidades:", df_resultados_unidades)
+
+                fitro_salida={'id_nombre_data': resultados[0].id,'id_condiciones_iniciales': df_resultados_a_ci["id"].to_string(index=False)}
+                print(fitro_salida)
+                resultados_ds = self.RegistroDatosSalidaManejador.consultar(filtros=fitro_salida)
+                df_resultados_ds = pd.DataFrame.from_records([condicion.__dict__ for condicion in resultados_ds])
+                print("Datos Salida:", df_resultados_ds)
+                print("CI T :", df_resultados_a_ci['temperatura'])
+                print("Datos Salida:", df_resultados_ds['constante_cinetica'])
+                #return resultados[0].id, print(resultados[0].id)
+                # Primero, resetea el índice de las Series para evitar problemas de alineación.
+                temperatura_reset = df_resultados_a_ci['temperatura'].reset_index(drop=True)
+                constante_cinetica_reset = df_resultados_ds['constante_cinetica'].reset_index(drop=True)
+
+                # Luego, concatena las dos Series en un nuevo DataFrame.
+                df_combinado = pd.concat([temperatura_reset, constante_cinetica_reset], axis=1)
+
+                # Renombra las columnas del nuevo DataFrame para reflejar el contenido.
+                df_combinado.columns = ['temperatura', 'constante_cinetica']
+                df_combinado.dropna(inplace=True)
+
+                # Finalmente, imprime el DataFrame combinado.
+                print(df_combinado.to_string(index=False))
+                
+                #ejecutar modelo de n puntos
+                resultado=ArrheniusAjustador.ajustar_modelo_arrhenius_lineal_multiple(df_combinado, "temperatura", "constante_cinetica","C")
+
+                # Imprimir el resultado
+                print("El resultado de la energía de activación es:", resultado)
+                
+                # Imprimir el resultado en la barra de estado
+
+                self.statusbar.showMessage(f"El resultado de la energía de activación es: K0={resultado[0]} ln(K0)={resultado[1]} EA/R={resultado[2]} ",5000)
 
 
-            fitro_salida={'id_nombre_data': resultados[0].id,'id_condiciones_iniciales': df_resultados_a_ci["id"].to_string(index=False)}
-            print(fitro_salida)
-            resultados_ds = self.RegistroDatosSalidaManejador.consultar(filtros=fitro_salida)
-            df_resultados_ds = pd.DataFrame.from_records([condicion.__dict__ for condicion in resultados_ds])
-            print("Datos Salida:", df_resultados_ds)
-            print("CI T :", df_resultados_a_ci['temperatura'])
-            print("Datos Salida:", df_resultados_ds['constante_cinetica'])
-            #return resultados[0].id, print(resultados[0].id)
-            # Primero, resetea el índice de las Series para evitar problemas de alineación.
-            temperatura_reset = df_resultados_a_ci['temperatura'].reset_index(drop=True)
-            constante_cinetica_reset = df_resultados_ds['constante_cinetica'].reset_index(drop=True)
+                self.vista_tabla_df.set_data(df_combinado)
+                #asignar valores a los line edit
 
-            # Luego, concatena las dos Series en un nuevo DataFrame.
-            df_combinado = pd.concat([temperatura_reset, constante_cinetica_reset], axis=1)
+                self.k_0_calculado.setText(str(resultado[0]))
+                self.ln_k_0_calculado.setText(str(resultado[1]))
+                self.ea_r_final.setText(str(resultado[2]))
 
-            # Renombra las columnas del nuevo DataFrame para reflejar el contenido.
-            df_combinado.columns = ['temperatura', 'constante_cinetica']
-            df_combinado.dropna(inplace=True)
+                # Limpiar la figura por completo
+                self.matplotlib_widget_1.canvas.figure.clf()
+                # Crear un nuevo conjunto de ejes
+                self.matplotlib_widget_1.ax = self.matplotlib_widget_1.canvas.figure.subplots()
+                self.escala_temperatura='C'
 
-            # Finalmente, imprime el DataFrame combinado.
-            print(df_combinado.to_string(index=False))
+                 # Convertir temperaturas a absolutas y luego a recíprocas
+                if self.escala_temperatura == 'C':
+                    T_absoluta = df_combinado['temperatura'] + 273.15  # Convertir a Kelvin
+                elif self.escala_temperatura == 'F':
+                    T_absoluta = df_combinado['temperatura'] + 459.67  # Convertir a Kelvin
+                elif self.escala_temperatura == 'K':
+                    T_absoluta = df_combinado['temperatura']
+                elif self.escala_temperatura == 'R':
+                    T_absoluta = df_combinado['temperatura']  # Convertir a Kelvin
+                else:
+                    raise ValueError("Escala de temperatura no reconocida. Elija entre 'C', 'F', 'K' o 'R'.")
+                reciproco_T = 1 / T_absoluta
+                ln_k = np.log(df_combinado['constante_cinetica'])
+                print(ln_k)
+                print(reciproco_T)
+
+
+                ArrheniusGraficador.graficar_modelo_arrhenius_lineal_multiple(
+                    data_cinetica=df_combinado,
+                    columna_temperatura='temperatura',
+                    columna_contante_cinetica='constante_cinetica',
+                    escala_temperatura=self.escala_temperatura,
+                    k_0=resultado[0],
+                    energia_activacion_R=resultado[2],
+                    grafico='MatplotlibWidget',
+                    ax=self.matplotlib_widget_1.ax,
+                    canvas=self.matplotlib_widget_1.canvas
+                )
+
+                # Configurar los límites y las etiquetas de los ejes
+                self.matplotlib_widget_1.ax.set_xlim([reciproco_T.min(), reciproco_T.max()])
+                self.matplotlib_widget_1.ax.set_ylim([ln_k.min(), ln_k.max()])
+                self.matplotlib_widget_1.ax.set_xlabel("1/T (K⁻¹)")
+                self.matplotlib_widget_1.ax.set_ylabel("ln(k)")
+                # Actualizar el gráfico
+                self.matplotlib_widget_1.canvas.draw()
+
+            else:
+                logging.warning(f"No se encontró un registro con el nombre: {self.registro_datos_box.currentText()}")
+                return None
             
-            #ejecutar modelo de n puntos
-            resultado=ArrheniusAjustador.ajustar_modelo_arrhenius_lineal_multiple(df_combinado, "temperatura", "constante_cinetica","C")
+        except Exception as e:
+            logging.error(f"Error al calcular la energía de activación: {str(e)}")
+            return None     
 
-            # Imprimir el resultado
-            print("El resultado de la energía de activación es:", resultado)
-
-
-            self.vista_tabla_df.set_data(df_combinado)
-                   
-        else:
-            logging.warning(f"No se encontró un registro con el nombre: {self.registro_datos_box.currentText()}")
-            return None
-        
     def cambiar_config_base_datos(self):
         self.metodos_comunes.cambiar_configuracion_db()
+
+    def crear_base_datos(self):
+        self.metodos_comunes.nueva_configuracion_db()
 
     def actualizar_datos_salida(self):
 

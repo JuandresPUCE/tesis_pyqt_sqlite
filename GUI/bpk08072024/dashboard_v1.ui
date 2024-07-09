@@ -451,7 +451,7 @@
           <item>
            <widget class="QTabWidget" name="tabWidget">
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="data_tab">
              <attribute name="title">
@@ -528,24 +528,24 @@
                      <number>0</number>
                     </property>
                     <item>
+                     <widget class="QLabel" name="label_3">
+                      <property name="maximumSize">
+                       <size>
+                        <width>16777215</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>Grafica de datos</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
                      <layout class="QVBoxLayout" name="vista_grafica">
                       <property name="spacing">
                        <number>0</number>
                       </property>
                      </layout>
-                    </item>
-                    <item>
-                     <spacer name="verticalSpacer_3">
-                      <property name="orientation">
-                       <enum>Qt::Vertical</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>20</width>
-                        <height>40</height>
-                       </size>
-                      </property>
-                     </spacer>
                     </item>
                    </layout>
                   </widget>
@@ -553,7 +553,7 @@
                  <item>
                   <widget class="QTabWidget" name="tabWidget_2">
                    <property name="currentIndex">
-                    <number>3</number>
+                    <number>4</number>
                    </property>
                    <widget class="QWidget" name="datos_cineticos_tab">
                     <attribute name="title">
@@ -834,17 +834,18 @@
                        </column>
                        <column>
                         <property name="text">
-                         <string>r</string>
-                        </property>
-                       </column>
-                       <column>
-                        <property name="text">
                          <string>nombre_data</string>
                         </property>
                        </column>
                       </widget>
                      </item>
                     </layout>
+                   </widget>
+                   <widget class="QWidget" name="tab_5">
+                    <attribute name="title">
+                     <string>salida</string>
+                    </attribute>
+                    <layout class="QVBoxLayout" name="verticalLayout_12"/>
                    </widget>
                   </widget>
                  </item>
@@ -1346,28 +1347,6 @@
              <attribute name="title">
               <string>Arrenius</string>
              </attribute>
-             <widget class="QWidget" name="verticalLayoutWidget">
-              <property name="geometry">
-               <rect>
-                <x>90</x>
-                <y>40</y>
-                <width>511</width>
-                <height>161</height>
-               </rect>
-              </property>
-              <layout class="QVBoxLayout" name="vista_grafico"/>
-             </widget>
-             <widget class="QWidget" name="verticalLayoutWidget_2">
-              <property name="geometry">
-               <rect>
-                <x>90</x>
-                <y>270</y>
-                <width>511</width>
-                <height>161</height>
-               </rect>
-              </property>
-              <layout class="QVBoxLayout" name="vista_tabla_df"/>
-             </widget>
             </widget>
             <widget class="QWidget" name="tab_3">
              <attribute name="title">

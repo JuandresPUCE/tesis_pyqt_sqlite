@@ -221,7 +221,7 @@ class MetodoIntegralGraficador:
 
 
     @staticmethod
-    def graficar_modelo_salida_opcional_ecuacion(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, k_ord_n_optimo, A_0_optimo, n_optimo, modelo_tipo,ecuacion_texto=None, data_producto=None, columna_concentracion_producto=None, grafico=None, ax=None, canvas=None):
+    def graficar_modelo_salida_opcional_ecuacion(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, k_ord_n_optimo, A_0_optimo, n_optimo, modelo_tipo, ecuacion_texto=None, data_producto=None, columna_concentracion_producto=None, grafico=None, ax=None, canvas=None):
         # Graficos de los datos
         if grafico == "MatplotlibWidget":
             print("Iniciando graficado con MatplotlibWidget")
@@ -253,12 +253,11 @@ class MetodoIntegralGraficador:
            
             ax.plot(t_data_graf, A_funcion, label=f'{modelo_tipo.replace("_", " ")}', color='green')
             # Agregar la ecuación al gráfico
-            ax.text(0.05, 0.95, ecuacion_texto, transform=ax.transAxes, fontsize=12, verticalalignment='top', bbox=dict(facecolor='white', alpha=0.5))
+            ax.text(0.02, 0.5, ecuacion_texto, transform=ax.transAxes, fontsize=10, verticalalignment='top', bbox=dict(facecolor='white', alpha=0.5))
             ax.set_xlabel('Tiempo')
             ax.set_ylabel('Concentración')
             ax.set_title(f'Modelo de datos: Reactivo limitante vs Tiempo ({modelo_tipo.replace("_", " ")})')
-            ax.legend()
-            
+            ax.legend()                       
             canvas.draw()  # Actualizar el lienzo con el nuevo gráfico
         else:
             plt.plot(data_cinetica[columna_tiempo], data_cinetica[columna_concentracion_reactivo_limitante], linestyle=':', label='A', color='orange', linewidth=5)
@@ -283,7 +282,8 @@ class MetodoIntegralGraficador:
             A_funcion = modelo_funcion(t_data_graf, k_ord_n_optimo, A_0_optimo, n_optimo)
 
             plt.plot(t_data_graf, A_funcion, label=f'{modelo_tipo.replace("_", " ")}', color='green')
-            plt.text(0.05, 0.95, ecuacion_texto, transform=plt.gca().transAxes, fontsize=12, verticalalignment='top', bbox=dict(facecolor='white', alpha=0.5))
+            # Agregar la ecuación al gráfico
+            plt.text(0.02, 0.5, ecuacion_texto, transform=plt.gca().transAxes, fontsize=10, verticalalignment='top', bbox=dict(facecolor='white', alpha=0.5))
             plt.xlabel('Tiempo')
             plt.ylabel('Concentración')
             plt.title(f'Modelo de datos: A vs Tiempo ({modelo_tipo.replace("_", " ")})')

@@ -253,14 +253,25 @@ class Servicios:
         if fileName:
             self.actualizar_configuracion_db(fileName)
 
+    def nueva_configuracion_db(self):
+        # Abre un diálogo para seleccionar o crear un nuevo archivo de base de datos
+        fileName, _ = QFileDialog.getSaveFileName(self.parent, "Guardar como...", "", "SQLite Files (*.db)")
+        if fileName:
+            self.actualizar_configuracion_db(fileName)
+
     def actualizar_configuracion_db(self, nueva_ruta):
-        # Define la ruta completa al archivo config.json dentro de la carpeta main/config
-        config_path = os.path.join('config', 'config.json')
-        # Actualiza el archivo JSON con la nueva ruta
-        config = {"db_path": nueva_ruta}
-        with open(config_path, "w") as f:
-            json.dump(config, f)
-        QMessageBox.information(self.parent, "Configuración Actualizada", "La ruta de la base de datos ha sido actualizada.")
+            # Define la ruta completa al archivo config.json dentro de la carpeta config
+            config_path = os.path.join(os.getcwd(), 'config', 'config.json')
+            
+            # Actualiza el archivo JSON con la nueva ruta
+            config = {"db_path": nueva_ruta}
+            
+            try:
+                with open(config_path, "w") as f:
+                    json.dump(config, f)
+                QMessageBox.information(self.parent, "Configuración Actualizada", "La ruta de la base de datos ha sido actualizada.")
+            except Exception as e:
+                QMessageBox.critical(self.parent, "Error", f"No se pudo actualizar la configuración: {str(e)}")
 
     def actualizar_valor_celda(self, tabla, manejador, fila, columna):
         try:
