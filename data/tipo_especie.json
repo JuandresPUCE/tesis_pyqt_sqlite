@@ -4,7 +4,6 @@
         {"id": 2, "Descripcion": "reactivo", "Color": "blue"},
         {"id": 3, "Descripcion": "producto", "Color": "green"},
         {"id": 4, "Descripcion": "inerte", "Color": "gray"},
-        {"id": 5, "Descripcion": "catalizador", "Color": "red"},
-        {"id": 6, "Descripcion": "otro", "Color": "purple"}
+        {"id": 5, "Descripcion": "catalizador", "Color": "red"}
     ]
 }

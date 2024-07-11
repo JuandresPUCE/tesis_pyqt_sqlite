@@ -1,0 +1,139 @@
+import sys
+from PyQt6.QtWidgets import *
+from PyQt6.QtGui import *
+from PyQt6.QtCore import *
+from PyQt6 import QtCore, QtWidgets
+from PyQt6.uic import *
+from modelos import *
+from repositorios import *
+import logging
+from datetime import datetime
+import json
+import os
+import pandas as pd
+
+
+#importe ui de la ventana principal
+from flujo_datos_vista import Ui_MainWindow
+from funciones import *
+
+# metodos comunes
+from servicios import *
+
+class FlujoDatos(QMainWindow):
+    def __init__(self,parent=None):
+        self.parent = parent
+        super(FlujoDatos, self).__init__(parent)
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+
+        #mensajes barra de estado
+        self.statusbar=self.ui.statusbar
+        self.statusbar.showMessage("Bienvenido al sistema de flujo de datos")
+    
+        # Crear instancias de los manejadores de la base de datos
+        self.manejadores_base()
+        # Crear un atajo para la tecla F5
+        shortcut = QShortcut(QKeySequence.StandardKey.Refresh, self)
+        #shortcut.activated.connect(self.refrescar_datos_tabla)
+        self.iniciar_ui_menu_derecho()
+
+        #oculta elementos de la vista
+        self.ocultar_elementos_vista()
+
+        #inicializa elementos gráficos                
+        self.init_ui_elementos_rde()
+        self.iniciar_control_botones_experimental()
+    
+    # manejadores de base de datos
+    def manejadores_base(self):       
+        
+        self.RegistroDataExperimentalManejador = RegistroDataExperimentalManejador()
+        self.CondicionesInicialesManejador = CondicionesInicialesManejador()
+        self.DatosCineticosManejador = DatosCineticosManejador()
+        self.ReaccionQuimicaManejador = ReaccionQuimicaManejador()
+        self.RegistroUnidadesManejador = RegistroUnidadesManejador()
+        self.RegistroDatosSalidaManejador = RegistroDatosSalidaManejador()
+        self.metodos_comunes = Servicios(self)
+    
+    #oculta elementos de la vista
+    def ocultar_elementos_vista(self):
+        # Lista de nombres de elementos a ocultar
+        elementos_ocultar = ['groupBox_33', 'nombre_data_rde_edit','nombre_reaccion_rq_edit','groupBox_41','nombre_data_ci_edit','label_17','label_8','nombre_data_dc_edit','label_9','nombre_reaccion_dc_edit','groupBox_14','groupBox_2', 'groupBox_3', 'groupBox_4', 'groupBox_5','groupBox_23','groupBox_21','groupBox_17','groupBox_22','groupBox_24','groupBox_25','groupBox_26','groupBox_29','groupBox_30','groupBox_31','groupBox_32']
+        for nombre in elementos_ocultar:
+            getattr(self.ui, nombre).hide()
+    
+    #inicializa elementos gráficos menu derecho
+    def iniciar_ui_menu_derecho(self):
+        #nombre_data_general_edit
+        self.nombre_data = self.ui.nombre_data_general_edit
+        self.id_nombre_data_general_edit = self.ui.id_nombre_data_general_edit
+        #nombre_reaccion_dc_edit
+        self.nombre_reaccion = self.ui.nombre_reaccion_general_edit
+        self.nombre_data_experimental = self.ui.nombre_data_general_edit
+        self.nombre_data_ci = self.ui.nombre_data_general_edit
+        self.nombre_reaccion_rq = self.ui.nombre_reaccion_general_edit
+    
+    def init_ui_elementos_rde(self):
+        # Datos experimentales
+        #nombre_data_rde_edit
+        #self.nombre_data_experimental = self.ui.nombre_data_rde_edit
+        #nombre_data_general_edit
+        self.nombre_data_experimental = self.ui.nombre_data_general_edit
+        self.fecha_data_experimental = self.ui.fecha_rde_edit
+        self.detalle_data_experimental = self.ui.detalle_rde_edit
+        
+        # Botones de datos experimentales
+        self.agregar_rde_btn = self.ui.agregar_rde_btn
+        self.actualizar_rde_btn = self.ui.actualizar_rde_btn
+        self.seleccionar_rde_btn = self.ui.seleccionar_rde_btn
+        self.buscar_rde_btn = self.ui.buscar_rde_btn
+        self.limpiar_rde_btn = self.ui.limpiar_rde_btn
+        self.borrar_rde_btn = self.ui.borrar_rde_btn
+    
+    #conexiones de botones rde
+    def iniciar_control_botones_experimental(self):
+        #self.agregar_rde_btn.clicked.connect(self.agregar_registro_data_experimental)
+        #self.actualizar_rde_btn.clicked.connect(self.actualizar_registro_data_experimental)
+        #self.seleccionar_rde_btn.clicked.connect(self.seleccionar_registro_data_experimental)
+        #self.borrar_rde_btn.clicked.connect(self.borrar_registro_data_experimental)
+        #self.limpiar_rde_btn.clicked.connect(self.limpiar_formulario_registro_data_experimental)
+        self.buscar_rde_btn.clicked.connect(self.buscar_registros_id)
+
+        self.nombre_data_experimental.textChanged.connect(self.buscar_registros_id)
+        self.nombre_data_experimental.editingFinished.connect(self.buscar_registros_id)
+    
+    #metodos registros
+    #buscar registros
+    def buscar_registros(self):
+        filtros = {
+            "nombre_data": self.nombre_data_experimental.text(),
+            "fecha": self.fecha_data_experimental.text(),
+            "detalle": self.detalle_data_experimental.text(),
+        }
+        registros = self.RegistroDataExperimentalManejador.consultar(filtros, "like")
+        #self.mostrar_registros(registros)
+        self.statusbar.showMessage("Bienvenido al sistema de flujo de datos")
+
+    def buscar_registros_id(self):
+        filtros = {
+            "nombre_data": self.nombre_data_experimental.text(),
+        }
+        registros = self.RegistroDataExperimentalManejador.consultar(filtros=filtros)
+        if registros:  # Verifica si la lista no está vacía
+            # Accede al atributo 'id' del primer registro directamente
+            self.statusbar.showMessage(f"{str(registros[0].id)}")
+            self.id_nombre_data_general_edit.setText(str(registros[0].id))
+        else:
+            self.statusbar.showMessage("No se encontraron registros.")
+            self.id_nombre_data_general_edit.setText("")
+        
+
+
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = FlujoDatos()
+    window.show()
+    sys.exit(app.exec())

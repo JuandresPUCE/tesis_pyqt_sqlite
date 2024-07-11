@@ -104,11 +104,12 @@ class FlujoDatos(QMainWindow):
         #nombre_data_general_edit
         self.nombre_data = self.ui.nombre_data_general_edit
         #nombre_reaccion_dc_edit
+        self.id_nombre_data_general_edit = self.ui.id_nombre_data_general_edit
         self.nombre_reaccion = self.ui.nombre_reaccion_general_edit
         self.nombre_data_experimental = self.ui.nombre_data_general_edit
         self.nombre_data_ci = self.ui.nombre_data_general_edit
         self.nombre_reaccion_rq = self.ui.nombre_reaccion_general_edit
-
+#revisar esta parte
         #configuracion unidades
         self.nombre_data_u_edit = self.ui.nombre_data_general_edit
         #data salida

@@ -52,7 +52,7 @@ class RegistroDataExperimental(Base):
     __tablename__ = "registro_data_experimental"
 
     id = Column(Integer, primary_key=True)
-    nombre_data = Column(String)
+    nombre_data = Column(String, unique=True)
     fecha = Column(String)
     detalle = Column(String)
 
@@ -85,8 +85,7 @@ class RegistroUnidades(Base):
     concentracion = Column(String)
     energia= Column(String)
     r = Column(Float)
-
-    nombre_data = Column(String)
+    nombre_data = Column(String, unique=True)
 
     def __str__(self):
         return f"id: {self.id}, presion: {self.presion}, temperatura: {self.temperatura}, tiempo: {self.tiempo}, concentracion: {self.concentracion}, energia: {self.energia}, r: {self.r}, nombre_data: {self.nombre_data}"

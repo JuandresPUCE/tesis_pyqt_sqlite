@@ -288,8 +288,10 @@ class Servicios:
 
             # Verificar el tipo de datos esperado según el encabezado de la columna
             header_text = tabla.horizontalHeaderItem(columna).text().lower()
-            if header_text in ['temperatura', 'tiempo', 'presion_total', 'presion_parcial', 'fraccion_molar',
-                               'concentracion', 'otra_propiedad', 'conversion_reactivo_limitante','coeficiente_estequiometrico','r']:
+            columnas_a_convertir = ['temperatura', 'tiempo', 'presion_total', 'presion_parcial', 'fraccion_molar',
+                                    'concentracion', 'otra_propiedad', 'conversion_reactivo_limitante', 'coeficiente_estequiometrico', 'r']
+
+            if header_text in columnas_a_convertir:
                 # Verificar si el valor puede convertirse a float
                 try:
                     nuevo_valor = float(nuevo_valor)
@@ -317,7 +319,6 @@ class Servicios:
         except Exception as e:
             logging.error(f"Error al actualizar el valor de la celda: {e}")
             QMessageBox.critical(self.parent, "Error", f"Se produjo un error al actualizar el valor de la celda: {e}", QMessageBox.StandardButton.Ok)
-
 
 # refactor json
 
@@ -377,3 +378,90 @@ class Servicios:
             QMessageBox.warning(self.parent, "Advertencia", f"Datos inválidos o incompletos: {e}")
         except Exception as e:
             QMessageBox.critical(self.parent, "Error", f"Se produjo un error: {e}")
+
+    def validar_convertir_campos(self, columnas, elementos_visuales, tipos):
+        datos = {}
+        for columna, elemento_visual, tipo in zip(columnas, elementos_visuales, tipos):
+            valor = elemento_visual.text().strip()
+            if not valor:
+                raise ValueError(f"El campo '{columna}' está vacío. Por favor, llénelo.")
+            if tipo == int:
+                valor = int(valor)
+            elif tipo == float:
+                valor = float(valor)
+            datos[columna] = valor
+        return datos
+    
+    def actualizar_datos_db(self, tabla, columnas, elementos_visuales, tipos, manejador, clase_objeto, limpiar_func, buscar_func):
+        try:
+            # Obtener el ID del registro seleccionado
+            fila_seleccionada = tabla.currentRow()  # O usar la tabla correspondiente
+            if fila_seleccionada == -1:
+                raise ValueError("Seleccione una fila para actualizar")
+
+            id = int(tabla.item(fila_seleccionada, 0).text().strip())  # Ajustar según tu tabla y modelo
+
+            # Validar y obtener los datos actualizados
+            datos = self.validar_convertir_campos(columnas, elementos_visuales, tipos)
+
+            # Intentar actualizar el registro en la base de datos
+            actualizar_resultado = manejador.actualizar(id, datos)
+
+            if actualizar_resultado:
+                QMessageBox.information(self.parent, "Información", f"{clase_objeto.__name__} actualizado correctamente", QMessageBox.StandardButton.Ok)
+                limpiar_func()
+                buscar_func()  # Refrescar la tabla con los nuevos datos
+            else:
+                QMessageBox.critical(self.parent, "Error", f"Hubo un problema al actualizar el {clase_objeto.__name__}", QMessageBox.StandardButton.Ok)
+
+        except ValueError as ve:
+            QMessageBox.warning(self.parent, "Advertencia", f"Datos inválidos o incompletos: {ve}", QMessageBox.StandardButton.Ok)
+
+        except Exception as e:
+            logging.error(f"Error al actualizar el {clase_objeto.__name__}: {str(e)}")
+            QMessageBox.critical(self.parent, "Error", f"Se produjo un error al actualizar el {clase_objeto.__name__}: {e}", QMessageBox.StandardButton.Ok)
+
+    def agregar_datos_db(self, columnas, elementos_visuales, tipos, manejador, clase_objeto, limpiar_func, buscar_func):
+        try:
+            # Validar y obtener los datos
+            datos = self.validar_convertir_campos(columnas, elementos_visuales, tipos)
+
+            # Crear el objeto de la clase correspondiente
+            objeto = clase_objeto(**datos)
+            print(f"Intentando agregar {clase_objeto.__name__}:", objeto)
+
+            # Intentar agregar el registro a la base de datos
+            agregar_resultado = manejador.agregar(objeto)
+
+            if agregar_resultado:
+                QMessageBox.information(self.parent, "Información", f"{clase_objeto.__name__} agregado correctamente", QMessageBox.StandardButton.Ok)
+                limpiar_func()
+                buscar_func()
+            else:
+                QMessageBox.critical(self.parent, "Error", f"Hubo un problema al agregar el {clase_objeto.__name__}", QMessageBox.StandardButton.Ok)
+
+        except ValueError as ve:
+            QMessageBox.warning(self.parent, "Advertencia", f"Datos inválidos o incompletos: {ve}", QMessageBox.StandardButton.Ok)
+
+        except Exception as e:
+            QMessageBox.critical(self.parent, "Error", f"Se produjo un error al agregar el {clase_objeto.__name__}: {e}", QMessageBox.StandardButton.Ok)
+    
+    def validar_filtros(self, columnas, elementos_visuales, aplicar_strip=None):
+        filtros = {}
+        for i, (columna, elemento_visual) in enumerate(zip(columnas, elementos_visuales)):
+            if aplicar_strip and aplicar_strip[i]:
+                valor = elemento_visual.text().strip()
+            else:
+                valor = elemento_visual.text()
+            if valor:
+                filtros[columna] = valor
+        return filtros
+
+    def buscar_datos_db(self, columnas, elementos_visuales, aplicar_strip, manejador, mostrar_func, like=False):
+        try:
+            filtros = self.validar_filtros(columnas, elementos_visuales, aplicar_strip)
+            modo_busqueda = "like" if like else "="
+            registros = manejador.consultar(filtros, modo_busqueda)
+            mostrar_func(registros)
+        except Exception as e:
+            QMessageBox.critical(self.parent, "Error", f"Se produjo un error al buscar los datos: {e}", QMessageBox.StandardButton.Ok)
