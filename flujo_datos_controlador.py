@@ -149,6 +149,7 @@ class FlujoDatos(QMainWindow):
         self.calculo2=self.ui.marcar_coeficiente_producto_btn
         self.calculo3=self.ui.marcar_coeficiente_reactivo_btn
         self.calculo4=self.ui.calcular_xa
+
         self.calculo5=self.ui.calcular_a
         self.calculo6=self.ui.calcular_producto
         self.calculo7=self.ui.conversion_gas_epsilon_a
@@ -186,7 +187,8 @@ class FlujoDatos(QMainWindow):
         self.calculo1.clicked.connect(self.marcar_quimico_inicial)
         self.calculo2.clicked.connect(self.marcar_coeficiente)
         self.calculo3.clicked.connect(self.marcar_coeficiente)
-        self.calculo4.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_producto)
+        self.calculo4.clicked.connect(self.calcular_conversion)
+
         self.calculo5.clicked.connect(self.calcular_concentracion_reactivo_limitante_dado_conversion)
         self.calculo6.clicked.connect(self.calcular_concentracion_producto_dado_conversion)
         self.calculo7.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_epsilon_a_presion)
@@ -582,8 +584,10 @@ class FlujoDatos(QMainWindow):
             elementos_visuales = [self.especie_quimica_rq, self.formula_rq, self.coeficiente_estequiometro_rq, self.detalle_rq, self.tipo_especie_rq, self.nombre_reaccion_rq]
             tipos = [str, str, float, str, str, str]
             self.metodos_comunes.agregar_datos_db(columnas=columnas,elementos_visuales=elementos_visuales,tipos=tipos,manejador=self.ReaccionQuimicaManejador,clase_objeto=ReaccionQuimica,limpiar_func=self.limpiar_formulario_rq_agregar,buscar_func=self.buscar_reaccion_quimica)
+            self.filtrar_reaccion_quimica()
         except ValueError as e:
             self.statusbar.showMessage(f"Datos inválidos o incompletos: {e}", 5000)
+            
         
     def actualizar_reaccion_quimica(self):
         try:
@@ -591,6 +595,7 @@ class FlujoDatos(QMainWindow):
             elementos_visuales = [self.especie_quimica_rq, self.formula_rq, self.coeficiente_estequiometro_rq, self.detalle_rq, self.tipo_especie_rq, self.nombre_reaccion_rq]
             tipos = [str, str, float, str, str, str]
             self.metodos_comunes.actualizar_datos_db(tabla=self.tabla_reaccion_quimica,columnas=columnas,elementos_visuales=elementos_visuales,tipos=tipos,manejador=self.ReaccionQuimicaManejador,clase_objeto=ReaccionQuimica,limpiar_func=self.limpiar_formulario_rq,buscar_func=self.buscar_reaccion_quimica)
+            self.filtrar_reaccion_quimica()
         except ValueError as e:
             self.statusbar.showMessage(f"Datos inválidos o incompletos: {e}", 5000)
    
@@ -919,6 +924,15 @@ class FlujoDatos(QMainWindow):
         titulos_columnas_datos = ["id", "Tiempo", "Concentración", "Otra\nPropiedad", "Conversión\nReactivo\nLimitante", "Tipo\nEspecie", "id\nCondiciones\nIniciales", "Nombre\ndata", "Nombre\nreacción", "Especie\nquímica"]
         self.tabla_datos.setHorizontalHeaderLabels(titulos_columnas_datos)
         self.tabla_datos.resizeColumnsToContents()
+        #ajuste visual columnas tabla datos salida
+        titulos_columnas_datos_salida = ["id", "Nombre\ndata\nsalida", "Fecha", "id Nombre\ndata", "id Condiciones\niniciales", "id Registro\nunidades", "R\nutilizada", "Nombre\ndata", "Nombre\nreacción", "Δn\nreacción", "ε\nreactivo\nlimitante", "Tipo\nespecie", "Especie\nquímica", "Constante\ncinética", "Orden\nreacción", "Modelo\ncinético", "Tipo\ncálculo", "Energía\nde\nactivación", "Detalles"]
+        self.tabla_datos_salida.setHorizontalHeaderLabels(titulos_columnas_datos_salida)
+        self.tabla_datos_salida.resizeColumnsToContents()
+        #columnas ocultas de datos de salida
+        columnas_ocultas_salida = [11,12,13,14,15,16,17,18,19]
+        #self.tabla_datos_salida.hideColumn(columnas_ocultas_salida)
+        for col in columnas_ocultas_salida:
+            self.tabla_datos_salida.hideColumn(col)
 
 
         
@@ -1036,7 +1050,7 @@ class FlujoDatos(QMainWindow):
         self.seleccion_quimico_inicial = pd.DataFrame.from_dict(seleccion_quimico_inicial)
         print(self.seleccion_quimico_inicial)
         return self.seleccion_quimico_inicial
-    
+    #similar a seleccionar reaccion qumica
     def marcar_coeficiente(self):
         seleccionar_fila = self.tabla_reaccion_quimica.currentRow()
         if seleccionar_fila != -1:
@@ -1056,7 +1070,7 @@ class FlujoDatos(QMainWindow):
             QMessageBox.information(self, "Información", "Seleccione una fila", QMessageBox.StandardButton.Ok)
             return
         
-        seleccion_reaccion_quimica = {
+        seleccion_reaccion_quimica = { 
             "especie_quimica": [self.especie_quimica_rq.text()],
             "formula": [self.formula_rq.text()],
             "coeficiente_estequiometrico": [self.coeficiente_estequiometro_rq.text()],
@@ -1067,38 +1081,69 @@ class FlujoDatos(QMainWindow):
 
         print(seleccion_reaccion_quimica)
 
-        #calcula la conversion de XA con respecto al la concentracion del producto 
-    def calcular_conversion_reactivo_limitante_dado_producto(self):
-        try:
-            # Verificar individualmente cada campo y lanzar una excepción si está vacío
-            if not self.concentracion.text().strip():
-                raise ValueError("El campo 'Concentración datos cinéticos de la pestaña' está vacío. Por favor, llénelo.")
-            if not self.concentracion_inicial_producto.text().strip():
-                raise ValueError("El campo 'Concentración Inicial del Producto del panel' está vacío. Por favor, llénelo.")
-            if not self.concentracion_inicial_reactivo_limitante.text().strip():
-                raise ValueError("El campo 'Concentración Inicial del Reactivo Limitante del panel' está vacío. Por favor, llénelo.")
-            if not self.coeficiente_estequiometro_producto.text().strip():
-                raise ValueError("El campo 'Coeficiente Estequiométrico del Producto del panel' está vacío. Por favor, llénelo.")
-            if not self.coeficiente_estequiometro_reactivo.text().strip():
-                raise ValueError("El campo 'Coeficiente Estequiométrico Reactivo del panel' está vacío. Por favor, llénelo.")
+        #calcula la conversion de XA
 
-            # Continuar con la conversión a float y el cálculo
+    
+    def calcular_conversion(self):
+        try:
             funciones = Funciones()
-            concentracion = float(self.concentracion.text())
-            concentracion_inicial_producto = float(self.concentracion_inicial_producto.text())
-            concentracion_inicial_reactivo_limitante = float(self.concentracion_inicial_reactivo_limitante.text())
-            coeficiente_estequiometro_producto = float(self.coeficiente_estequiometro_producto.text())
-            coeficiente_estequiometro_reactivo = float(self.coeficiente_estequiometro_reactivo.text())
-            xa = funciones.conversion_reactivo_limitante_dado_producto(concentracion, concentracion_inicial_producto, concentracion_inicial_reactivo_limitante, coeficiente_estequiometro_producto, coeficiente_estequiometro_reactivo)
-            self.conversion_reactivo_limitante.setText(str(xa))
-            self.conversion_reactivo_limitante_calculo.setText(str(xa))
-            self.statusbar.showMessage(f"la conversion del reactivo limitante es x reactivo limitante= {xa} .", 5000)
+            tipo_especie = self.tipo_especie.text().strip()
+
+            if not tipo_especie:
+                raise ValueError("Seleccione el 'Tipo de Especie' y verifique que no esté vacío. Por favor, llénelo.")
+
+            #conversion_reactivo_limitante_dado_producto(self,concentracion_producto,concentracion_inicial_producto,concentracion_inicial_reactivo_limitante, coeficiente_producto, coeficiente_reactivo_limitante )
+            #(concentracion_producto - concentracion_inicial_producto) / ((coeficiente_producto / coeficiente_reactivo_limitante) * concentracion_inicial_reactivo_limitante)
+            if tipo_especie == "producto":
+                # Verificar individualmente cada campo y lanzar una excepción si está vacío
+                if not self.concentracion.text().strip():
+                    raise ValueError("El campo 'Concentración datos cinéticos de la pestaña' está vacío. Por favor, llénelo.")
+                if not self.concentracion_inicial_producto.text().strip():
+                    raise ValueError("El campo 'Concentración Inicial del Producto del panel' está vacío. Por favor, llénelo.")
+                if not self.concentracion_inicial_reactivo_limitante.text().strip():
+                    raise ValueError("El campo 'Concentración Inicial del Reactivo Limitante del panel' está vacío. Por favor, llénelo.")
+                if not self.coeficiente_estequiometro_producto.text().strip():
+                    raise ValueError("El campo 'Coeficiente Estequiométrico del Producto del panel' está vacío. Por favor, llénelo.")
+                if not self.coeficiente_estequiometro_reactivo.text().strip():
+                    raise ValueError("El campo 'Coeficiente Estequiométrico Reactivo del panel' está vacío. Por favor, llénelo.")
+
+                # Continuar con la conversión a float y el cálculo
+                concentracion = float(self.concentracion.text())
+                concentracion_inicial_producto = float(self.concentracion_inicial_producto.text())
+                concentracion_inicial_reactivo_limitante = float(self.concentracion_inicial_reactivo_limitante.text())
+                coeficiente_estequiometro_producto = float(self.coeficiente_estequiometro_producto.text())
+                coeficiente_estequiometro_reactivo = float(self.coeficiente_estequiometro_reactivo.text())
+                xa = funciones.conversion_reactivo_limitante_dado_producto(concentracion, concentracion_inicial_producto, concentracion_inicial_reactivo_limitante, coeficiente_estequiometro_producto, coeficiente_estequiometro_reactivo)
+                self.conversion_reactivo_limitante.setText(str(xa))
+                self.conversion_reactivo_limitante_calculo.setText(str(xa))
+                self.statusbar.showMessage(f"La conversión del reactivo limitante es: {xa}", 5000)
+            #conversion_reactivo_limitante(self,concentracion_inicial_reactivo_limitante,concentracion_reactivo_limitante):
+            # 1 - (concentracion_reactivo_limitante / concentracion_inicial_reactivo_limitante)
+            elif tipo_especie == "reactivo_limitante":
+                # Verificar individualmente cada campo y lanzar una excepción si está vacío
+                if not self.concentracion_inicial_reactivo_limitante.text().strip():
+                    raise ValueError("El campo 'Concentración Inicial del Reactivo Limitante del panel' está vacío. Por favor, llénelo.")
+                if not self.concentracion.text().strip():
+                    raise ValueError("El campo 'Concentración de la pestaña datos cinéticos' está vacío. Por favor, llénelo.")
+
+                # Continuar con la conversión a float y el cálculo
+                concentracion_inicial_reactivo_limitante = float(self.concentracion_inicial_reactivo_limitante.text())
+                concentracion_reactivo_limitante = float(self.concentracion.text())
+                xa = funciones.conversion_reactivo_limitante(concentracion_inicial_reactivo_limitante, concentracion_reactivo_limitante)
+                self.conversion_reactivo_limitante.setText(str(xa))
+                self.conversion_reactivo_limitante_calculo.setText(str(xa))
+                self.statusbar.showMessage(f"La conversión del reactivo limitante es: {xa}", 5000)
+
+            else:
+                raise ValueError("Tipo de especie no reconocido.")
+        
         except ValueError as e:
-            # Mostrar el mensaje de error específico para el campo vacío
+            QMessageBox.information(self, "Error", str(e), QMessageBox.StandardButton.Ok)
             self.statusbar.showMessage(str(e), 5000)
         except Exception as e:
-            # Manejar cualquier otro error inesperado
             self.statusbar.showMessage(f"Error inesperado: {e}", 5000)
+
+
         
 
     #calcula A con Xa y la Concentracion inicial

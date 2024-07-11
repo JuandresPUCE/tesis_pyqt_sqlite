@@ -103,6 +103,23 @@ class Funciones:
             float: La conversión de la reacción.
         """
         return 1 - (A / A0)
+
+    def conversion_reactivo_limitante(self,concentracion_inicial_reactivo_limitante,concentracion_reactivo_limitante):
+        """
+        Calcula la conversión del reactivo limitante en una reacción química.
+
+        Esta función calcula la conversión del reactivo limitante en una reacción
+        química utilizando la concentración inicial del reactivo limitante y la
+        concentración actual del reactivo limitante.
+
+        Args:
+            concentracion_inicial_reactivo_limitante (float): Concentración inicial del reactivo limitante.
+            concentracion_reactivo_limitante (float): Concentración actual del reactivo limitante.
+
+        Returns:
+            float: La conversión del reactivo limitante en la reacción.
+        """
+        return 1 - (concentracion_reactivo_limitante / concentracion_inicial_reactivo_limitante)
     
     def concentracion_Producto(self,Producto_0, coeficiente_producto, a, XA, A0):
         """

@@ -225,16 +225,21 @@ class Servicios:
     def actualizar_lineedit(self, combo_box, line_edit, sin_ocultar=None):
         try:
             current_text = combo_box.currentText()
-            line_edit.setText(current_text)
-            if current_text == "otro":
-                line_edit.show()
-                line_edit.setText(current_text)
-            else:
+            if current_text == "Seleccione una opción":
+                line_edit.clear()
                 if not sin_ocultar:
                     line_edit.hide()
-                #line_edit.clear()
+            else:
+                line_edit.setText(current_text)
+                if current_text == "otro":
+                    line_edit.show()
+                    line_edit.setText(current_text)
+                else:
+                    if not sin_ocultar:
+                        line_edit.hide()
         except Exception as e:
             QMessageBox.critical(self.parent, "Error", f"Error inesperado al actualizar el line edit: {e}", QMessageBox.StandardButton.Ok)
+
     
     def cargar_configuracion_json(self,archivo,catalogo):
         try:
