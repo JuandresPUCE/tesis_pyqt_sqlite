@@ -192,7 +192,7 @@ class FlujoDatos(QMainWindow):
         self.calculo5.clicked.connect(self.calcular_concentracion_reactivo_limitante_dado_conversion)
         self.calculo6.clicked.connect(self.calcular_concentracion_producto_dado_conversion)
         self.calculo7.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_epsilon_a_presion)
-        self.calculo8.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_concentracion_gas)
+        self.calculo8.clicked.connect(self.calcular_concentracion_reactivo_limitante_dado_concentracion_gas)
         
 
         self.agregar_dc_archivo_btn.clicked.connect(self.cargar_datos_btn_click)
@@ -654,6 +654,7 @@ class FlujoDatos(QMainWindow):
             elementos_visuales = [self.presion_u_edit, self.temperatura_u_edit, self.tiempo_u_edit, self.concentracion_u_edit, self.energia_u_edit, self.r_u_edit,self.nombre_data_experimental]
             tipos = [str, str, str, str, str, float,str]
             self.metodos_comunes.agregar_datos_db(columnas=columnas,elementos_visuales=elementos_visuales,tipos=tipos,manejador=self.RegistroUnidadesManejador,clase_objeto=RegistroUnidades,limpiar_func=self.limpiar_formulario_unidades_agregar,buscar_func=self.buscar_unidades)
+            self.buscar_unidades_nombre_data()
         except ValueError as e:
             self.statusbar.showMessage(f"Datos inválidos o incompletos: {e}", 5000)
     
@@ -663,6 +664,7 @@ class FlujoDatos(QMainWindow):
             elementos_visuales = [self.presion_u_edit, self.temperatura_u_edit, self.tiempo_u_edit, self.concentracion_u_edit, self.energia_u_edit, self.r_u_edit,self.nombre_data_experimental]
             tipos = [str, str, str, str, str, float,str]
             self.metodos_comunes.actualizar_datos_db(tabla=self.tabla_registro_unidades,columnas=columnas,elementos_visuales=elementos_visuales,tipos=tipos,manejador=self.RegistroUnidadesManejador,clase_objeto=RegistroUnidades,limpiar_func=self.limpiar_formulario_unidades,buscar_func=self.buscar_unidades)
+            self.buscar_unidades_nombre_data()
         except ValueError as e:
             self.statusbar.showMessage(f"Datos inválidos o incompletos: {e}", 5000)
     
@@ -1328,38 +1330,39 @@ class FlujoDatos(QMainWindow):
         except Exception as e:
             self.statusbar.showMessage(f"Error inesperado: {e}", 5000)
 
-    def calcular_conversion_reactivo_limitante_dado_concentracion_gas(self):
+    def calcular_concentracion_reactivo_limitante_dado_concentracion_gas(self):
         try:
             funciones = Funciones()
             # Verificar individualmente cada campo y mostrar un mensaje específico si está vacío
             if not self.temperatura_ci.text():
-                self.statusbar.showMessage("El campo 'Temperatura condiciones iniciales' está vacío. Por favor, llénelo.", 5000)
-                return
+                raise ValueError("El campo 'Temperatura condiciones iniciales' está vacío. Por favor, llénelo.")
+
             if not self.presion_total_ci.text():
-                self.statusbar.showMessage("El campo 'Presión Total  de condiciones iniciales' está vacío. Por favor, llénelo.", 5000)
-                return
+                raise ValueError("El campo 'Presión Total  de condiciones iniciales' está vacío. Por favor, llénelo.")
             if not self.fraccion_molar_ci.text():
-                self.statusbar.showMessage("El campo 'Fracción Molar  de condiciones iniciales' está vacío. Por favor, llénelo.", 5000)
-                return
-            if not self.temperatura_u_edit.text():
-                self.statusbar.showMessage("El campo 'Unidad de Temperatura de condiciones iniciales' está vacío. Por favor, llénelo.", 5000)
-                return
+                raise ValueError("El campo 'Fracción Molar  de condiciones iniciales' está vacío. Por favor, llénelo.")
+
+            #verifica unidad de temperatura
+            if not (self.ui.temp_ci_l.text().strip() or self.temperatura_u_edit.text()):
+                raise ValueError("No se han agregado unidades. Por favor, Agrege")
             
-            if not self.r_u_edit.text():
-                self.statusbar.showMessage("El valor de R está vacío. Por favor, llénelo.", 5000)
-                return
-            
+            if not self.r_ds_edit.text():
+                raise ValueError("El valor de R está vacío. Por favor, llénelo.")
+           
             temperatura = float(self.temperatura_ci.text())
             presion_total = float(self.presion_total_ci.text())
             fraccion_molar = float(self.fraccion_molar_ci.text())
-            unidad_temperatura = self.temperatura_u_edit.text()
+            unidad_temperatura = self.ui.temp_ci_l.text()
             
-            concentracion_gas = funciones.gas_concentracion_componente(1, fraccion_molar, presion_total, self.r_u_edit, temperatura, unidad_temperatura)
+            concentracion_gas = funciones.gas_concentracion_componente(1, fraccion_molar, presion_total, self.r_ds_edit, temperatura, unidad_temperatura)
             print(concentracion_gas)
             self.concentracion_reactivo_limitante_calculo_2.setText(str(concentracion_gas))
             self.statusbar.showMessage(f"La concentración inicial del gas reactivo limitante es: {concentracion_gas}", 5000)
+            
         except ValueError as e:
-            self.statusbar.showMessage(f"Error al convertir a float: {e}", 5000)
+            QMessageBox.information(self, "Error", str(e), QMessageBox.StandardButton.Ok)
+
+            self.statusbar.showMessage(str(e), 5000)
         except Exception as e:
             self.statusbar.showMessage(f"Error inesperado: {e}", 5000)
 
@@ -1452,14 +1455,45 @@ class FlujoDatos(QMainWindow):
         self.metodos_comunes.actualizar_valor_celda(self.tabla_datos_salida, self.RegistroDatosSalidaManejador, fila, columna)
 
 
+    def seleccionar_archivo_datos(self):
+            # Abre un cuadro de diálogo para seleccionar el archivo de datos
+        fileName, _ = QFileDialog.getOpenFileName(self.parent, "Selecciona el archivo de datos", "", "CSV Files (*.csv);;Excel Files (*.xlsx)")
+        if fileName:
+            self.insertar_datos_cineticos_archivo(fileName)
+
     def insertar_datos_cineticos_archivo(self, ruta_archivo):
+        # Función auxiliar para leer el archivo con un delimitador específico
+        def leer_archivo_con_delimitador(ruta_archivo, delimitador):
+            try:
+                return pd.read_csv(ruta_archivo, delimiter=delimitador)
+            except pd.errors.ParserError:
+                return None
+
         # Leer el archivo
+        df = None
         if ruta_archivo.endswith('.csv'):
-            df = pd.read_csv(ruta_archivo)
+            df = leer_archivo_con_delimitador(ruta_archivo, ';')
+            if df is None:
+                df = leer_archivo_con_delimitador(ruta_archivo, ',')
         elif ruta_archivo.endswith('.xlsx'):
             df = pd.read_excel(ruta_archivo)
         else:
-            raise ValueError("Formato de archivo no soportado")
+            QMessageBox.critical(self.parent, "Error", "Formato de archivo no soportado", QMessageBox.StandardButton.Ok)
+            return
+
+        if df is None:
+            QMessageBox.critical(self.parent, "Error", "Error al leer el archivo CSV con ambos delimitadores (';' y ',')", QMessageBox.StandardButton.Ok)
+            return
+
+        # Verificar los nombres de las columnas
+        columnas_esperadas = ['tiempo', 'concentracion', 'otra_propiedad', 'conversion_reactivo_limitante', 
+                              'tipo_especie', 'id_condiciones_iniciales', 'nombre_data', 
+                              'nombre_reaccion', 'especie_quimica']
+        columnas_faltantes = [col for col in columnas_esperadas if col not in df.columns]
+
+        if columnas_faltantes:
+            QMessageBox.critical(self.parent, "Error", f"Faltan las siguientes columnas en el archivo: {', '.join(columnas_faltantes)}", QMessageBox.StandardButton.Ok)
+            return
 
         # Iterar sobre cada fila del DataFrame
         for _, fila in df.iterrows():
@@ -1480,12 +1514,12 @@ class FlujoDatos(QMainWindow):
             try:
                 agregar_resultado = self.DatosCineticosManejador.agregar(dato)
                 if not agregar_resultado:
-                    QMessageBox.critical(self, "Error", "Hubo un problema al agregar los datos ", QMessageBox.StandardButton.Ok)
+                    QMessageBox.critical(self.parent, "Error", "Hubo un problema al agregar los datos", QMessageBox.StandardButton.Ok)
             except Exception as e:
-                QMessageBox.critical(self, "Error", f"Se produjo un error al agregar los datos: {e}", QMessageBox.StandardButton.Ok)
+                QMessageBox.critical(self.parent, "Error", f"Se produjo un error al agregar los datos: {e}", QMessageBox.StandardButton.Ok)
 
-        QMessageBox.information(self, "Información", "Datos agregados correctamente", QMessageBox.StandardButton.Ok)
-        self.buscar_dato()  # Refrescar la tabla con los nuevos datos
+        QMessageBox.information(self.parent, "Información", "Datos agregados correctamente", QMessageBox.StandardButton.Ok)
+        self.buscar_dato()  # Refrescar la tabla con los nuevos datos al cargar un CSV o Excel
 
 
 

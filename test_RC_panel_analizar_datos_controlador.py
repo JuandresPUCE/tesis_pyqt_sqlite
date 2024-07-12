@@ -23,7 +23,7 @@ from modelos_metodo_arrhenius import *
 
 #otras ventanas
 from test_crud_db_controlador import PantallaCrud
-from test2_flujo_datos_controlador import FlujoDatos
+from flujo_datos_controlador import FlujoDatos
 
 # metodos comunes
 from servicios import *
