@@ -212,7 +212,7 @@ class FlujoDatos(QMainWindow):
 
     def ocultar_elementos_vista(self):
         # Lista de nombres de elementos a ocultar
-        elementos_ocultar = ['groupBox_33', 'nombre_data_rde_edit','nombre_reaccion_rq_edit','groupBox_41','nombre_data_ci_edit','groupBox_61','nombre_data_dc_edit','groupBox_60','nombre_reaccion_dc_edit','groupBox_14','groupBox_2', 'groupBox_3', 'groupBox_4', 'groupBox_5','groupBox_21','groupBox_17','groupBox_22','groupBox_24','groupBox_25','groupBox_26','groupBox_29','groupBox_30','groupBox_31','groupBox_32','groupBox_52']
+        elementos_ocultar = ['groupBox_33', 'nombre_data_rde_edit','nombre_reaccion_rq_edit','groupBox_41','nombre_data_ci_edit','groupBox_61','nombre_data_dc_edit','groupBox_60','nombre_reaccion_dc_edit','groupBox_14','groupBox_2', 'groupBox_3', 'groupBox_4', 'groupBox_5','groupBox_21','groupBox_17','groupBox_22','groupBox_24','groupBox_25','groupBox_26','groupBox_29','groupBox_30','groupBox_31','groupBox_32','groupBox_52','group_box_computo']
         for nombre in elementos_ocultar:
             getattr(self.ui, nombre).hide()
 
@@ -1143,10 +1143,8 @@ class FlujoDatos(QMainWindow):
         except Exception as e:
             self.statusbar.showMessage(f"Error inesperado: {e}", 5000)
 
-
-        
-
-    #calcula A con Xa y la Concentracion inicial
+    #calcula A con Xa y la Concentracion inicial A = A0 * (1 - XA)
+    #concentracion_inicial_reactivo*(1-conversion_reactivo_limitante)
     def calcular_concentracion_reactivo_limitante_dado_conversion(self):
         try:
             # Verificar individualmente cada campo y lanzar una excepción si está vacío
@@ -1160,17 +1158,26 @@ class FlujoDatos(QMainWindow):
             concentracion_inicial_reactivo_limitante = float(self.concentracion_inicial_reactivo_limitante.text())
             conversion_reactivo_limitante = float(self.conversion_reactivo_limitante.text())
             A = funciones.concentracion_reactivo_funcion_conversion(concentracion_inicial_reactivo_limitante, conversion_reactivo_limitante)
-            print(A)
-            self.concentracion.setText(str(A))
             self.concentracion_reactivo_limitante_calculo.setText(str(A))
-            self.statusbar.showMessage(f"la conversion del reactivo limitante es x reactivo limitante= {A} .", 5000)
+            # Obtener el tipo de especie
+            tipo_especie = self.tipo_especie.text().strip()
+
+            # Asignar el valor a self.concentracion solo si tipo_especie es "reactivo_limitante" o está vacío
+            if tipo_especie == "reactivo_limitante" or not tipo_especie:
+                self.concentracion.setText(str(A))           
+            
+            self.statusbar.showMessage(f"La conversión del reactivo limitante es: {A}", 5000)
+        
         except ValueError as e:
             # Mostrar el mensaje de error específico para el campo vacío
+            QMessageBox.information(self, "Error", str(e), QMessageBox.StandardButton.Ok)
             self.statusbar.showMessage(str(e), 5000)
         except Exception as e:
             # Manejar cualquier otro error inesperado
             self.statusbar.showMessage(f"Error inesperado: {e}", 5000)
 
+    #Producto = Producto_0 + (coeficiente_producto / a) * (A0 * XA)
+    #concentracion_Producto(self,Producto_0, coeficiente_producto, a, XA, A0):
     def calcular_concentracion_producto_dado_conversion(self):
         try:
             # Verificar individualmente cada campo y lanzar una excepción si está vacío
@@ -1192,13 +1199,23 @@ class FlujoDatos(QMainWindow):
             conversion_reactivo_limitante = float(self.conversion_reactivo_limitante.text())
             coeficiente_estequiometro_producto = float(self.coeficiente_estequiometro_producto.text())
             coeficiente_estequiometro_reactivo = float(self.coeficiente_estequiometro_reactivo.text())
-            producto = funciones.concentracion_Producto(concentracion_inicial_producto, coeficiente_estequiometro_producto, coeficiente_estequiometro_reactivo, conversion_reactivo_limitante, concentracion_inicial_reactivo_limitante)
-            print(producto)
-            self.concentracion.setText(str(producto))
+            producto = funciones.concentracion_producto(concentracion_inicial_producto, coeficiente_estequiometro_producto, coeficiente_estequiometro_reactivo, conversion_reactivo_limitante, concentracion_inicial_reactivo_limitante)
+            #print(producto)
+
             self.concentracion_producto_calculo.setText(str(producto))
             self.statusbar.showMessage(f"La concentración del producto dada la conversión es: {producto}", 5000)
+            
+            # Obtener el tipo de especie
+            tipo_especie = self.tipo_especie.text().strip()
+
+            # Asignar el valor a self.concentracion solo si tipo_especie es "producto" o está vacío
+            if tipo_especie == "producto" or not tipo_especie:
+                self.concentracion.setText(str(producto))  
+
+
         except ValueError as e:
             # Mostrar el mensaje de error específico para el campo vacío
+            QMessageBox.information(self, "Error", str(e), QMessageBox.StandardButton.Ok)
             self.statusbar.showMessage(str(e), 5000)
         except Exception as e:
             # Manejar cualquier otro error inesperado
@@ -1483,7 +1500,7 @@ class FlujoDatos(QMainWindow):
 
     def calculos_adicionales(self):
         # Lista de nombres de elementos a alternar visibilidad
-        elementos_ocultos = ['groupBox_2', 'groupBox_3', 'groupBox_4', 'groupBox_5']
+        elementos_ocultos = ['groupBox_2', 'groupBox_3', 'groupBox_4', 'groupBox_5','group_box_computo']
         
         for nombre_elemento in elementos_ocultos:
             elemento = getattr(self.ui, nombre_elemento)  # Obtiene el objeto del elemento por su nombre

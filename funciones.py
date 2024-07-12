@@ -54,7 +54,7 @@ class Funciones:
             plt.show()
     
     
-    def concentracion_reactivo_funcion_conversion(self,concentracion_inicial_reactivo,conversion_reactivo):
+    def concentracion_reactivo_funcion_conversion(self,concentracion_inicial_reactivo,conversion_reactivo_limitante):
         """
         Calcula la concentración del reactivo en función de la conversión de la reacción.
 
@@ -62,48 +62,16 @@ class Funciones:
 
         Args:
             concentracion_inicial_reactivo (float): Concentración inicial del reactivo.
-            conversion_reactivo (float): Conversión del reactivo de 0 a 1 en tanto por uno.
+            conversion_reactivo_limitante (float): Conversión del reactivo de 0 a 1 en tanto por uno.
         
         Returns:
+            A = A0 * (1 - XA)
             float: La concentración del reactivo en función de la conversión.
         """
             
-        return concentracion_inicial_reactivo*(1-conversion_reactivo)
+        return concentracion_inicial_reactivo*(1-conversion_reactivo_limitante)
 
-    def concentracion_producto_principal(self,A0, XA):
-        """
-        Calcula la concentración del producto principal.
-
-        Esta función calcula la concentración del producto principal
-        utilizando la concentración inicial del producto principal y
-        la conversión de la reacción.
-
-        Args:
-            A0 (float): Concentración inicial del producto principal.
-            XA conversión del producto principal (float): Conversión de la reacción de 0 a 1 en tanto por uno.
-
-        Returns:
-            float: La concentración del producto principal.
-        """
-        return A0 * (1 - XA)
     
-    def conversion_A(self,A0, A):
-        """
-        Calcula la conversión del producto principal A de la reacción.
-
-        Esta función calcula la conversión de la reacción utilizando
-        la concentración inicial del producto principal y la concentración
-        actual del producto principal.
-
-        Args:
-            A0 (float): Concentración inicial del producto principal.
-            A (float): Concentración actual del producto principal.
-
-        Returns:
-            float: La conversión de la reacción.
-        """
-        return 1 - (A / A0)
-
     def conversion_reactivo_limitante(self,concentracion_inicial_reactivo_limitante,concentracion_reactivo_limitante):
         """
         Calcula la conversión del reactivo limitante en una reacción química.
@@ -117,11 +85,12 @@ class Funciones:
             concentracion_reactivo_limitante (float): Concentración actual del reactivo limitante.
 
         Returns:
+            x_A = 1 - (A / A0)
             float: La conversión del reactivo limitante en la reacción.
         """
         return 1 - (concentracion_reactivo_limitante / concentracion_inicial_reactivo_limitante)
     
-    def concentracion_Producto(self,Producto_0, coeficiente_producto, a, XA, A0):
+    def concentracion_producto(self,Producto_0, coeficiente_producto, a, XA, A0):
         """
         Calcula la concentración de un producto de una reacción química.
 
@@ -138,6 +107,7 @@ class Funciones:
             A0 (float): Concentración inicial del reactivo limitante.
 
         Returns:
+            Producto = Producto_0 + (coeficiente_producto / a) * (A0 * XA)
             float: La concentración del producto en el estado deseado.
         """
         return Producto_0 + (coeficiente_producto / a) * (A0 * XA)
