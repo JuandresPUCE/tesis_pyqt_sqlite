@@ -66,6 +66,8 @@ class PanelDataAnalisis(QMainWindow):
         self.flujo_datos = FlujoDatos()
         self.init_panel_menu()
 
+        self.ajustes_visuales_tabla()
+
         # Definir panel_izquierdo para cambios
         self.panel_izquierdo = self.ui.tab_3
 
@@ -181,6 +183,13 @@ class PanelDataAnalisis(QMainWindow):
         self.ea_r_final=self.ui.ea_r_final
         self.k_0_calculado=self.ui.k_0_calculado
         self.ln_k_0_calculado=self.ui.ln_k_0_calculado
+    
+    def ajustes_visuales_tabla(self):
+         #ajuste visual columnas tabla datos
+        titulos_columnas_datos = ["id", "Tiempo", "Concentración", "Otra\nPropiedad", "Conversión\nReactivo\nLimitante", "Tipo\nEspecie", "id\nCondiciones\nIniciales", "Nombre\ndata", "Nombre\nreacción", "Especie\nquímica"]
+        self.tabla_datos.setHorizontalHeaderLabels(titulos_columnas_datos)
+        self.tabla_datos.resizeColumnsToContents()
+
 
         # funciones de la barra de menu
     def init_panel_menu(self):
@@ -262,7 +271,6 @@ class PanelDataAnalisis(QMainWindow):
         else:
             QMessageBox.information(self, "No hay datos", "No se encontraron datos en la base de datos.", QMessageBox.StandardButton.Ok)
 
-
     def filtrar_datos(self):
         self.filtro_datos_box.clear()
         self.filtro_datos_box.addItem("Seleccione una opción")    
@@ -302,9 +310,9 @@ class PanelDataAnalisis(QMainWindow):
 
 #manejar try except cuando la base de datos no tiene datos, regresar version no refactorizada
     def mostrar_datos_tabla(self, resultados):
-        tabla = self.datos_cineticos_tabla
-        tabla.clearContents()
-        self.metodos_comunes.mostrar_datos_tabla(tabla, resultados)
+        self.tabla_datos = self.datos_cineticos_tabla
+        self.tabla_datos.clearContents()
+        self.metodos_comunes.mostrar_datos_tabla(self.tabla_datos, resultados)
 
     def mostrar_reaccion_tabla(self, resultados):
         tabla = self.reaccion_quimica_tabla
@@ -314,7 +322,6 @@ class PanelDataAnalisis(QMainWindow):
     def mostrar_datos_tabla_salida(self, resultados):
         self.metodos_comunes.mostrar_datos_tabla_salida(self.tabla_datos_salida, resultados)
     
-
     def actualizar_datos_cineticos(self):
         nombre_data = self.registro_datos_box.currentText()
         condicion_inicial_id = self.condiciones_iniciales_box.currentData()
@@ -327,7 +334,6 @@ class PanelDataAnalisis(QMainWindow):
 
         datos_cineticos = self.DatosCineticosManejador.consultar(filtros=filtros)
         self.mostrar_datos_tabla(datos_cineticos)    
-
 
     def mostrar_metodos_ajustador(self):
         self.ajustar_modelo_box.clear()
@@ -417,8 +423,6 @@ class PanelDataAnalisis(QMainWindow):
             
             return resultado
             # Ahora, graficamos el modelo utilizando los resultados obtenidos
-            
-
 
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Ocurrió un error al ejecutar el modelo: {str(e)}", QMessageBox.StandardButton.Ok)
@@ -434,26 +438,6 @@ class PanelDataAnalisis(QMainWindow):
     
     def abrir_ingreso_datos(self):
         self.flujo_datos.show()
-
-    """
-    def abrir_ingreso_datos(self):
-
-        if hasattr(self, 'flujo_datos'):
-            self.flujo_datos.setParent(None)
-            self.flujo_datos.deleteLater()
-
-        self.flujo_datos = FlujoDatos(self)
-        self.flujo_datos.setParent(self.panel_izquierdo)
-
-        if self.panel_izquierdo.layout() is None:
-            self.layout = QVBoxLayout(self.panel_izquierdo)
-        else:
-            self.layout = self.panel_izquierdo.layout()
-
-        self.layout.addWidget(self.flujo_datos)
-
-        self.flujo_datos.show()
-    """
 
     def imprimir_registro_seleccionado(self):
         nombre_data = self.registro_datos_box.currentText()
