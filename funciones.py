@@ -316,8 +316,6 @@ class Funciones:
             # Actualizar el lienzo para que se muestre el nuevo gráfico
             self.canvas.draw()
 
-# revisar R https://cruzfierro.com/formularios/R.pdf
-
     def gas_conversion_componente_principal_epsilon_a(self,presion_total, presion_total_inicial,epsilon_a):
         #viene de la ec Presion_total = presion_total_inicial *(1+epsion_a*conversion_A)
         
@@ -326,11 +324,23 @@ class Funciones:
         return conversion_A
     
     def propiedad_conversion_componente_principal_epsilon_a(self,propiedad, propiedad_inicial,epsilon_a):
-        #viene de la ec Presion_total = presion_total_inicial *(1+epsion_a*conversion_A)
+        #análogo de viene de la ec Presion_total = presion_total_inicial *(1+epsion_a*conversion_A)
+
+        """
+            Calcula la conversión del reactivo limitante dado el cambio en una propiedad medible.
+            
+            Args:
+            propiedad (float): Valor de la propiedad medida en el tiempo t.
+            propiedad_inicial (float): Valor inicial de la propiedad antes de la reacción o t_0 = 0.
+            epsilon_a (float): Cambio relativo en la propiedad por unidad de conversión del reactivo A.
+            
+            Returns:
+            float: Conversión del reactivo principal A.
+        """
         
-        conversion_A = ((propiedad/propiedad_inicial) - 1)/epsilon_a
+        conversion_reactivo_limitante = ((propiedad/propiedad_inicial) - 1)/epsilon_a
         
-        return conversion_A
+        return conversion_reactivo_limitante
     
     def propiedad_conversion_componente_principal(self,propiedad, propiedad_inicial):
         #viene de la ec Presion_total = presion_total_inicial *(1+epsion_a*conversion_A)

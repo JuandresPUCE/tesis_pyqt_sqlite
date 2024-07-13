@@ -595,13 +595,6 @@
                               <number>0</number>
                              </property>
                              <item>
-                              <widget class="QPushButton" name="marcar_ci_btn">
-                               <property name="text">
-                                <string>marcar condiciones iniciales A</string>
-                               </property>
-                              </widget>
-                             </item>
-                             <item>
                               <spacer name="verticalSpacer_4">
                                <property name="orientation">
                                 <enum>Qt::Vertical</enum>
@@ -665,7 +658,7 @@
                         <item>
                          <widget class="QGroupBox" name="groupBox_4">
                           <property name="title">
-                           <string>Concentracion</string>
+                           <string>Panel de Concentracion</string>
                           </property>
                           <layout class="QVBoxLayout" name="verticalLayout_32">
                            <property name="spacing">
@@ -903,7 +896,7 @@
                                <item>
                                 <widget class="QPushButton" name="marcar_coeficiente_producto_btn">
                                  <property name="text">
-                                  <string>Coeficiente Producto</string>
+                                  <string>Coeficiente producto</string>
                                  </property>
                                 </widget>
                                </item>
@@ -1010,7 +1003,7 @@
                                   <item>
                                    <widget class="QPushButton" name="marcar_producto0_btn">
                                     <property name="text">
-                                     <string>Marcar Producto</string>
+                                     <string>Producto</string>
                                     </property>
                                    </widget>
                                   </item>
@@ -1040,7 +1033,7 @@
                                   <item>
                                    <widget class="QPushButton" name="marcar_a0_btn">
                                     <property name="text">
-                                     <string>Marcar Reactivo Limitante</string>
+                                     <string>Reactivo Limitante</string>
                                     </property>
                                    </widget>
                                   </item>
@@ -1081,7 +1074,7 @@
                              <item>
                               <widget class="QGroupBox" name="groupBox_5">
                                <property name="title">
-                                <string>Gases</string>
+                                <string>Gases conversiones</string>
                                </property>
                                <layout class="QVBoxLayout" name="verticalLayout_72">
                                 <property name="spacing">
@@ -1115,7 +1108,7 @@
                                        </size>
                                       </property>
                                       <property name="text">
-                                       <string>otra_propiedad_inicial</string>
+                                       <string>Propiedad Inicial</string>
                                       </property>
                                       <property name="textFormat">
                                        <enum>Qt::AutoText</enum>
@@ -1162,9 +1155,9 @@
                                   <item>
                                    <layout class="QHBoxLayout" name="horizontalLayout_56">
                                     <item>
-                                     <widget class="QPushButton" name="conversion_gas_epsilon_a">
+                                     <widget class="QPushButton" name="conversion_propiedad_epsilon_a">
                                       <property name="text">
-                                       <string>Presion a Conversion</string>
+                                       <string>Propiedad Conversion</string>
                                       </property>
                                      </widget>
                                     </item>
@@ -1204,7 +1197,7 @@
                                     <item>
                                      <widget class="QPushButton" name="concentracion_irl_btn">
                                       <property name="text">
-                                       <string>concentracion inicial RL</string>
+                                       <string>Concentracion 0 RL</string>
                                       </property>
                                      </widget>
                                     </item>
@@ -1315,7 +1308,7 @@
                </size>
               </property>
               <property name="currentIndex">
-               <number>4</number>
+               <number>3</number>
               </property>
               <widget class="QWidget" name="rde_tab">
                <attribute name="title">

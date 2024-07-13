@@ -1462,7 +1462,7 @@
               </property>
               <layout class="QVBoxLayout" name="vista_tabla_df"/>
              </widget>
-             <widget class="QWidget" name="">
+             <widget class="QWidget" name="layoutWidget">
               <property name="geometry">
                <rect>
                 <x>110</x>
@@ -1595,7 +1595,7 @@
                </rect>
               </property>
               <property name="text">
-               <string>Nueva conjunto de datos</string>
+               <string>Nuevo conjunto de datos</string>
               </property>
              </widget>
             </widget>

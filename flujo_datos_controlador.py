@@ -74,6 +74,7 @@ class FlujoDatos(QMainWindow):
         self.ajustes_visuales_tabla()
         # Completar los campos vacíos opcionales
         self.completar_campos_vacios()
+        self.init_panel_menu()
 
         #refactor direccion con datos json
         #json_tipo_especie = r"data\tipo_especie.json"
@@ -102,6 +103,18 @@ class FlujoDatos(QMainWindow):
     def restablecer_estilo_statusbar(self):
         # Restablecer el estilo de statusbar a su configuración original
         self.statusbar.setStyleSheet("")
+
+            # funciones de la barra de menu
+    def init_panel_menu(self):
+        self.menu_bar = self.ui.menu_btn
+        self.menu_derecho = self.ui.menu_derecho
+        self.menu_bar.clicked.connect(self.modificar_menu)
+    
+    def modificar_menu(self):
+        if self.menu_derecho.isVisible():
+            self.menu_derecho.hide()
+        else:
+            self.menu_derecho.show()
 
 
     def manejadores_base(self):
@@ -135,7 +148,6 @@ class FlujoDatos(QMainWindow):
         self.nombre_data_ds_edit=self.ui.nombre_data_general_edit
 
                 #botones
-        self.marcar_ci_btn = self.ui.marcar_ci_btn
         self.epsilon_a_btn = self.ui.epsilon_a_btn
         self.epsilon_reactivo_limitante_calculo = self.ui.epsilon_reactivo_limitante_calculo
         self.concentracion_irl_btn=self.ui.concentracion_irl_btn
@@ -152,7 +164,7 @@ class FlujoDatos(QMainWindow):
 
         self.calculo5=self.ui.calcular_a
         self.calculo6=self.ui.calcular_producto
-        self.calculo7=self.ui.conversion_gas_epsilon_a
+        self.calculo7=self.ui.conversion_propiedad_epsilon_a
         self.calculo8=self.ui.concentracion_irl_btn
 
         self.coeficiente_estequiometro_producto = self.ui.coeficiente_estequiometrico_producto_edit
@@ -191,7 +203,7 @@ class FlujoDatos(QMainWindow):
 
         self.calculo5.clicked.connect(self.calcular_concentracion_reactivo_limitante_dado_conversion)
         self.calculo6.clicked.connect(self.calcular_concentracion_producto_dado_conversion)
-        self.calculo7.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_epsilon_a_presion)
+        self.calculo7.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_epsilon_a_otra_propiedad)
         self.calculo8.clicked.connect(self.calcular_concentracion_reactivo_limitante_dado_concentracion_gas)
         
 
@@ -439,7 +451,7 @@ class FlujoDatos(QMainWindow):
         self.borrar_ci_btn.clicked.connect(self.borrar_condiciones_iniciales)
         self.limpiar_ci_btn.clicked.connect(self.limpiar_formulario_ci)
         self.buscar_ci_btn.clicked.connect(self.buscar_condiciones_iniciales)   
-        self.marcar_ci_btn.clicked.connect(self.marcar_condiciones_iniciales)
+
 
     def init_control_botones_rq(self):
         self.agregar_rq_btn.clicked.connect(self.agregar_reaccion_quimica)
@@ -858,9 +870,7 @@ class FlujoDatos(QMainWindow):
             self.metodos_comunes.actualizar_datos_db(tabla=self.tabla_datos,columnas=columnas,elementos_visuales=elementos_visuales,tipos=tipos,manejador=self.DatosCineticosManejador,clase_objeto=DatosIngresadosCineticos,limpiar_func=self.limpiar_formulario,buscar_func=self.buscar_dato)
         except ValueError as e:
             self.statusbar.showMessage(f"Datos inválidos o incompletos: {e}", 5000)
-    #slyr
 
-#revisare version refactor de crud_db_controlador
     def borrar_dato(self):
         fila_seleccionada = self.tabla_datos.currentRow()
         if fila_seleccionada != -1:
@@ -935,10 +945,6 @@ class FlujoDatos(QMainWindow):
         #self.tabla_datos_salida.hideColumn(columnas_ocultas_salida)
         for col in columnas_ocultas_salida:
             self.tabla_datos_salida.hideColumn(col)
-
-
-        
-
 
     
     def cargar_datos_json_unidades_temperatura(self, archivo):
@@ -1034,7 +1040,7 @@ class FlujoDatos(QMainWindow):
                 self.concentracion_inicial_reactivo_limitante.setText(concentracion)
 
         else:
-            QMessageBox.information(self, "Información", "Seleccione una fila", QMessageBox.StandardButton.Ok)
+            QMessageBox.information(self, "Información", "Seleccione en la pestaña de Datos cinéticos el valor inicial correspondiente o si lo conoce digítelo ", QMessageBox.StandardButton.Ok)
             return
         
         seleccion_quimico_inicial = {
@@ -1069,7 +1075,7 @@ class FlujoDatos(QMainWindow):
             else:
                 self.coeficiente_estequiometro_reactivo.setText(coeficiente_estequiometrico)
         else:
-            QMessageBox.information(self, "Información", "Seleccione una fila", QMessageBox.StandardButton.Ok)
+            QMessageBox.information(self, "Información", "Dirijase a la pestaña de reacción química y seleccione una fila", QMessageBox.StandardButton.Ok)
             return
         
         seleccion_reaccion_quimica = { 
@@ -1083,9 +1089,8 @@ class FlujoDatos(QMainWindow):
 
         print(seleccion_reaccion_quimica)
 
-        #calcula la conversion de XA
-
     
+        #calcula la conversion de XA
     def calcular_conversion(self):
         try:
             funciones = Funciones()
@@ -1214,7 +1219,6 @@ class FlujoDatos(QMainWindow):
             if tipo_especie == "producto" or not tipo_especie:
                 self.concentracion.setText(str(producto))  
 
-
         except ValueError as e:
             # Mostrar el mensaje de error específico para el campo vacío
             QMessageBox.information(self, "Error", str(e), QMessageBox.StandardButton.Ok)
@@ -1247,9 +1251,8 @@ class FlujoDatos(QMainWindow):
             reaccion_quimica = self.ReaccionQuimicaManejador.consultar(filtros)
             
             if not reaccion_quimica:
-                self.statusbar.showMessage("No se encontraron datos para la reacción seleccionada")
-                return
-            
+                raise ValueError("Verifique que haya seleccionado una reacción química válida. Por favor, seleccione una.")
+          
             # Convertir los datos de la reacción química a un DataFrame de pandas
             df_reaccion_quimica = pd.DataFrame.from_records([r.__dict__ for r in reaccion_quimica])
             print(df_reaccion_quimica)
@@ -1260,37 +1263,26 @@ class FlujoDatos(QMainWindow):
             self.delta_n_rq.setText(str(delta_n))
             self.delta_n_ds_edit.setText(str(delta_n))
             self.statusbar.showMessage(f"Delta n calculado: {delta_n}")
+        except ValueError as e:
+            QMessageBox.information(self, "Error", str(e), QMessageBox.StandardButton.Ok)
+            self.statusbar.showMessage(f"Error: {e}", 5000)
         except Exception as e:
             print(f"Ocurrió un error al calcular delta_n: {e}")
             self.statusbar.showMessage("Error al calcular")
-
-    def marcar_condiciones_iniciales(self):
-        seleccionar_fila = self.tabla_condiciones_iniciales.currentRow()
-        if seleccionar_fila != -1:
-            id = self.tabla_condiciones_iniciales.item(seleccionar_fila, 0).text().strip()
-            temperatura = self.tabla_condiciones_iniciales.item(seleccionar_fila, 1).text().strip()
-            tiempo = self.tabla_condiciones_iniciales.item(seleccionar_fila, 2).text().strip()
-            presion_total = self.tabla_condiciones_iniciales.item(seleccionar_fila, 3).text().strip()
-            presion_parcial = self.tabla_condiciones_iniciales.item(seleccionar_fila, 4).text().strip()
-            fraccion_molar = self.tabla_condiciones_iniciales.item(seleccionar_fila, 5).text().strip()
-            especie_quimica = self.tabla_condiciones_iniciales.item(seleccionar_fila, 6).text().strip()
-            tipo_especie = self.tabla_condiciones_iniciales.item(seleccionar_fila, 7).text().strip()
-            detalle = self.tabla_condiciones_iniciales.item(seleccionar_fila, 8).text().strip()
-            nombre_data = self.tabla_condiciones_iniciales.item(seleccionar_fila, 9).text().strip()
 
     def calcular_epsilon_reactivo_limitante(self):
         try:
             funciones = Funciones()
             # Verificar individualmente cada campo y mostrar un mensaje específico si está vacío
             if not self.fraccion_molar_ci.text():
-                self.statusbar.showMessage("El campo 'Fracción Molar de condiciones iniciales' está vacío. Por favor, llénelo.", 5000)
-                return
+                raise ValueError("El campo 'Fracción Molar de condiciones iniciales' está vacío. Por favor, llénelo.")
+                
             if not self.delta_n_rq.text():
-                self.statusbar.showMessage("El campo 'Delta n de la reacción quimica' está vacío. Por favor, llénelo.", 5000)
-                return
+                raise ValueError("El campo 'Delta n de la reacción quimica' está vacío. Por favor, llénelo.")
+                
             if not self.coeficiente_estequiometro_reactivo.text():
-                self.statusbar.showMessage("El campo del 'Coeficiente Estequiométrico del Reactivo' está vacío. Por favor, llénelo.", 5000)
-                return
+                raise ValueError("El campo del 'Coeficiente Estequiométrico del Reactivo' está vacío. Por favor, llénelo.")
+
             
             fraccion_molar_inicial = float(self.fraccion_molar_ci.text())
             delta_n = float(self.delta_n_rq.text())
@@ -1300,32 +1292,34 @@ class FlujoDatos(QMainWindow):
             self.epsilon_rl_ds_edit.setText(str(epsilon_a))
             self.statusbar.showMessage(f"epsilon del reactivo limintante es e_rl= {epsilon_a} .", 5000)
         except ValueError as e:
-            self.statusbar.showMessage(f"Error al convertir a float: {e}", 5000)
+            QMessageBox.information(self, "Error", str(e), QMessageBox.StandardButton.Ok)
+            self.statusbar.showMessage(f"Error: {e}", 5000)
         except Exception as e:
             self.statusbar.showMessage(f"Error inesperado: {e}", 5000)
             
-    def calcular_conversion_reactivo_limitante_dado_epsilon_a_presion(self):
+    def calcular_conversion_reactivo_limitante_dado_epsilon_a_otra_propiedad(self):
         try:
             funciones = Funciones()
             # Verificar individualmente cada campo y mostrar un mensaje específico si está vacío
             if not self.otra_propiedad_inicial.text():
-                self.statusbar.showMessage("El campo 'Otra Propiedad Inicial del panel' está vacío. Por favor, llénelo.", 5000)
-                return
+                raise ValueError("El campo 'Otra Propiedad Inicial del panel' está vacío. Por favor, llénelo.")
+                
             if not self.otra_propiedad.text():
-                self.statusbar.showMessage("El campo 'Otra Propiedad de la pestaña datos cinéticos' está vacío. Por favor, llénelo.", 5000)
-                return
+                raise ValueError("El campo 'Otra Propiedad de la pestaña datos cinéticos' está vacío. Por favor, llénelo.")
+                
             if not self.epsilon_reactivo_limitante_calculo.text():
-                self.statusbar.showMessage("El campo 'Epsilon Reactivo Limitante del panel' está vacío. Por favor, llénelo.", 5000)
-                return
+                raise ValueError("El campo 'Epsilon Reactivo Limitante del panel' está vacío. Por favor, llénelo.")
+                
             
             otra_propiedad_inicial = float(self.otra_propiedad_inicial.text())
             otra_propiedad = float(self.otra_propiedad.text())
             epsilon_a = float(self.epsilon_reactivo_limitante_calculo.text())
-            gas_conversion_componente_principal = funciones.gas_conversion_componente_principal_epsilon_a(otra_propiedad, otra_propiedad_inicial, epsilon_a)
+            gas_conversion_componente_principal = funciones.propiedad_conversion_componente_principal_epsilon_a(otra_propiedad, otra_propiedad_inicial, epsilon_a)
             
             self.conversion_reactivo_limitante_gas.setText(str(gas_conversion_componente_principal))
             self.statusbar.showMessage(f" La conversion del reactivo limitante es x reactivo limitante= {gas_conversion_componente_principal} .", 5000)
         except ValueError as e:
+            QMessageBox.warning(self, "Revisar", f" {e}", QMessageBox.StandardButton.Ok)
             self.statusbar.showMessage(f"Error al convertir a float: {e}", 5000)
         except Exception as e:
             self.statusbar.showMessage(f"Error inesperado: {e}", 5000)
@@ -1384,7 +1378,6 @@ class FlujoDatos(QMainWindow):
                 self.epsilon_rl_ds_edit.setText(epsilon_rl_calculo_valor)
             else:
                 self.epsilon_rl_ds_edit.setText('0')
-
 
     # crud datos de salida
     def agregar_datos_salida(self):
