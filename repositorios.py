@@ -120,6 +120,28 @@ class RegistroDataExperimentalManejador(BaseManejador):
 class ReaccionQuimicaManejador(BaseManejador):
     def __init__(self):
         super().__init__(ReaccionQuimica)
+    
+    def imprimir_ecuacion(self, nombre_reaccion):
+        try:
+            filtro_reaccion = {'nombre_reaccion': nombre_reaccion}
+            resultados = self.consultar(filtros=filtro_reaccion)
+            
+            reactivos = []
+            productos = []
+
+            for row in resultados:
+                coeficiente_str = f"{row.coeficiente_estequiometrico} " if row.coeficiente_estequiometrico != 1 else ""
+                if row.tipo_especie in ['reactivo_limitante', 'reactivo']:
+                    reactivos.append(f"{coeficiente_str}{row.formula}")
+                elif row.tipo_especie == 'producto':
+                    productos.append(f"{coeficiente_str}{row.formula}")
+
+            ecuacion_quimica = " + ".join(reactivos) + " = " + " + ".join(productos)
+            #print(ecuacion_quimica)
+            return ecuacion_quimica
+        except SQLAlchemyError as e:
+            logging.error(f"Error de SQLAlchemy al consultar ReaccionQuimica: {e}")
+            return None
 
 class RegistroUnidadesManejador(BaseManejador):
     def __init__(self):

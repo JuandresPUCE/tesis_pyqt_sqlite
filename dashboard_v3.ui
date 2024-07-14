@@ -220,7 +220,7 @@
              <item>
               <widget class="QGroupBox" name="groupBox_3">
                <property name="title">
-                <string>Filtro</string>
+                <string>Tipo especie</string>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_13">
                 <item>
@@ -448,13 +448,6 @@
                    </property>
                   </widget>
                  </item>
-                 <item>
-                  <widget class="QPushButton" name="opcion_btn_3">
-                   <property name="text">
-                    <string>Opciones_2</string>
-                   </property>
-                  </widget>
-                 </item>
                 </layout>
                </item>
                <item>
@@ -639,6 +632,34 @@
                             </spacer>
                            </item>
                            <item>
+                            <widget class="QLabel" name="reaccion_label">
+                             <property name="font">
+                              <font>
+                               <bold>true</bold>
+                              </font>
+                             </property>
+                             <property name="text">
+                              <string/>
+                             </property>
+                             <property name="alignment">
+                              <set>Qt::AlignCenter</set>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <spacer name="verticalSpacer_7">
+                             <property name="orientation">
+                              <enum>Qt::Vertical</enum>
+                             </property>
+                             <property name="sizeHint" stdset="0">
+                              <size>
+                               <width>20</width>
+                               <height>40</height>
+                              </size>
+                             </property>
+                            </spacer>
+                           </item>
+                           <item>
                             <layout class="QVBoxLayout" name="vista_grafica">
                              <property name="spacing">
                               <number>0</number>
@@ -684,7 +705,7 @@
                  <item>
                   <widget class="QTabWidget" name="tabWidget_2">
                    <property name="currentIndex">
-                    <number>2</number>
+                    <number>1</number>
                    </property>
                    <widget class="QWidget" name="reaccion_quimica_tab">
                     <attribute name="title">
@@ -980,7 +1001,7 @@
                         <item>
                          <widget class="QPushButton" name="graficar_btn">
                           <property name="text">
-                           <string>Graficar</string>
+                           <string>Graficar Modelo</string>
                           </property>
                          </widget>
                         </item>
@@ -1566,6 +1587,19 @@
                 </widget>
                </item>
               </layout>
+             </widget>
+             <widget class="QPushButton" name="graficar_arrhenius">
+              <property name="geometry">
+               <rect>
+                <x>340</x>
+                <y>620</y>
+                <width>95</width>
+                <height>24</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Graficar Arrenius</string>
+              </property>
              </widget>
             </widget>
             <widget class="QWidget" name="tab_3">

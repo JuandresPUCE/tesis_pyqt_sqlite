@@ -139,8 +139,8 @@ class PanelDataAnalisis(QMainWindow):
         # Conectar la señal currentIndexChanged a la función manejadora
         self.ajustar_modelo_box.currentIndexChanged.connect(self.manejador_seleccion_modelo)
         
-        self.opcion_btn_3 = self.ui.opcion_btn_3
-        self.opcion_btn_3.clicked.connect(self.calcular_arrenius)
+        self.graficar_arrhenius = self.ui.graficar_arrhenius
+        self.graficar_arrhenius.clicked.connect(self.calcular_arrenius)
 
         #botones para abrir otros paneles
         # line edit de modelo de ajuste
@@ -195,7 +195,17 @@ class PanelDataAnalisis(QMainWindow):
         titulos_columnas_datos = ["id", "Tiempo", "Concentración", "Otra\nPropiedad", "Conversión\nReactivo\nLimitante", "Tipo\nEspecie", "id\nCondiciones\nIniciales", "Nombre\ndata", "Nombre\nreacción", "Especie\nquímica"]
         self.tabla_datos.setHorizontalHeaderLabels(titulos_columnas_datos)
         self.tabla_datos.resizeColumnsToContents()
-
+         #ajuste visual columnas condiciones iniciales
+        titulos_columnas_condiciones_iniciales = ["id", "Temperatura", "Tiempo", "Presión\nTotal", "Presión\nParcial", "Fracción\nMolar", "Especie\nQuímica", "Tipo\nEspecie", "Detalle", "Nombre\ndata"]
+        self.condiciones_iniciales_tabla.setHorizontalHeaderLabels(titulos_columnas_condiciones_iniciales)
+        self.condiciones_iniciales_tabla.resizeColumnsToContents()
+        
+        #ajuste visual columnas tabla reaccion quimica
+        titulos_columnas_reaccion_q = ["id","Especie\nQuimica", "Fórmula", "Coeficiente\nEstequiométrico", "Detalle", "Tipo\nEspecie", "Nombre\nreaccion"]
+        # Aplicar los títulos a la tabla
+        self.reaccion_quimica_tabla.setHorizontalHeaderLabels(titulos_columnas_reaccion_q)
+        # Autoajustar el ancho de las columnas al contenido
+        self.reaccion_quimica_tabla.resizeColumnsToContents()
 
         # funciones de la barra de menu
     def init_panel_menu(self):
@@ -324,6 +334,7 @@ class PanelDataAnalisis(QMainWindow):
         tabla = self.reaccion_quimica_tabla
         tabla.clearContents()
         self.metodos_comunes.mostrar_reacciones(self.reaccion_quimica_tabla, resultados)
+        #print("Reacciones químicas:", resultados)
     
     def mostrar_datos_tabla_salida(self, resultados):
         self.metodos_comunes.mostrar_datos_tabla_salida(self.tabla_datos_salida, resultados)
@@ -451,7 +462,7 @@ class PanelDataAnalisis(QMainWindow):
         #nombre_data_filtro = self.condiciones_iniciales_box.currentText()
         tipo_especie = self.filtro_datos_box.currentText()
         especie_quimica = self.filtro_datos_box_2.currentText()
-
+        
         if not nombre_data:
             return
         
@@ -499,7 +510,8 @@ class PanelDataAnalisis(QMainWindow):
 
             filtro_reaccion = {'nombre_reaccion': nombre_reaccion}
             reaccion_quimica = self.ReaccionQuimicaManejador.consultar(filtros=filtro_reaccion)
-
+            reaccion_quimica_ecuacion = self.ReaccionQuimicaManejador.imprimir_ecuacion(nombre_reaccion)
+            self.ui.reaccion_label.setText(reaccion_quimica_ecuacion)
             # Convertir la reacción química a un DataFrame de pandas
             df_reaccion_quimica = pd.DataFrame.from_records([reaccion.__dict__ for reaccion in reaccion_quimica])
             print("Reacción química:", df_reaccion_quimica)
@@ -684,8 +696,8 @@ class PanelDataAnalisis(QMainWindow):
             #nombre_reaccion=self.nombre_reaccion_ds_edit.text()
             #delta_n_reaccion=float(self.delta_n_ds_edit.text())
             #epsilon_reactivo_limitante=float(self.epsilon_rl_ds_edit.text())
-            #tipo_especie=self.tipo_especie_ds_edit.text()
-            #especie_quimica=self.especie_quimica_ds_edit.text()
+            tipo_especie=self.filtro_datos_box.currentText()
+            especie_quimica=self.filtro_datos_box_2.currentText()
             constante_cinetica=float(self.k_calculado.text())
             orden_reaccion=float(self.n_calculado.text())
             modelo_cinetico=self.modelo_utilizado.text()
@@ -699,9 +711,13 @@ class PanelDataAnalisis(QMainWindow):
             # Crear el objeto de datos de salida actualizados
             nuevos_datos_salida = {
 
+                "tipo_especie": tipo_especie,
+                "especie_quimica": especie_quimica,
                 "constante_cinetica": constante_cinetica,
                 "orden_reaccion": orden_reaccion,
                 "modelo_cinetico": modelo_cinetico,
+                "tipo_calculo": "método integral",
+                
 
             }
 
