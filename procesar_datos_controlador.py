@@ -67,6 +67,7 @@ class PanelDataAnalisis(QMainWindow):
         self.init_panel_menu()
 
         self.ajustes_visuales_tabla()
+        self.buscar_unidades_nombre_data()
 
         # Definir panel_izquierdo para cambios
         self.panel_izquierdo = self.ui.tab_3
@@ -99,13 +100,14 @@ class PanelDataAnalisis(QMainWindow):
         self.registro_datos_box = self.ui.registro_datos_box
         #self.registro_datos_box.currentIndexChanged.connect(self.actualizar_condiciones_iniciales)
         self.registro_datos_box.currentIndexChanged.connect(self.imprimir_registro_seleccionado)
+        self.registro_datos_box.currentIndexChanged.connect(self.buscar_unidades_nombre_data)
         #self.registro_datos_box.currentIndexChanged.connect(self.actualizar_datos_cineticos)
 
         # Combobox de condiciones iniciales
-        self.condiciones_iniciales_box = self.ui.condiciones_iniciales_box
+        #self.condiciones_iniciales_box = self.ui.condiciones_iniciales_box
         #self.condiciones_iniciales_box.currentIndexChanged.connect(self.actualizar_datos_cineticos)
         #self.condiciones_iniciales_box.currentIndexChanged.connect(self.desplegar_condiciones_iniciales_tabla)
-        self.filtrar_datos_condiciones_iniciales()
+        #self.filtrar_datos_condiciones_iniciales()
 
         #combo box filtro datos experimentales
         self.filtro_datos_box = self.ui.filtro_datos_box
@@ -156,6 +158,10 @@ class PanelDataAnalisis(QMainWindow):
         #boton de ejecutar modelo
         self.ejecutar_modelo_button = self.ui.graficar_btn
         self.ejecutar_modelo_button.clicked.connect(self.ejecutar_modelo)
+        
+        #Graficar datos de entrada
+        self.graficar_datos_btn = self.ui.graficar_datos_btn
+        self.graficar_datos_btn.clicked.connect(self.imprimir_registro_seleccionado)
 
         #boton CRUD
         self.crud_1= self.ui.panel_datos_btn
@@ -234,7 +240,7 @@ class PanelDataAnalisis(QMainWindow):
 
     def mostrar_condiciones_iniciales(self,condiciones):
         self.mensaje_error = "No se encontraron condiciones iniciales en la base de datos."
-        self.metodos_comunes.desplegar_datos_combo_box(self.condiciones_iniciales_box,condiciones,self.mensaje_error)
+        #self.metodos_comunes.desplegar_datos_combo_box(self.condiciones_iniciales_box,condiciones,self.mensaje_error)
         self.metodos_comunes.mostrar_condiciones_iniciales(self.condiciones_iniciales_tabla, condiciones)
     
     def desplegar_condiciones_iniciales_tabla(self):
@@ -442,7 +448,7 @@ class PanelDataAnalisis(QMainWindow):
     def imprimir_registro_seleccionado(self):
         nombre_data = self.registro_datos_box.currentText()
         id_condiciones_iniciales = self.filtro_datos_box_3.currentText()
-        nombre_data_filtro = self.condiciones_iniciales_box.currentText()
+        #nombre_data_filtro = self.condiciones_iniciales_box.currentText()
         tipo_especie = self.filtro_datos_box.currentText()
         especie_quimica = self.filtro_datos_box_2.currentText()
 
@@ -718,6 +724,34 @@ class PanelDataAnalisis(QMainWindow):
         
         finally:
             QMessageBox.information(self, "Información", "Datos de salida actualizados correctamente", QMessageBox.StandardButton.Ok)
+            
+    def buscar_unidades_nombre_data(self):
+        # Verifica si nombre_data_experimental está vacío
+        if not self.registro_datos_box.currentText():
+            self.ui.temp_u_l.setText("T")
+            self.ui.t_u_label.setText("t")
+            self.ui.p_u_l.setText("P")
+            self.ui.c_u_label.setText("[C]")
+            return  # Termina la ejecución del método aquí
+        try:
+            filtros = {"nombre_data": self.registro_datos_box.currentText()}
+            registros = self.RegistroUnidadesManejador.consultar(filtros=filtros)
+            if registros:  # Verifica si la lista no está vacía
+                # Accede al atributo 'id' del registro directamente
+
+                self.ui.temp_u_l.setText(str(registros[0].temperatura))
+                self.ui.t_u_label.setText(str(registros[0].tiempo))
+                self.ui.p_u_l.setText(str(registros[0].presion))
+                self.ui.c_u_label.setText(str(registros[0].concentracion))
+                #self.ui.id_registro_unidades_ds_edit.setText(str(registros[0].id))
+            else:
+                self.ui.temp_u_l.setText("T")
+                self.ui.t_u_label.setText("t")
+                self.ui.p_u_l.setText("P")
+                self.ui.c_u_label.setText("[C]")
+        except Exception as e:
+            # Mostrar un mensaje de error en la interfaz de usuario
+            self.statusbar.showMessage(f"Error al buscar registros por ID: {e}", 5000)
 
 
 class MatplotlibWidget(QWidget):

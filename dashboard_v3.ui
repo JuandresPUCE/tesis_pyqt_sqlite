@@ -193,140 +193,196 @@
              <enum>QFrame::Raised</enum>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_3">
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
              <item>
-              <widget class="QFrame" name="frame_6">
-               <property name="frameShape">
-                <enum>QFrame::StyledPanel</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
+              <widget class="QGroupBox" name="groupBox_2">
+               <property name="title">
+                <string>Registro datos</string>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_9">
-                <property name="spacing">
-                 <number>0</number>
-                </property>
-                <property name="leftMargin">
-                 <number>0</number>
-                </property>
-                <property name="topMargin">
-                 <number>0</number>
-                </property>
-                <property name="bottomMargin">
-                 <number>0</number>
-                </property>
                 <item>
-                 <widget class="QGroupBox" name="groupBox">
-                  <property name="title">
-                   <string>Registro datos</string>
-                  </property>
-                  <layout class="QVBoxLayout" name="verticalLayout_8">
-                   <property name="spacing">
-                    <number>0</number>
-                   </property>
-                   <property name="leftMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="topMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="bottomMargin">
-                    <number>0</number>
-                   </property>
-                   <item>
-                    <widget class="QComboBox" name="registro_datos_box"/>
-                   </item>
-                  </layout>
-                 </widget>
+                 <widget class="QComboBox" name="registro_datos_box"/>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_17">
+               <property name="title">
+                <string>Condiciones Iniciales</string>
+               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout_8">
+                <item>
+                 <widget class="QComboBox" name="filtro_datos_box_3"/>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_3">
+               <property name="title">
+                <string>Filtro</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_13">
+                <item>
+                 <widget class="QComboBox" name="filtro_datos_box"/>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_4">
+               <property name="title">
+                <string>Especie Quimica</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_16">
+                <item>
+                 <widget class="QComboBox" name="filtro_datos_box_2"/>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="graficar_datos_btn">
+               <property name="text">
+                <string>Graficar datos</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox">
+               <property name="title">
+                <string>Unidades Ocupadas</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_19">
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_17">
+                  <item>
+                   <widget class="QLabel" name="temp_u_e">
+                    <property name="text">
+                     <string>Temperatura</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_10">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="temp_u_l">
+                    <property name="layoutDirection">
+                     <enum>Qt::LeftToRight</enum>
+                    </property>
+                    <property name="text">
+                     <string>T</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </item>
                 <item>
-                 <widget class="QGroupBox" name="groupBox_2">
-                  <property name="title">
-                   <string>Condiciones Iniciales</string>
-                  </property>
-                  <layout class="QHBoxLayout" name="horizontalLayout_8">
-                   <property name="spacing">
-                    <number>0</number>
-                   </property>
-                   <property name="leftMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="topMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="bottomMargin">
-                    <number>0</number>
-                   </property>
-                   <item>
-                    <widget class="QComboBox" name="filtro_datos_box_3"/>
-                   </item>
-                   <item>
-                    <widget class="QComboBox" name="condiciones_iniciales_box"/>
-                   </item>
-                  </layout>
-                 </widget>
+                 <layout class="QHBoxLayout" name="horizontalLayout_18">
+                  <item>
+                   <widget class="QLabel" name="p_u_e">
+                    <property name="text">
+                     <string>Presión</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_11">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="p_u_l">
+                    <property name="text">
+                     <string>P</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </item>
                 <item>
-                 <widget class="QGroupBox" name="groupBox_3">
-                  <property name="title">
-                   <string>Filtro</string>
-                  </property>
-                  <layout class="QVBoxLayout" name="verticalLayout_13">
-                   <property name="spacing">
-                    <number>0</number>
-                   </property>
-                   <property name="leftMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="topMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="bottomMargin">
-                    <number>0</number>
-                   </property>
-                   <item>
-                    <widget class="QComboBox" name="filtro_datos_box"/>
-                   </item>
-                  </layout>
-                 </widget>
+                 <layout class="QHBoxLayout" name="horizontalLayout_19">
+                  <item>
+                   <widget class="QLabel" name="t_u_e">
+                    <property name="text">
+                     <string>Tiempo</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_12">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="t_u_label">
+                    <property name="layoutDirection">
+                     <enum>Qt::LeftToRight</enum>
+                    </property>
+                    <property name="text">
+                     <string>t</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </item>
                 <item>
-                 <widget class="QGroupBox" name="groupBox_4">
-                  <property name="title">
-                   <string>Especie Quimica</string>
-                  </property>
-                  <layout class="QVBoxLayout" name="verticalLayout_16">
-                   <property name="spacing">
-                    <number>0</number>
-                   </property>
-                   <property name="leftMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="topMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="bottomMargin">
-                    <number>0</number>
-                   </property>
-                   <item>
-                    <widget class="QComboBox" name="filtro_datos_box_2"/>
-                   </item>
-                  </layout>
-                 </widget>
+                 <layout class="QHBoxLayout" name="horizontalLayout_20">
+                  <item>
+                   <widget class="QLabel" name="c_u_e">
+                    <property name="text">
+                     <string>Concentración</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_13">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="c_u_label">
+                    <property name="text">
+                     <string>[C]</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </item>
                </layout>
               </widget>
@@ -360,6 +416,19 @@
              </property>
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <item>
+                <spacer name="horizontalSpacer_14">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
                <item>
                 <layout class="QVBoxLayout" name="verticalLayout_4">
                  <property name="spacing">
@@ -615,87 +684,8 @@
                  <item>
                   <widget class="QTabWidget" name="tabWidget_2">
                    <property name="currentIndex">
-                    <number>0</number>
+                    <number>2</number>
                    </property>
-                   <widget class="QWidget" name="datos_cineticos_tab">
-                    <attribute name="title">
-                     <string>Conjunto datos cinéticos</string>
-                    </attribute>
-                    <layout class="QHBoxLayout" name="horizontalLayout_6">
-                     <item>
-                      <widget class="QTableWidget" name="datos_cineticos_tabla">
-                       <property name="focusPolicy">
-                        <enum>Qt::NoFocus</enum>
-                       </property>
-                       <property name="showGrid">
-                        <bool>false</bool>
-                       </property>
-                       <attribute name="horizontalHeaderMinimumSectionSize">
-                        <number>50</number>
-                       </attribute>
-                       <attribute name="horizontalHeaderDefaultSectionSize">
-                        <number>70</number>
-                       </attribute>
-                       <attribute name="horizontalHeaderStretchLastSection">
-                        <bool>true</bool>
-                       </attribute>
-                       <attribute name="verticalHeaderVisible">
-                        <bool>false</bool>
-                       </attribute>
-                       <column>
-                        <property name="text">
-                         <string>id</string>
-                        </property>
-                       </column>
-                       <column>
-                        <property name="text">
-                         <string>tiempo</string>
-                        </property>
-                       </column>
-                       <column>
-                        <property name="text">
-                         <string>concentracion</string>
-                        </property>
-                       </column>
-                       <column>
-                        <property name="text">
-                         <string>otra_propiedad</string>
-                        </property>
-                       </column>
-                       <column>
-                        <property name="text">
-                         <string>conversion_reactivo_limitante</string>
-                        </property>
-                       </column>
-                       <column>
-                        <property name="text">
-                         <string>tipo_especie</string>
-                        </property>
-                       </column>
-                       <column>
-                        <property name="text">
-                         <string>id_condiciones_iniciales</string>
-                        </property>
-                       </column>
-                       <column>
-                        <property name="text">
-                         <string>nombre_data</string>
-                        </property>
-                       </column>
-                       <column>
-                        <property name="text">
-                         <string>nombre_reaccion</string>
-                        </property>
-                       </column>
-                       <column>
-                        <property name="text">
-                         <string>especie_quimica</string>
-                        </property>
-                       </column>
-                      </widget>
-                     </item>
-                    </layout>
-                   </widget>
                    <widget class="QWidget" name="reaccion_quimica_tab">
                     <attribute name="title">
                      <string>Reacción Química </string>
@@ -839,13 +829,13 @@
                      </item>
                     </layout>
                    </widget>
-                   <widget class="QWidget" name="tab_4">
+                   <widget class="QWidget" name="datos_cineticos_tab">
                     <attribute name="title">
-                     <string>Unidades</string>
+                     <string>Conjunto datos cinéticos</string>
                     </attribute>
-                    <layout class="QVBoxLayout" name="verticalLayout_17">
+                    <layout class="QHBoxLayout" name="horizontalLayout_6">
                      <item>
-                      <widget class="QTableWidget" name="registro_unidades_tabla">
+                      <widget class="QTableWidget" name="datos_cineticos_tabla">
                        <property name="focusPolicy">
                         <enum>Qt::NoFocus</enum>
                        </property>
@@ -871,17 +861,7 @@
                        </column>
                        <column>
                         <property name="text">
-                         <string>presion</string>
-                        </property>
-                       </column>
-                       <column>
-                        <property name="text">
-                         <string>temperatura</string>
-                        </property>
-                       </column>
-                       <column>
-                        <property name="text">
-                         <string>nombre_data</string>
+                         <string>tiempo</string>
                         </property>
                        </column>
                        <column>
@@ -891,17 +871,37 @@
                        </column>
                        <column>
                         <property name="text">
-                         <string>energia</string>
+                         <string>otra_propiedad</string>
                         </property>
                        </column>
                        <column>
                         <property name="text">
-                         <string>r</string>
+                         <string>conversion_reactivo_limitante</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>tipo_especie</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>id_condiciones_iniciales</string>
                         </property>
                        </column>
                        <column>
                         <property name="text">
                          <string>nombre_data</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>nombre_reaccion</string>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>especie_quimica</string>
                         </property>
                        </column>
                       </widget>
@@ -917,7 +917,7 @@
             </widget>
             <widget class="QWidget" name="mi_tab">
              <attribute name="title">
-              <string>método integral</string>
+              <string>Método integral</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_15">
               <item>
