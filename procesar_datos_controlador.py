@@ -94,20 +94,10 @@ class PanelDataAnalisis(QMainWindow):
         self.tabla_datos_salida.setSortingEnabled(False)
         
         #cambio de columnas para la tabla de datos de salida
-
-
         # Combobox de registro datos experimentales
         self.registro_datos_box = self.ui.registro_datos_box
-        #self.registro_datos_box.currentIndexChanged.connect(self.actualizar_condiciones_iniciales)
         self.registro_datos_box.currentIndexChanged.connect(self.imprimir_registro_seleccionado)
         self.registro_datos_box.currentIndexChanged.connect(self.buscar_unidades_nombre_data)
-        #self.registro_datos_box.currentIndexChanged.connect(self.actualizar_datos_cineticos)
-
-        # Combobox de condiciones iniciales
-        #self.condiciones_iniciales_box = self.ui.condiciones_iniciales_box
-        #self.condiciones_iniciales_box.currentIndexChanged.connect(self.actualizar_datos_cineticos)
-        #self.condiciones_iniciales_box.currentIndexChanged.connect(self.desplegar_condiciones_iniciales_tabla)
-        #self.filtrar_datos_condiciones_iniciales()
 
         #combo box filtro datos experimentales
         self.filtro_datos_box = self.ui.filtro_datos_box
@@ -121,7 +111,6 @@ class PanelDataAnalisis(QMainWindow):
 
         self.filtro_datos_box_3 = self.ui.filtro_datos_box_3
         self.filtrar_datos_id_condiciones_iniciales()
-        
         
         # Crear un widget para el gráfico de Matplotlib
         self.matplotlib_widget = MatplotlibWidget(self)
@@ -178,9 +167,6 @@ class PanelDataAnalisis(QMainWindow):
         #nuevo archivo de base de datos
         self.nuevo_archivo_btn=self.ui.nuevo_archivo_btn
         self.nuevo_archivo_btn.clicked.connect(self.crear_base_datos)
-
-        #tabla de dataframe
-        #self.vista_tabla_df=self.ui.vista_tabla_df
 
         self.vista_tabla_df = DataFrameWidget(self)
         #self.ui.vista_tabla_df.addWidget(self.vista_tabla_df)
@@ -253,43 +239,12 @@ class PanelDataAnalisis(QMainWindow):
         #self.metodos_comunes.desplegar_datos_combo_box(self.condiciones_iniciales_box,condiciones,self.mensaje_error)
         self.metodos_comunes.mostrar_condiciones_iniciales(self.condiciones_iniciales_tabla, condiciones)
     
-    """
-    def desplegar_condiciones_iniciales_tabla(self):
-        nombre_data = self.registro_datos_box.currentText()
-        condicion_inicial_id = self.condiciones_iniciales_box.currentData()
-
-        filtros = {}
-        if nombre_data and nombre_data != "Seleccione una opción":
-            filtros['nombre_data'] = nombre_data
-        if condicion_inicial_id and condicion_inicial_id != "Seleccione una opción":
-            filtros['id'] = condicion_inicial_id
-
-        #condiciones = self.CondicionesInicialesManejador.consultar(filtros=filtros)
-        #self.mostrar_condiciones_iniciales_tabla(condiciones)
-    """
-
     def mostrar_condiciones_iniciales_tabla(self, condiciones):
         self.metodos_comunes.mostrar_condiciones_iniciales(self.condiciones_iniciales_tabla, condiciones)
 
     def buscar_dato(self):
         datos_resultados = self.DatosCineticosManejador.consultar()
         self.mostrar_datos_tabla(datos_resultados)
-
-    """
-    def filtrar_datos_condiciones_iniciales(self):
-        self.condiciones_iniciales_box.clear()
-        self.condiciones_iniciales_box.addItem("Seleccione una opción")
-
-        condiciones_iniciales = self.CondicionesInicialesManejador.consultar()
-
-        if condiciones_iniciales:
-            nombre_data_columna = set(registro.nombre_data for registro in condiciones_iniciales)
-            
-            for nombre_data in nombre_data_columna:
-                self.condiciones_iniciales_box.addItem(str(nombre_data))
-        else:
-            QMessageBox.information(self, "No hay datos", "No se encontraron datos en la base de datos.", QMessageBox.StandardButton.Ok)
-    """
 
     def filtrar_datos(self):
         self.filtro_datos_box.clear()
@@ -338,25 +293,10 @@ class PanelDataAnalisis(QMainWindow):
         tabla = self.reaccion_quimica_tabla
         tabla.clearContents()
         self.metodos_comunes.mostrar_reacciones(self.reaccion_quimica_tabla, resultados)
-        #print("Reacciones químicas:", resultados)
     
     def mostrar_datos_tabla_salida(self, resultados):
         self.metodos_comunes.mostrar_datos_tabla_salida(self.tabla_datos_salida, resultados)
-    
-    """
-    def actualizar_datos_cineticos(self):
-        nombre_data = self.registro_datos_box.currentText()
-        condicion_inicial_id = self.condiciones_iniciales_box.currentData()
 
-        filtros = {}
-        if nombre_data and nombre_data != "Seleccione una opción":
-            filtros['nombre_data'] = nombre_data
-        if condicion_inicial_id and condicion_inicial_id != "Seleccione una opción":
-            filtros['id_condiciones_iniciales'] = condicion_inicial_id
-
-        datos_cineticos = self.DatosCineticosManejador.consultar(filtros=filtros)
-        self.mostrar_datos_tabla(datos_cineticos)    
-    """
 
     def mostrar_metodos_ajustador(self):
         self.ajustar_modelo_box.clear()
@@ -368,6 +308,7 @@ class PanelDataAnalisis(QMainWindow):
     # Maneja la selección del modelo de ajuste
     def manejador_seleccion_modelo(self, index):
         if index == 0:  # Si se selecciona "Modelos cinéticos", no computa
+            QMessageBox.warning(self, "Selección requerida", "Por favor, escoja un modelo.")
             return
 
         try:
@@ -383,13 +324,11 @@ class PanelDataAnalisis(QMainWindow):
             metodo = getattr(MetodoIntegralAjustador, nombre_metodo)
 
             # Obtener los parámetros necesarios para el método
-            #reactivo_limitante_inicial = self.reactivo_limitante_inicial_edit.text().strip()
             estimacion_inicial_k = self.estimacion_inicial_k_edit.text().strip()
             estimacion_inicial_n = self.estimacion_inicial_n_edit.text().strip()
 
             # Verificar si los valores son numéricos antes de convertirlos
             try:
-                #reactivo_limitante_inicial = float(reactivo_limitante_inicial)
                 estimacion_inicial_k = float(estimacion_inicial_k)
                 estimacion_inicial_n = float(estimacion_inicial_n)  # Asumimos que n es un entero
             except ValueError:
@@ -410,10 +349,10 @@ class PanelDataAnalisis(QMainWindow):
             self.reactivo_limitante_calculado.setText(str(resultado[1]))
             self.k_calculado.setText(str(resultado[0]))
             self.n_calculado.setText(str(resultado[2]))
-            #self.modelo_utilizado.setText(nombre_metodo)
-            self.modelo_utilizado.setText(str(resultado[3]))
-            # Graficar utilizando el resultado obtenido
 
+            self.modelo_utilizado.setText(str(resultado[3]))
+
+            # Graficar utilizando el resultado obtenido
             MetodoIntegralGraficador.graficar_modelo_salida_opcional_ecuacion(
             dataframe,
             "tiempo",
@@ -425,7 +364,6 @@ class PanelDataAnalisis(QMainWindow):
             resultado[4], #ecuacion
             data_producto=None,
             columna_concentracion_producto=None,
-
             )
 
             MetodoIntegralGraficador.graficar_modelo_salida_opcional_ecuacion(
@@ -443,10 +381,10 @@ class PanelDataAnalisis(QMainWindow):
             ax=self.matplotlib_widget.ax, 
             canvas=self.matplotlib_widget.canvas
             )
+            # Mostrar mensaje indicando que el modelado fue exitoso
+            #QMessageBox.information(self, "Modelado Exitoso", "Modelado con éxito. Por favor, escoja dónde grabar los datos modelados.") 
+            #self.statusBar().showMessage("Modelado con éxito. Por favor, escoja dónde grabar los datos modelados.",5000)
             
-            return resultado
-            # Ahora, graficamos el modelo utilizando los resultados obtenidos
-
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Ocurrió un error al ejecutar el modelo: {str(e)}", QMessageBox.StandardButton.Ok)
             return None
@@ -465,9 +403,14 @@ class PanelDataAnalisis(QMainWindow):
     def imprimir_registro_seleccionado(self):
         nombre_data = self.registro_datos_box.currentText()
         id_condiciones_iniciales = self.filtro_datos_box_3.currentText()
-        #nombre_data_filtro = self.condiciones_iniciales_box.currentText()
         tipo_especie = self.filtro_datos_box.currentText()
         especie_quimica = self.filtro_datos_box_2.currentText()
+    
+        # Verificar si no se ha seleccionado un nombre de dato
+        if nombre_data == "Seleccione una opción":
+            self.mostrar_imagen_datos_vacios()
+            self.statusBar().showMessage("Por favor, Antes de continuar seleccione un nombre de conjunto de datos para modelar.", 5000)
+            return
         
         if not nombre_data:
             return
@@ -505,8 +448,7 @@ class PanelDataAnalisis(QMainWindow):
         self.df_datos_cineticos_listos = df_datos_cineticos_listos
 
         if df_datos_cineticos_listos.empty:
-            ruta_imagen = 'assets/_2dcfdd65-68b6-4c73-ab67-0c542d136375.jpeg'
-            self.matplotlib_widget.mostrar_imagen(ruta_imagen)
+            self.mostrar_imagen_datos_vacios()
             return
 
         # Verificar si la columna 'nombre_reaccion' existe en el DataFrame
@@ -559,6 +501,8 @@ class PanelDataAnalisis(QMainWindow):
 
             # Actualizar el gráfico
             self.matplotlib_widget.canvas.draw()
+            # Mostrar mensaje indicando que los datos están listos para modelar
+            QMessageBox.information(self, "Datos Listos", "Los datos iniciales han sido identificados y están listos para ser modelados.")
         except KeyError as e:
             print(f"Error: {e}. La columna no existe en el DataFrame.")
                 
@@ -576,21 +520,21 @@ class PanelDataAnalisis(QMainWindow):
                 #pasar a dataframe las condiciones iniciales
                 df_resultados_a_ci = pd.DataFrame.from_records([condicion.__dict__ for condicion in resultados_a_ci])
                 #imprimir condiciones iniciales
-                print("Condiciones iniciales:", df_resultados_a_ci[['id', 'temperatura']])
+                #print("Condiciones iniciales:", df_resultados_a_ci[['id', 'temperatura']])
                 #consultar unidades
                 resultados_unidades = self.RegistroUnidadesManejador.consultar(filtros=filtros)
                 #pasar a dataframe las unidades
                 df_resultados_unidades = pd.DataFrame.from_records([condicion.__dict__ for condicion in resultados_unidades])
                 #imprimir unidades
-                print("Unidades:", df_resultados_unidades)
+                #print("Unidades:", df_resultados_unidades)
 
                 fitro_salida={'id_nombre_data': resultados[0].id,'id_condiciones_iniciales': df_resultados_a_ci["id"].to_string(index=False)}
-                print(fitro_salida)
+                #print(fitro_salida)
                 resultados_ds = self.RegistroDatosSalidaManejador.consultar(filtros=fitro_salida)
                 df_resultados_ds = pd.DataFrame.from_records([condicion.__dict__ for condicion in resultados_ds])
-                print("Datos Salida:", df_resultados_ds)
-                print("CI T :", df_resultados_a_ci['temperatura'])
-                print("Datos Salida:", df_resultados_ds['constante_cinetica'])
+                #print("Datos Salida:", df_resultados_ds)
+                #print("CI T :", df_resultados_a_ci['temperatura'])
+                #print("Datos Salida:", df_resultados_ds['constante_cinetica'])
                 #return resultados[0].id, print(resultados[0].id)
                 # Primero, resetea el índice de las Series para evitar problemas de alineación.
                 temperatura_reset = df_resultados_a_ci['temperatura'].reset_index(drop=True)
@@ -604,13 +548,14 @@ class PanelDataAnalisis(QMainWindow):
                 df_combinado.dropna(inplace=True)
 
                 # Finalmente, imprime el DataFrame combinado.
-                print(df_combinado.to_string(index=False))
+                #print(df_combinado.to_string(index=False))
                 
                 #ejecutar modelo de n puntos
-                resultado=ArrheniusAjustador.ajustar_modelo_arrhenius_lineal_multiple(df_combinado, "temperatura", "constante_cinetica","C")
+                resultado=ArrheniusAjustador.ajustar_modelo_arrhenius_lineal_multiple(df_combinado, "temperatura", "constante_cinetica",self.ui.temp_u_l.text())
+                QMessageBox.information(self, "Resultado", f"El resultado de la energía de activación es: K0={resultado[0]:.4e} ln(K0)={resultado[1]:.6f} EA/R={resultado[2]:.6e} ", QMessageBox.StandardButton.Ok)
 
                 # Imprimir el resultado
-                print("El resultado de la energía de activación es:", resultado)
+                #print("El resultado de la energía de activación es:", resultado)
                 
                 # Imprimir el resultado en la barra de estado
 
@@ -643,8 +588,8 @@ class PanelDataAnalisis(QMainWindow):
                     raise ValueError("Escala de temperatura no reconocida. Elija entre 'C', 'F', 'K' o 'R'.")
                 reciproco_T = 1 / T_absoluta
                 ln_k = np.log(df_combinado['constante_cinetica'])
-                print(ln_k)
-                print(reciproco_T)
+                #print(ln_k)
+                #print(reciproco_T)
 
 
                 ArrheniusGraficador.graficar_modelo_arrhenius_lineal_multiple(
@@ -662,18 +607,20 @@ class PanelDataAnalisis(QMainWindow):
 
                 # Configurar los límites y las etiquetas de los ejes
                 
-                print(f"Reciproco_T: {reciproco_T}, ln_k: {ln_k}")
+                #print(f"Reciproco_T: {reciproco_T}, ln_k: {ln_k}")
                 self.matplotlib_widget_1.ax.set_xlim([reciproco_T.min(), reciproco_T.max()])
                 self.matplotlib_widget_1.ax.set_ylim([ln_k.min(), ln_k.max()])
                 self.matplotlib_widget_1.ax.set_xlabel("1/T")
                 self.matplotlib_widget_1.ax.set_ylabel("ln(k)")
                 # Actualizar el gráfico
                 
-                print("Actualizando el gráfico")
+                #print("Actualizando el gráfico")
                 self.matplotlib_widget_1.canvas.draw()
 
             else:
                 logging.warning(f"No se encontró un registro con el nombre: {self.registro_datos_box.currentText()}")
+                self.statusbar.showMessage(f"No se encontró un registro con el nombre: {self.registro_datos_box.currentText()}",5000)
+                QMessageBox.warning(self, "Advertencia", f"No se encontró un registro con el nombre: {self.registro_datos_box.currentText()}", QMessageBox.StandardButton.Ok)
                 return None
             
         except Exception as e:
@@ -748,9 +695,6 @@ class PanelDataAnalisis(QMainWindow):
         except Exception as e:
             logging.error("Error al actualizar los datos de salida: %s", str(e))
             QMessageBox.critical(self, "Error", f"Se produjo un error al actualizar los datos de salida: {e}", QMessageBox.StandardButton.Ok)
-        
-        finally:
-            QMessageBox.information(self, "Información", "Datos de salida actualizados correctamente", QMessageBox.StandardButton.Ok)
             
     def buscar_unidades_nombre_data(self):
         # Verifica si nombre_data_experimental está vacío
@@ -780,6 +724,14 @@ class PanelDataAnalisis(QMainWindow):
             # Mostrar un mensaje de error en la interfaz de usuario
             self.statusbar.showMessage(f"Error al buscar registros por ID: {e}", 5000)
 
+    def mostrar_imagen_datos_vacios(self):
+        ruta_imagen = 'assets/_2dcfdd65-68b6-4c73-ab67-0c542d136375.jpeg'
+        try:
+            self.matplotlib_widget.mostrar_imagen(ruta_imagen)
+        except FileNotFoundError:
+            QMessageBox.critical(self, "Error", "La imagen no se encuentra en la ruta especificada.", QMessageBox.StandardButton.Ok)
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Se produjo un error al mostrar la imagen: {e}", QMessageBox.StandardButton.Ok)
 
 class MatplotlibWidget(QWidget):
     def __init__(self, parent=None):

@@ -102,6 +102,29 @@ class BaseManejador:
             return False
         finally:
             session.close()
+    
+    # Método para actualizar un campo específico de un registro incrementando el mismo
+    def actualizar_incremental(self, id, nuevo_valor, campo_a_actualizar):
+        session = self.Session()
+        try:
+            # Buscar el registro por ID
+            registro = session.query(self.model).filter(self.model.id == id).first()
+            if registro:
+                # Concatenar el nuevo valor al valor existente
+                valor_actual = getattr(registro, campo_a_actualizar) or ""
+                valor_concatenado = valor_actual + nuevo_valor
+                setattr(registro, campo_a_actualizar, valor_concatenado)
+                session.commit()
+                return True
+            else:
+                logging.warning(f"No se encontró el registro con id {id}")
+                return False
+        except Exception as e:
+            logging.error(f"Error al actualizar el registro: {e}")
+            session.rollback()
+            return False
+        finally:
+            session.close()
 
 # Definir manejadores específicos para cada modelo
 
