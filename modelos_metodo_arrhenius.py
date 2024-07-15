@@ -39,16 +39,22 @@ class ArrheniusAjustador:
         popt, pcov = curve_fit(lambda T, k_0, energia_activacion_R: ArrheniusModelos.modelo_arrhenius_lineal_multiple(T, k_0, energia_activacion_R, escala_temperatura), T_data, ln_k)
         k_0, energia_activacion_R = popt
         ln_k0 = np.log(k_0)
+
+                #Generar la cadena de texto con la ecuacion del modelo ajustado
+        ecuacion_modelo = f'$\\ln(k) = \\ln({k_0:.4e}) - \\frac{{{energia_activacion_R:.6e}}}{{R}} \\left(\\frac{{1}}{{T}}\\right)$'
+
         print(f"K0: {k_0:.6e}")
         print(f"ln(K0): {ln_k0}")
         print(f"EA/R: {energia_activacion_R}")
+
+
         
-        return k_0,ln_k0, energia_activacion_R
+        return k_0,ln_k0, energia_activacion_R,ecuacion_modelo
 
 class ArrheniusGraficador:
     
     @staticmethod
-    def graficar_modelo_arrhenius_lineal_multiple(data_cinetica, columna_temperatura, columna_contante_cinetica, escala_temperatura, k_0, energia_activacion_R, grafico=None, ax=None, canvas=None):
+    def graficar_modelo_arrhenius_lineal_multiple(data_cinetica, columna_temperatura, columna_contante_cinetica, escala_temperatura, k_0, energia_activacion_R, ecuacion_texto=None,grafico=None, ax=None, canvas=None):
         # Extraer datos
         T_data = np.array(data_cinetica[columna_temperatura])
         k_data = np.array(data_cinetica[columna_contante_cinetica])
@@ -87,7 +93,8 @@ class ArrheniusGraficador:
             ax.clear()  # Limpiar el eje para una nueva gráfica
             ax.scatter(reciproco_T, ln_k, label='Datos experimentales', color='orange', marker='o')
             ax.plot(reciproco_T_fit, lnK_fit, label='Ajuste del modelo', color='green')
-            ax.set_xlabel('1/T (K⁻¹)')
+            ax.text(0.02, 0.5, ecuacion_texto, transform=ax.transAxes, fontsize=10, verticalalignment='top', bbox=dict(facecolor='white', alpha=0.5))
+            ax.set_xlabel('1/T absoluta')
             ax.set_ylabel('ln(k)')
             ax.set_title('Modelo de Arrhenius')
             ax.legend()                       
@@ -95,7 +102,8 @@ class ArrheniusGraficador:
         else:
             plt.scatter(reciproco_T, ln_k, label='Datos experimentales', color='orange', marker='o')
             plt.plot(reciproco_T_fit, T_fit_absoluta, label='Ajuste del modelo', color='green')
-            plt.xlabel('1/T (K⁻¹)')
+            plt.text(0.02, 0.5, ecuacion_texto, transform=plt.gca().transAxes, fontsize=10, verticalalignment='top', bbox=dict(facecolor='white', alpha=0.5))
+            plt.xlabel('1/T absoluta')
             plt.ylabel('ln(k)')
             plt.title('Modelo de Arrhenius')
             plt.legend()

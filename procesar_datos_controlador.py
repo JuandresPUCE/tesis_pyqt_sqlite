@@ -253,6 +253,7 @@ class PanelDataAnalisis(QMainWindow):
         #self.metodos_comunes.desplegar_datos_combo_box(self.condiciones_iniciales_box,condiciones,self.mensaje_error)
         self.metodos_comunes.mostrar_condiciones_iniciales(self.condiciones_iniciales_tabla, condiciones)
     
+    """
     def desplegar_condiciones_iniciales_tabla(self):
         nombre_data = self.registro_datos_box.currentText()
         condicion_inicial_id = self.condiciones_iniciales_box.currentData()
@@ -265,6 +266,7 @@ class PanelDataAnalisis(QMainWindow):
 
         #condiciones = self.CondicionesInicialesManejador.consultar(filtros=filtros)
         #self.mostrar_condiciones_iniciales_tabla(condiciones)
+    """
 
     def mostrar_condiciones_iniciales_tabla(self, condiciones):
         self.metodos_comunes.mostrar_condiciones_iniciales(self.condiciones_iniciales_tabla, condiciones)
@@ -273,6 +275,7 @@ class PanelDataAnalisis(QMainWindow):
         datos_resultados = self.DatosCineticosManejador.consultar()
         self.mostrar_datos_tabla(datos_resultados)
 
+    """
     def filtrar_datos_condiciones_iniciales(self):
         self.condiciones_iniciales_box.clear()
         self.condiciones_iniciales_box.addItem("Seleccione una opción")
@@ -286,6 +289,7 @@ class PanelDataAnalisis(QMainWindow):
                 self.condiciones_iniciales_box.addItem(str(nombre_data))
         else:
             QMessageBox.information(self, "No hay datos", "No se encontraron datos en la base de datos.", QMessageBox.StandardButton.Ok)
+    """
 
     def filtrar_datos(self):
         self.filtro_datos_box.clear()
@@ -339,6 +343,7 @@ class PanelDataAnalisis(QMainWindow):
     def mostrar_datos_tabla_salida(self, resultados):
         self.metodos_comunes.mostrar_datos_tabla_salida(self.tabla_datos_salida, resultados)
     
+    """
     def actualizar_datos_cineticos(self):
         nombre_data = self.registro_datos_box.currentText()
         condicion_inicial_id = self.condiciones_iniciales_box.currentData()
@@ -351,6 +356,7 @@ class PanelDataAnalisis(QMainWindow):
 
         datos_cineticos = self.DatosCineticosManejador.consultar(filtros=filtros)
         self.mostrar_datos_tabla(datos_cineticos)    
+    """
 
     def mostrar_metodos_ajustador(self):
         self.ajustar_modelo_box.clear()
@@ -622,7 +628,7 @@ class PanelDataAnalisis(QMainWindow):
                 self.matplotlib_widget_1.canvas.figure.clf()
                 # Crear un nuevo conjunto de ejes
                 self.matplotlib_widget_1.ax = self.matplotlib_widget_1.canvas.figure.subplots()
-                self.escala_temperatura='C'
+                self.escala_temperatura=self.ui.temp_u_l.text()
 
                  # Convertir temperaturas a absolutas y luego a recíprocas
                 if self.escala_temperatura == 'C':
@@ -648,17 +654,22 @@ class PanelDataAnalisis(QMainWindow):
                     escala_temperatura=self.escala_temperatura,
                     k_0=resultado[0],
                     energia_activacion_R=resultado[2],
+                    ecuacion_texto=resultado[3],
                     grafico='MatplotlibWidget',
                     ax=self.matplotlib_widget_1.ax,
                     canvas=self.matplotlib_widget_1.canvas
                 )
 
                 # Configurar los límites y las etiquetas de los ejes
+                
+                print(f"Reciproco_T: {reciproco_T}, ln_k: {ln_k}")
                 self.matplotlib_widget_1.ax.set_xlim([reciproco_T.min(), reciproco_T.max()])
                 self.matplotlib_widget_1.ax.set_ylim([ln_k.min(), ln_k.max()])
-                self.matplotlib_widget_1.ax.set_xlabel("1/T (K⁻¹)")
+                self.matplotlib_widget_1.ax.set_xlabel("1/T")
                 self.matplotlib_widget_1.ax.set_ylabel("ln(k)")
                 # Actualizar el gráfico
+                
+                print("Actualizando el gráfico")
                 self.matplotlib_widget_1.canvas.draw()
 
             else:
