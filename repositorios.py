@@ -173,3 +173,7 @@ class RegistroUnidadesManejador(BaseManejador):
 class RegistroDatosSalidaManejador(BaseManejador):
     def __init__(self):
         super().__init__(DatosSalida)
+
+class RegistroDatosSalidaArrhenius(BaseManejador):
+    def __init__(self):
+        super().__init__(DatosSalidaArrhenius)
