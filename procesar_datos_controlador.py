@@ -185,6 +185,9 @@ class PanelDataAnalisis(QMainWindow):
         titulos_columnas_condiciones_iniciales = ["id", "Temperatura", "Tiempo", "Presión\nTotal", "Presión\nParcial", "Fracción\nMolar", "Especie\nQuímica", "Tipo\nEspecie", "Detalle", "Nombre\ndata"]
         self.condiciones_iniciales_tabla.setHorizontalHeaderLabels(titulos_columnas_condiciones_iniciales)
         self.condiciones_iniciales_tabla.resizeColumnsToContents()
+        titulos_columnas_datos_salida = ["id","Data\nsalida","Fecha","id\nNombre\ndata","id\nCondiciones\niniciales","id\nRegistro\nunidades","r\nutilizada","Nombre\ndata","Nombre\nreaccion","Δn\nreacción","ε\nreactivo\nlimitante","Tipo\nespecie", "Especie\nquímica","Constante\ncinética", "Orden\nreacción", "Modelo\ncinético", "Tipo\ncálculo", "Detalles"]        
+        self.tabla_datos_salida.setHorizontalHeaderLabels(titulos_columnas_datos_salida)
+        self.tabla_datos_salida.resizeColumnsToContents()
         
         #ajuste visual columnas tabla reaccion quimica
         titulos_columnas_reaccion_q = ["id","Especie\nQuimica", "Fórmula", "Coeficiente\nEstequiométrico", "Detalle", "Tipo\nEspecie", "Nombre\nreaccion"]
@@ -402,10 +405,7 @@ class PanelDataAnalisis(QMainWindow):
 
     def imprimir_registro_seleccionado(self):
         nombre_data = self.registro_datos_box.currentText()
-        id_condiciones_iniciales = self.filtro_datos_box_3.currentText()
-        tipo_especie = self.filtro_datos_box.currentText()
-        especie_quimica = self.filtro_datos_box_2.currentText()
-    
+
         # Verificar si no se ha seleccionado un nombre de dato
         if nombre_data == "Seleccione una opción":
             self.mostrar_imagen_datos_vacios()
@@ -414,6 +414,12 @@ class PanelDataAnalisis(QMainWindow):
         
         if not nombre_data:
             return
+
+        id_condiciones_iniciales = self.filtro_datos_box_3.currentText()
+        tipo_especie = self.filtro_datos_box.currentText()
+        especie_quimica = self.filtro_datos_box_2.currentText()
+
+
         
         filtros = {'id': id_condiciones_iniciales}
         condiciones = self.CondicionesInicialesManejador.consultar(filtros=filtros)
@@ -425,6 +431,13 @@ class PanelDataAnalisis(QMainWindow):
 
         # Consultar datos cinéticos filtrando por id de condiciones iniciales
         datos_cineticos = self.DatosCineticosManejador.consultar(filtros=filtros_dc)
+
+        # Verificar si nombre_data está en los resultados obtenidos
+        nombres_datos = [dato.nombre_data for dato in datos_cineticos]
+        if nombre_data not in nombres_datos:
+            self.mostrar_imagen_datos_vacios()
+            self.statusBar().showMessage("Por favor, seleccione un nombre de conjunto de datos válido para modelar.", 5000)
+            return
 
         # Filtrar datos cinéticos por tipo_especie si se selecciona uno específico
         if tipo_especie != "Seleccione una opción":
@@ -561,7 +574,6 @@ class PanelDataAnalisis(QMainWindow):
 
                 self.statusbar.showMessage(f"El resultado de la energía de activación es: K0={resultado[0]} ln(K0)={resultado[1]} EA/R={resultado[2]} ",5000)
 
-
                 self.vista_tabla_df.set_data(df_combinado)
                 #asignar valores a los line edit
 
@@ -634,7 +646,6 @@ class PanelDataAnalisis(QMainWindow):
         self.metodos_comunes.nueva_configuracion_db()
 
     def actualizar_datos_salida(self):
-
         try:
             # Obtener el ID de los datos de salida seleccionados
             fila_seleccionada = self.tabla_datos_salida.currentRow()
@@ -643,29 +654,12 @@ class PanelDataAnalisis(QMainWindow):
                 return
             id = int(self.tabla_datos_salida.item(fila_seleccionada, 0).text().strip())
 
-            # Validaciones
-            #nombre_data_salida=self.nombre_ds_edit.text()
-            #fecha_ds=self.fecha_ds_edit.text()
-            #id_nombre_data=int(self.id_nombre_data_ds_edit.text())
-            #id_condiciones_iniciales=int(self.id_condiciones_iniciales_ds_edit.text())
-            #id_registro_unidades=int(self.id_registro_unidades_ds_edit.text())
-            #r_utilizada=float(self.r_ds_edit.text())
-            #nombre_data=self.nombre_data_ds_edit.text()
-            #nombre_reaccion=self.nombre_reaccion_ds_edit.text()
-            #delta_n_reaccion=float(self.delta_n_ds_edit.text())
-            #epsilon_reactivo_limitante=float(self.epsilon_rl_ds_edit.text())
             tipo_especie=self.filtro_datos_box.currentText()
             especie_quimica=self.filtro_datos_box_2.currentText()
             constante_cinetica=float(self.k_calculado.text())
             orden_reaccion=float(self.n_calculado.text())
             modelo_cinetico=self.modelo_utilizado.text()
-            #tipo_calculo=self.tipo_calculo_ds_edit.text()
-            #energia_activacion=float(self.energia_activacion_ds_edit.text())
-            #detalles_ds=self.detalles_ds_edit.text()
 
-            #if not nombre_data_salida or not fecha_ds or not id_nombre_data or not id_condiciones_iniciales or not id_registro_unidades or not r_utilizada or not nombre_data or not delta_n_reaccion or not epsilon_reactivo_limitante or not tipo_especie or not especie_quimica or not constante_cinetica or not orden_reaccion or not modelo_cinetico or not tipo_calculo or not energia_activacion or not detalles_ds:
-            #    raise ValueError("Todos los campos de texto deben estar llenos")
-        
             # Crear el objeto de datos de salida actualizados
             nuevos_datos_salida = {
 
@@ -684,7 +678,6 @@ class PanelDataAnalisis(QMainWindow):
 
             if actualizar_resultado:
                 QMessageBox.information(self, "Información", "Datos de salida actualizados correctamente", QMessageBox.StandardButton.Ok)
-                #self.limpiar_formulario_datos_salida()
                 self.buscar_datos_salida()
             else:
                 QMessageBox.critical(self, "Error", "Hubo un problema al actualizar los datos de salida", QMessageBox.StandardButton.Ok)

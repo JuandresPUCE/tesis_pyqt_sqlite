@@ -224,7 +224,7 @@ class FlujoDatos(QMainWindow):
 
     def ocultar_elementos_vista(self):
         # Lista de nombres de elementos a ocultar
-        elementos_ocultar = ['groupBox_33', 'nombre_data_rde_edit','nombre_reaccion_rq_edit','groupBox_41','nombre_data_ci_edit','groupBox_61','nombre_data_dc_edit','groupBox_60','nombre_reaccion_dc_edit','groupBox_14','groupBox_2', 'groupBox_3', 'groupBox_4', 'groupBox_5','groupBox_21','groupBox_17','groupBox_22','groupBox_24','groupBox_25','groupBox_26','groupBox_29','groupBox_30','groupBox_31','groupBox_32','groupBox_52','group_box_computo']
+        elementos_ocultar = ['groupBox_33', 'nombre_data_rde_edit','nombre_reaccion_rq_edit','groupBox_41','nombre_data_ci_edit','groupBox_61','nombre_data_dc_edit','groupBox_60','nombre_reaccion_dc_edit','groupBox_14','groupBox_2', 'groupBox_3', 'groupBox_4', 'groupBox_5','groupBox_21','groupBox_17','groupBox_22','groupBox_24','groupBox_25','groupBox_29','groupBox_30','groupBox_31','groupBox_32','groupBox_52','group_box_computo']
         for nombre in elementos_ocultar:
             getattr(self.ui, nombre).hide()
 
@@ -379,7 +379,6 @@ class FlujoDatos(QMainWindow):
         self.orden_reaccion_ds_edit=self.ui.orden_reaccion_ds_edit
         self.modelo_cinetico_ds_edit=self.ui.modelo_cinetico_ds_edit
         self.tipo_calculo_ds_edit=self.ui.tipo_calculo_ds_edit
-        self.energia_activacion_ds_edit=self.ui.energia_activacion_ds_edit
         self.detalles_ds_edit=self.ui.detalles_ds_edit
 
         #tabla tabla_datos_salida
@@ -937,7 +936,7 @@ class FlujoDatos(QMainWindow):
         self.tabla_datos.setHorizontalHeaderLabels(titulos_columnas_datos)
         self.tabla_datos.resizeColumnsToContents()
         #ajuste visual columnas tabla datos salida
-        titulos_columnas_datos_salida = ["id", "Nombre\ndata\nsalida", "Fecha", "id Nombre\ndata", "id Condiciones\niniciales", "id Registro\nunidades", "R\nutilizada", "Nombre\ndata", "Nombre\nreacción", "Δn\nreacción", "ε\nreactivo\nlimitante", "Tipo\nespecie", "Especie\nquímica", "Constante\ncinética", "Orden\nreacción", "Modelo\ncinético", "Tipo\ncálculo", "Energía\nde\nactivación", "Detalles"]
+        titulos_columnas_datos_salida = ["id", "Nombre\ndata\nsalida", "Fecha", "id Nombre\ndata", "id Condiciones\niniciales", "id Registro\nunidades", "R\nutilizada", "Nombre\ndata", "Nombre\nreacción", "Δn\nreacción", "ε\nreactivo\nlimitante", "Tipo\nespecie", "Especie\nquímica", "Constante\ncinética", "Orden\nreacción", "Modelo\ncinético", "Tipo\ncálculo", "Detalles"]
         self.tabla_datos_salida.setHorizontalHeaderLabels(titulos_columnas_datos_salida)
         self.tabla_datos_salida.resizeColumnsToContents()
         #columnas ocultas de datos de salida
@@ -1402,8 +1401,8 @@ class FlujoDatos(QMainWindow):
         self.metodos_comunes.mostrar_datos_tabla_salida(self.tabla_datos_salida, resultados)
     
     def seleccionar_datos_salida(self):
-        columnas = ["id", "nombre_data_salida", "fecha", "id_nombre_data", "id_condiciones_iniciales", "id_registro_unidades", "r_utilizada", "nombre_data", "nombre_reaccion", "delta_n_reaccion", "epsilon_reactivo_limitante", "tipo_especie", "especie_quimica", "constante_cinetica", "orden_reaccion", "modelo_cinetico", "tipo_calculo", "energia_activacion", "detalles"]
-        elementos_visuales = [self.nombre_ds_edit, self.fecha_ds_edit, self.id_nombre_data_ds_edit, self.id_condiciones_iniciales_ds_edit, self.id_registro_unidades_ds_edit, self.r_ds_edit, self.nombre_data_ds_edit, self.nombre_reaccion_ds_edit, self.delta_n_ds_edit, self.epsilon_rl_ds_edit, self.tipo_especie_ds_edit, self.especie_quimica_ds_edit, self.constante_cinetica_ds_edit, self.orden_reaccion_ds_edit, self.modelo_cinetico_ds_edit, self.tipo_calculo_ds_edit, self.energia_activacion_ds_edit, self.detalles_ds_edit]
+        columnas = ["id", "nombre_data_salida", "fecha", "id_nombre_data", "id_condiciones_iniciales", "id_registro_unidades", "r_utilizada", "nombre_data", "nombre_reaccion", "delta_n_reaccion", "epsilon_reactivo_limitante", "tipo_especie", "especie_quimica", "constante_cinetica", "orden_reaccion", "modelo_cinetico", "tipo_calculo", "detalles"]
+        elementos_visuales = [self.nombre_ds_edit, self.fecha_ds_edit, self.id_nombre_data_ds_edit, self.id_condiciones_iniciales_ds_edit, self.id_registro_unidades_ds_edit, self.r_ds_edit, self.nombre_data_ds_edit, self.nombre_reaccion_ds_edit, self.delta_n_ds_edit, self.epsilon_rl_ds_edit, self.tipo_especie_ds_edit, self.especie_quimica_ds_edit, self.constante_cinetica_ds_edit, self.orden_reaccion_ds_edit, self.modelo_cinetico_ds_edit, self.tipo_calculo_ds_edit, self.detalles_ds_edit]
         datos=self.metodos_comunes.seleccionar_datos_visuales(self.tabla_datos_salida, columnas, elementos_visuales)
         if datos:
             self.statusbar.showMessage(f"Set de Datos de Salida seleccionados id: {datos['id']}", 5000)
@@ -1429,19 +1428,19 @@ class FlujoDatos(QMainWindow):
 
     def buscar_datos_salida(self):
         try:
-            columnas = ["nombre_data_salida", "fecha", "id_nombre_data", "id_condiciones_iniciales", "id_registro_unidades", "r_utilizada", "nombre_data", "nombre_reaccion", "delta_n_reaccion", "epsilon_reactivo_limitante", "tipo_especie, especie_quimica, constante_cinetica, orden_reaccion, modelo_cinetico, tipo_calculo, energia_activacion, detalles"]
-            elementos_visuales = [self.nombre_ds_edit, self.fecha_ds_edit, self.id_nombre_data_ds_edit, self.id_condiciones_iniciales_ds_edit, self.id_registro_unidades_ds_edit, self.r_ds_edit, self.nombre_data_ds_edit, self.nombre_reaccion_ds_edit, self.delta_n_ds_edit, self.epsilon_rl_ds_edit, self.tipo_especie_ds_edit, self.especie_quimica_ds_edit, self.constante_cinetica_ds_edit, self.orden_reaccion_ds_edit, self.modelo_cinetico_ds_edit, self.tipo_calculo_ds_edit, self.energia_activacion_ds_edit, self.detalles_ds_edit]
+            columnas = ["nombre_data_salida", "fecha", "id_nombre_data", "id_condiciones_iniciales", "id_registro_unidades", "r_utilizada", "nombre_data", "nombre_reaccion", "delta_n_reaccion", "epsilon_reactivo_limitante", "tipo_especie, especie_quimica, constante_cinetica, orden_reaccion, modelo_cinetico, tipo_calculo, detalles"]
+            elementos_visuales = [self.nombre_ds_edit, self.fecha_ds_edit, self.id_nombre_data_ds_edit, self.id_condiciones_iniciales_ds_edit, self.id_registro_unidades_ds_edit, self.r_ds_edit, self.nombre_data_ds_edit, self.nombre_reaccion_ds_edit, self.delta_n_ds_edit, self.epsilon_rl_ds_edit, self.tipo_especie_ds_edit, self.especie_quimica_ds_edit, self.constante_cinetica_ds_edit, self.orden_reaccion_ds_edit, self.modelo_cinetico_ds_edit, self.tipo_calculo_ds_edit, self.detalles_ds_edit]
             aplicar_strip = []
             self.metodos_comunes.buscar_datos_db(columnas, elementos_visuales,aplicar_strip, self.RegistroDatosSalidaManejador, self.mostrar_datos_tabla_salida,True)
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Se produjo un error al buscar los datos de salida: {e}", QMessageBox.StandardButton.Ok)
     
     def limpiar_formulario_datos_salida(self):
-        elementos_visuales = [self.nombre_ds_edit, self.fecha_ds_edit, self.id_nombre_data_ds_edit, self.id_condiciones_iniciales_ds_edit, self.id_registro_unidades_ds_edit, self.r_ds_edit, self.nombre_data_ds_edit, self.nombre_reaccion_ds_edit, self.delta_n_ds_edit, self.epsilon_rl_ds_edit, self.tipo_especie_ds_edit, self.especie_quimica_ds_edit, self.constante_cinetica_ds_edit, self.orden_reaccion_ds_edit, self.modelo_cinetico_ds_edit, self.tipo_calculo_ds_edit, self.energia_activacion_ds_edit, self.detalles_ds_edit]
+        elementos_visuales = [self.nombre_ds_edit, self.fecha_ds_edit, self.id_nombre_data_ds_edit, self.id_condiciones_iniciales_ds_edit, self.id_registro_unidades_ds_edit, self.r_ds_edit, self.nombre_data_ds_edit, self.nombre_reaccion_ds_edit, self.delta_n_ds_edit, self.epsilon_rl_ds_edit, self.tipo_especie_ds_edit, self.especie_quimica_ds_edit, self.constante_cinetica_ds_edit, self.orden_reaccion_ds_edit, self.modelo_cinetico_ds_edit, self.tipo_calculo_ds_edit, self.detalles_ds_edit]
         self.metodos_comunes.limpiar_elementos_visuales(elementos_visuales)
     
     def limpiar_formulario_datos_salida_agregar(self):
-        elementos_visuales = [self.nombre_ds_edit, self.fecha_ds_edit, self.id_condiciones_iniciales_ds_edit, self.r_ds_edit, self.tipo_especie_ds_edit, self.especie_quimica_ds_edit, self.constante_cinetica_ds_edit, self.orden_reaccion_ds_edit, self.modelo_cinetico_ds_edit, self.tipo_calculo_ds_edit, self.energia_activacion_ds_edit, self.detalles_ds_edit]
+        elementos_visuales = [self.nombre_ds_edit, self.fecha_ds_edit, self.id_condiciones_iniciales_ds_edit, self.r_ds_edit, self.tipo_especie_ds_edit, self.especie_quimica_ds_edit, self.constante_cinetica_ds_edit, self.orden_reaccion_ds_edit, self.modelo_cinetico_ds_edit, self.tipo_calculo_ds_edit, self.detalles_ds_edit]
         self.metodos_comunes.limpiar_elementos_visuales(elementos_visuales)
 
     def actualizar_valor_celda_datos_salida(self, fila, columna):

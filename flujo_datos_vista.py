@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'flujo_datos_gui_v5.ui'
+# Form implementation generated from reading ui file 'flujo_datos_gui_v6.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.2
 #
@@ -1458,15 +1458,6 @@ class Ui_MainWindow(object):
         self.tipo_especie_ds_edit.setObjectName("tipo_especie_ds_edit")
         self.verticalLayout_50.addWidget(self.tipo_especie_ds_edit)
         self.horizontalLayout_63.addWidget(self.groupBox_25)
-        self.groupBox_26 = QtWidgets.QGroupBox(parent=self.cal_tab)
-        self.groupBox_26.setObjectName("groupBox_26")
-        self.verticalLayout_51 = QtWidgets.QVBoxLayout(self.groupBox_26)
-        self.verticalLayout_51.setObjectName("verticalLayout_51")
-        self.energia_activacion_ds_edit = QtWidgets.QLineEdit(parent=self.groupBox_26)
-        self.energia_activacion_ds_edit.setText("")
-        self.energia_activacion_ds_edit.setObjectName("energia_activacion_ds_edit")
-        self.verticalLayout_51.addWidget(self.energia_activacion_ds_edit)
-        self.horizontalLayout_63.addWidget(self.groupBox_26)
         self.verticalLayout_39.addLayout(self.horizontalLayout_63)
         self.horizontalLayout_64 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_64.setObjectName("horizontalLayout_64")
@@ -1563,7 +1554,7 @@ class Ui_MainWindow(object):
         self.datos_salida_tabla.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         self.datos_salida_tabla.setShowGrid(False)
         self.datos_salida_tabla.setObjectName("datos_salida_tabla")
-        self.datos_salida_tabla.setColumnCount(19)
+        self.datos_salida_tabla.setColumnCount(18)
         self.datos_salida_tabla.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.datos_salida_tabla.setHorizontalHeaderItem(0, item)
@@ -1601,8 +1592,6 @@ class Ui_MainWindow(object):
         self.datos_salida_tabla.setHorizontalHeaderItem(16, item)
         item = QtWidgets.QTableWidgetItem()
         self.datos_salida_tabla.setHorizontalHeaderItem(17, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.datos_salida_tabla.setHorizontalHeaderItem(18, item)
         self.datos_salida_tabla.horizontalHeader().setDefaultSectionSize(70)
         self.datos_salida_tabla.horizontalHeader().setMinimumSectionSize(50)
         self.datos_salida_tabla.horizontalHeader().setStretchLastSection(True)
@@ -1619,7 +1608,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget_2.setCurrentIndex(0)
+        self.tabWidget_2.setCurrentIndex(5)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -1820,7 +1809,6 @@ class Ui_MainWindow(object):
         self.groupBox_23.setTitle(_translate("MainWindow", "R"))
         self.groupBox_24.setTitle(_translate("MainWindow", "Especie quimica"))
         self.groupBox_25.setTitle(_translate("MainWindow", "Tipo Especie"))
-        self.groupBox_26.setTitle(_translate("MainWindow", "Energia Activacion"))
         self.groupBox_27.setTitle(_translate("MainWindow", "delta n"))
         self.groupBox_28.setTitle(_translate("MainWindow", "epsilon reactivo limitante"))
         self.groupBox_29.setTitle(_translate("MainWindow", "Tipo calculo"))
@@ -1868,8 +1856,6 @@ class Ui_MainWindow(object):
         item = self.datos_salida_tabla.horizontalHeaderItem(16)
         item.setText(_translate("MainWindow", "tipo_calculo"))
         item = self.datos_salida_tabla.horizontalHeaderItem(17)
-        item.setText(_translate("MainWindow", "energia_activacion"))
-        item = self.datos_salida_tabla.horizontalHeaderItem(18)
         item.setText(_translate("MainWindow", "detalles"))
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.cal_tab), _translate("MainWindow", "Calculos"))
 

@@ -124,11 +124,10 @@ class DatosSalida(Base):
     orden_reaccion = Column(Float)
     modelo_cinetico = Column(String)
     tipo_calculo = Column(String)
-    energia_activacion = Column(Float)
     detalles = Column(String)
 
     def __str__(self):
-        return f"id: {self.id}, nombre_data_salida: {self.nombre_data_salida}, fecha: {self.fecha}, id_nombre_data: {self.id_nombre_data}, id_condiciones_iniciales: {self.id_condiciones_iniciales}, nombre_data: {self.nombre_data}, nombre_reaccion: {self.nombre_reaccion}, delta_n_reaccion: {self.delta_n_reaccion}, epsilon_reactivo_limitante: {self.epsilon_reactivo_limitante},tipo_especie: {self.tipo_especie}, especie_quimica: {self.especie_quimica}, constante_cinetica: {self.constante_cinetica}, orden_reaccion: {self.orden_reaccion}, modelo_cinetico: {self.modelo_cinetico}, tipo_calculo: {self.tipo_calculo}, energia_activacion: {self.energia_activacion}, detalles: {self.detalles}"
+        return f"id: {self.id}, nombre_data_salida: {self.nombre_data_salida}, fecha: {self.fecha}, id_nombre_data: {self.id_nombre_data}, id_condiciones_iniciales: {self.id_condiciones_iniciales}, nombre_data: {self.nombre_data}, nombre_reaccion: {self.nombre_reaccion}, delta_n_reaccion: {self.delta_n_reaccion}, epsilon_reactivo_limitante: {self.epsilon_reactivo_limitante},tipo_especie: {self.tipo_especie}, especie_quimica: {self.especie_quimica}, constante_cinetica: {self.constante_cinetica}, orden_reaccion: {self.orden_reaccion}, modelo_cinetico: {self.modelo_cinetico}, tipo_calculo: {self.tipo_calculo}, detalles: {self.detalles}"
     
 class DatosSalidaArrhenius(Base):
     __tablename__ = "datos_salida_proceso_arrhenius"
@@ -137,8 +136,6 @@ class DatosSalidaArrhenius(Base):
     nombre_caso= Column(String)
     id_nombre_data_salida = Column(Integer)
     id_nombre_data = Column(Integer)
-    id_condiciones_iniciales = Column(Integer)
-    id_registro_unidades = Column(Integer)
     fecha = Column(String)
     temperatura = Column(Float)
     reciproco_temperatura_absoluta = Column(Float)
@@ -150,3 +147,6 @@ class DatosSalidaArrhenius(Base):
     constante_cinetica_0 = Column(Float)
     logaritmo_constante_cinetica_0 = Column(Float)
     detalles = Column(String)
+
+    def __str__(self):
+        return f"id: {self.id}, nombre_caso: {self.nombre_caso}, id_nombre_data_salida: {self.id_nombre_data_salida}, id_nombre_data: {self.id_nombre_data}, fecha: {self.fecha}, temperatura: {self.temperatura}, reciproco_temperatura_absoluta: {self.reciproco_temperatura_absoluta}, constante_cinetica: {self.constante_cinetica}, logaritmo_constante_cinetica: {self.logaritmo_constante_cinetica}, energia_activacion_r: {self.energia_activacion_r}, r_utilizada: {self.r_utilizada}, energia_activacion: {self.energia_activacion}, constante_cinetica_0: {self.constante_cinetica_0}, logaritmo_constante_cinetica_0: {self.logaritmo_constante_cinetica_0}, detalles: {self.detalles}"

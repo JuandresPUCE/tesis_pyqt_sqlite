@@ -1445,6 +1445,11 @@
                 </column>
                 <column>
                  <property name="text">
+                  <string>energia_activacion</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
                   <string>detalles</string>
                  </property>
                 </column>
@@ -1561,56 +1566,11 @@
                </layout>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_23">
-                <item>
-                 <widget class="QGroupBox" name="groupBox_18">
-                  <property name="title">
-                   <string>Nombre Caso</string>
-                  </property>
-                  <layout class="QHBoxLayout" name="horizontalLayout_21">
-                   <item>
-                    <widget class="QLineEdit" name="lineEdit"/>
-                   </item>
-                   <item>
-                    <spacer name="horizontalSpacer_15">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                   <item>
-                    <widget class="QPushButton" name="pushButton">
-                     <property name="text">
-                      <string>Guardar</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QGroupBox" name="groupBox_19">
-                  <property name="title">
-                   <string>Desplegar datos</string>
-                  </property>
-                  <layout class="QHBoxLayout" name="horizontalLayout_22">
-                   <item>
-                    <widget class="QPushButton" name="graficar_arrhenius">
-                     <property name="text">
-                      <string>Graficar Arrenius</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-               </layout>
+               <widget class="QPushButton" name="graficar_arrhenius">
+                <property name="text">
+                 <string>Graficar Arrenius</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </widget>

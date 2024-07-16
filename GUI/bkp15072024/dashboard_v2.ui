@@ -615,7 +615,7 @@
                  <item>
                   <widget class="QTabWidget" name="tabWidget_2">
                    <property name="currentIndex">
-                    <number>0</number>
+                    <number>3</number>
                    </property>
                    <widget class="QWidget" name="datos_cineticos_tab">
                     <attribute name="title">
@@ -1462,7 +1462,7 @@
               </property>
               <layout class="QVBoxLayout" name="vista_tabla_df"/>
              </widget>
-             <widget class="QWidget" name="layoutWidget">
+             <widget class="QWidget" name="">
               <property name="geometry">
                <rect>
                 <x>110</x>
@@ -1595,7 +1595,7 @@
                </rect>
               </property>
               <property name="text">
-               <string>Nuevo conjunto de datos</string>
+               <string>Nueva conjunto de datos</string>
               </property>
              </widget>
             </widget>
