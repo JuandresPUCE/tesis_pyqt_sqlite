@@ -439,6 +439,20 @@ class PanelDataAnalisis(QMainWindow):
             self.statusBar().showMessage("Por favor, seleccione un nombre de conjunto de datos válido para modelar.", 5000)
             return
 
+        # Verificar si tipo_especie está en los resultados obtenidos
+        tipos_datos = [dato.tipo_especie for dato in datos_cineticos]
+        if tipo_especie not in tipos_datos:
+            self.mostrar_imagen_datos_vacios()
+            self.statusBar().showMessage("Por favor, seleccione un tipo de especie válido.", 5000)
+            return
+
+        # Verificar si especie_quimica está en los resultados obtenidos
+        especies_datos = [dato.especie_quimica for dato in datos_cineticos]
+        if especie_quimica not in especies_datos:
+            self.mostrar_imagen_datos_vacios()
+            self.statusBar().showMessage("Por favor, seleccione una especie química válida.", 5000)
+            return
+
         # Filtrar datos cinéticos por tipo_especie si se selecciona uno específico
         if tipo_especie != "Seleccione una opción":
             datos_cineticos = [dato for dato in datos_cineticos if dato.tipo_especie == tipo_especie]
