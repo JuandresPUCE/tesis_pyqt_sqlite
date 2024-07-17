@@ -168,6 +168,9 @@ class PanelDataAnalisis(QMainWindow):
         self.nuevo_archivo_btn=self.ui.nuevo_archivo_btn
         self.nuevo_archivo_btn.clicked.connect(self.crear_base_datos)
 
+        #reoirte de datos
+        self.ui.rep1.clicked.connect(self.evento_guardar_clicked)
+
         self.vista_tabla_df = DataFrameWidget(self)
         #self.ui.vista_tabla_df.addWidget(self.vista_tabla_df)
         self.ui.vista_tabla_df.layout().addWidget(self.vista_tabla_df)
@@ -406,10 +409,9 @@ class PanelDataAnalisis(QMainWindow):
     def imprimir_registro_seleccionado(self):
         nombre_data = self.registro_datos_box.currentText()
 
-        # Verificar si no se ha seleccionado un nombre de dato
         if nombre_data == "Seleccione una opción":
             self.mostrar_imagen_datos_vacios()
-            self.statusBar().showMessage("Por favor, Antes de continuar seleccione un nombre de conjunto de datos para modelar.", 5000)
+            self.statusBar().showMessage("Por favor, seleccione un nombre de conjunto de datos para modelar.", 5000)
             return
         
         if not nombre_data:
@@ -419,98 +421,75 @@ class PanelDataAnalisis(QMainWindow):
         tipo_especie = self.filtro_datos_box.currentText()
         especie_quimica = self.filtro_datos_box_2.currentText()
 
-
-        
         filtros = {'id': id_condiciones_iniciales}
         condiciones = self.CondicionesInicialesManejador.consultar(filtros=filtros)
-        # Convertir las condiciones iniciales a un DataFrame de pandas
-        df_condiciones_iniciales = pd.DataFrame.from_records([condicion.__dict__ for condicion in condiciones])
-        print("Condiciones iniciales:", df_condiciones_iniciales)
+        self.df_condiciones_iniciales = pd.DataFrame.from_records([condicion.__dict__ for condicion in condiciones])
+        print("Condiciones iniciales:", self.df_condiciones_iniciales)
 
         filtros_dc = {'id_condiciones_iniciales': id_condiciones_iniciales}
-
-        # Consultar datos cinéticos filtrando por id de condiciones iniciales
         datos_cineticos = self.DatosCineticosManejador.consultar(filtros=filtros_dc)
 
-        # Verificar si nombre_data está en los resultados obtenidos
         nombres_datos = [dato.nombre_data for dato in datos_cineticos]
         if nombre_data not in nombres_datos:
             self.mostrar_imagen_datos_vacios()
             self.statusBar().showMessage("Por favor, seleccione un nombre de conjunto de datos válido para modelar.", 5000)
             return
 
-        # Verificar si tipo_especie está en los resultados obtenidos
         tipos_datos = [dato.tipo_especie for dato in datos_cineticos]
         if tipo_especie not in tipos_datos:
             self.mostrar_imagen_datos_vacios()
             self.statusBar().showMessage("Por favor, seleccione un tipo de especie válido.", 5000)
             return
 
-        # Verificar si especie_quimica está en los resultados obtenidos
         especies_datos = [dato.especie_quimica for dato in datos_cineticos]
         if especie_quimica not in especies_datos:
             self.mostrar_imagen_datos_vacios()
             self.statusBar().showMessage("Por favor, seleccione una especie química válida.", 5000)
             return
 
-        # Filtrar datos cinéticos por tipo_especie si se selecciona uno específico
         if tipo_especie != "Seleccione una opción":
             datos_cineticos = [dato for dato in datos_cineticos if dato.tipo_especie == tipo_especie]
-        
-        # Filtrar datos cinéticos por especie_quimica si se selecciona una específica
+
         if especie_quimica != "Seleccione una opción":
             datos_cineticos = [dato for dato in datos_cineticos if dato.especie_quimica == especie_quimica]
 
-        # Convertir los datos a un DataFrame de pandas
-        df_datos_cineticos_listos = pd.DataFrame.from_records([dato.__dict__ for dato in datos_cineticos])
+        self.df_datos_cineticos_listos = pd.DataFrame.from_records([dato.__dict__ for dato in datos_cineticos])
 
-                # Verificar si el DataFrame está vacío
-        if not df_datos_cineticos_listos.empty:
-            # Si no está vacío, ordenar por las columnas especificadas
-            df_datos_cineticos_listos = df_datos_cineticos_listos.sort_values(by=["tiempo", "especie_quimica","tipo_especie" ])
-                
-        print("Datos cinéticos listos:", df_datos_cineticos_listos)
-        # Guardar df_datos_cineticos_listos como variable de instancia
+        if not self.df_datos_cineticos_listos.empty:
+            self.df_datos_cineticos_listos = self.df_datos_cineticos_listos.sort_values(by=["tiempo", "especie_quimica", "tipo_especie"])
         
-        self.df_datos_cineticos_listos = df_datos_cineticos_listos
+        print("Datos cinéticos listos:", self.df_datos_cineticos_listos)
 
-        if df_datos_cineticos_listos.empty:
+        if self.df_datos_cineticos_listos.empty:
             self.mostrar_imagen_datos_vacios()
             return
 
-        # Verificar si la columna 'nombre_reaccion' existe en el DataFrame
-        if 'nombre_reaccion' in df_datos_cineticos_listos.columns:
-            # Obtener el nombre de la reacción de la base de datos datos_ingresados_cineticos
-            nombre_reaccion = df_datos_cineticos_listos['nombre_reaccion'].iloc[0]
-
+        if 'nombre_reaccion' in self.df_datos_cineticos_listos.columns:
+            nombre_reaccion = self.df_datos_cineticos_listos['nombre_reaccion'].iloc[0]
             filtro_reaccion = {'nombre_reaccion': nombre_reaccion}
             reaccion_quimica = self.ReaccionQuimicaManejador.consultar(filtros=filtro_reaccion)
             reaccion_quimica_ecuacion = self.ReaccionQuimicaManejador.imprimir_ecuacion(nombre_reaccion)
             self.ui.reaccion_label.setText(reaccion_quimica_ecuacion)
-            # Convertir la reacción química a un DataFrame de pandas
-            df_reaccion_quimica = pd.DataFrame.from_records([reaccion.__dict__ for reaccion in reaccion_quimica])
-            print("Reacción química:", df_reaccion_quimica)
 
-            # Mostrar la tabla de reacciones químicas
+            self.df_reaccion_quimica = pd.DataFrame.from_records([reaccion.__dict__ for reaccion in reaccion_quimica])
+            print("Reacción química:", self.df_reaccion_quimica)
+
             self.mostrar_reaccion_tabla(reaccion_quimica)
         else:
             print("La columna 'nombre_reaccion' no existe en el DataFrame.")
 
-        # Llamar a la función para graficar
         etiqueta_horizontal = "tiempo"
         etiqueta_vertical = "concentracion"
-        titulo = "concentracion vs tiempo"
+        titulo = "Concentracion vs Tiempo"
         componente = f"{tipo_especie} - {especie_quimica}"
+        
         try:
-            # Limpiar la figura por completo
             self.matplotlib_widget.canvas.figure.clf()
-            # Crear un nuevo conjunto de ejes
             self.matplotlib_widget.ax = self.matplotlib_widget.canvas.figure.subplots()
 
-            # Graficar los datos experimentales iniciales
             self.matplotlib_widget.funciones.graficar_datos_experimentales_iniciales(
-                df_datos_cineticos_listos["tiempo"], 
-                df_datos_cineticos_listos["concentracion"],
+                self.df_datos_cineticos_listos["tiempo"], 
+                self.df_datos_cineticos_listos["concentracion"],
                 etiqueta_horizontal, 
                 etiqueta_vertical, 
                 titulo, 
@@ -520,18 +499,17 @@ class PanelDataAnalisis(QMainWindow):
                 canvas=self.matplotlib_widget.canvas
             )
 
-            # Configurar los límites y las etiquetas de los ejes
-            self.matplotlib_widget.ax.set_xlim([df_datos_cineticos_listos["tiempo"].min(), df_datos_cineticos_listos["tiempo"].max()])
-            self.matplotlib_widget.ax.set_ylim([df_datos_cineticos_listos["concentracion"].min(), df_datos_cineticos_listos["concentracion"].max()])
+            self.matplotlib_widget.ax.set_xlim([self.df_datos_cineticos_listos["tiempo"].min(), self.df_datos_cineticos_listos["tiempo"].max()])
+            self.matplotlib_widget.ax.set_ylim([self.df_datos_cineticos_listos["concentracion"].min(), self.df_datos_cineticos_listos["concentracion"].max()])
             self.matplotlib_widget.ax.set_xlabel(etiqueta_horizontal)
             self.matplotlib_widget.ax.set_ylabel(etiqueta_vertical)
 
-            # Actualizar el gráfico
             self.matplotlib_widget.canvas.draw()
-            # Mostrar mensaje indicando que los datos están listos para modelar
+
             QMessageBox.information(self, "Datos Listos", "Los datos iniciales han sido identificados y están listos para ser modelados.")
         except KeyError as e:
             print(f"Error: {e}. La columna no existe en el DataFrame.")
+
                 
     def calcular_arrenius(self):
         try:
@@ -739,6 +717,134 @@ class PanelDataAnalisis(QMainWindow):
             QMessageBox.critical(self, "Error", "La imagen no se encuentra en la ruta especificada.", QMessageBox.StandardButton.Ok)
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Se produjo un error al mostrar la imagen: {e}", QMessageBox.StandardButton.Ok)
+    
+    def guardar_reporte_grafico(self):
+        # Definir el nombre del archivo y la ruta
+        file_dialog = QFileDialog(self)
+        file_dialog.setWindowTitle("Guardar Reporte")
+        file_dialog.setDefaultSuffix("pdf")
+        file_dialog.setNameFilter("PDF Files (*.pdf);;Excel Files (*.xlsx)")
+
+        if file_dialog.exec():
+            ruta_archivo = file_dialog.selectedFiles()[0]
+
+            try:
+                if ruta_archivo.endswith(".xlsx"):
+                    # Guardar en formato Excel
+                    with pd.ExcelWriter(ruta_archivo) as writer:
+                        self.df_condiciones_iniciales.to_excel(writer, sheet_name="Condiciones Iniciales", index=False)
+                        self.df_datos_cineticos_listos.to_excel(writer, sheet_name="Datos Cinéticos", index=False)
+
+                        # Guardar el gráfico como imagen
+                        ruta_grafico = "grafico.png"  # Puedes cambiar el nombre o la ruta
+                        self.matplotlib_widget.canvas.figure.savefig(ruta_grafico, format='png')
+                        
+                        # Incluir el gráfico en el Excel
+                        worksheet = writer.sheets["Datos Cinéticos"]
+                        worksheet.insert_image('E2', ruta_grafico)
+
+                elif ruta_archivo.endswith(".pdf"):
+                    # Guardar el gráfico en formato PDF
+                    self.matplotlib_widget.canvas.figure.savefig(ruta_archivo, format='pdf')
+
+                QMessageBox.information(self, "Éxito", "El reporte se ha guardado correctamente.")
+            except Exception as e:
+                QMessageBox.critical(self, "Error", f"Ocurrió un error al guardar el reporte: {e}")
+
+    def guardar_reporte(self):
+        # Definir el nombre del archivo y la ruta
+        file_dialog = QFileDialog(self)
+        file_dialog.setWindowTitle("Guardar Reporte")
+        file_dialog.setNameFilter("PDF Files (*.pdf);;HTML Files (*.html)")
+
+        if file_dialog.exec():
+            ruta_archivo = file_dialog.selectedFiles()[0]
+            selected_filter = file_dialog.selectedNameFilter()
+
+            # Asegurarse de que la extensión del archivo sea correcta
+            if "PDF" in selected_filter and not ruta_archivo.endswith(".pdf"):
+                ruta_archivo += ".pdf"
+            elif "HTML" in selected_filter and not ruta_archivo.endswith(".html"):
+                ruta_archivo += ".html"
+
+            try:
+                if "PDF" in selected_filter:
+                    from matplotlib.backends.backend_pdf import PdfPages
+                    from matplotlib import pyplot as plt
+
+                    with PdfPages(ruta_archivo) as pdf:
+                        # Guardar el gráfico en el PDF
+                        self.matplotlib_widget.canvas.figure.set_size_inches(8, 6)
+                        self.matplotlib_widget.canvas.figure.savefig(pdf, format='pdf')
+
+                        def agregar_tabla(df, nombre_tabla):
+                            plt.figure(figsize=(8, 6))
+                            plt.title(nombre_tabla, fontsize=16)
+                            plt.axis('off')
+
+                            # Eliminar la columna _sa_instance_state si existe
+                            if '_sa_instance_state' in df.columns:
+                                df = df.drop(columns=['_sa_instance_state'])
+
+                            cell_text = df.values.tolist()
+                            col_labels = df.columns.tolist()
+                            plt.table(cellText=cell_text,
+                                    colLabels=col_labels,
+                                    cellLoc='center',
+                                    loc='center',
+                                    colColours=["#f0f0f0"] * len(col_labels))
+                            plt.xticks(fontsize=12)
+                            plt.yticks(fontsize=12)
+                            pdf.savefig()
+                            plt.close()
+
+                        # Agregar tablas al PDF
+                        if hasattr(self, 'df_datos_cineticos_listos'):
+                            agregar_tabla(self.df_datos_cineticos_listos, "Datos Cinéticos Listos")
+                        if hasattr(self, 'df_condiciones_iniciales') and not self.df_condiciones_iniciales.empty:
+                            agregar_tabla(self.df_condiciones_iniciales, "Condiciones Iniciales")
+                        if hasattr(self, 'df_reaccion_quimica') and not self.df_reaccion_quimica.empty:
+                            agregar_tabla(self.df_reaccion_quimica, "Reacción Química")
+
+                elif "HTML" in selected_filter:
+                    # Usar el nombre del archivo HTML para el gráfico
+                    grafico_path = ruta_archivo.replace('.html', '.png')
+                    self.matplotlib_widget.canvas.figure.savefig(grafico_path, format='png')
+
+                    # Crear contenido HTML
+                    html_content = "<html><head><title>Reporte</title></head><body>"
+                    html_content += f"<h1>Reporte de Datos</h1>"
+                    html_content += f"<h2>Gráfico</h2><img src='{grafico_path}' alt='Gráfico'>"
+
+                    # Agregar tablas al HTML
+                    if hasattr(self, 'df_datos_cineticos_listos'):
+                        df_datos_cineticos = self.df_datos_cineticos_listos.drop(columns=['_sa_instance_state'], errors='ignore')
+                        html_content += df_datos_cineticos.to_html(classes='table table-striped', border=0, index=False)
+                    if hasattr(self, 'df_condiciones_iniciales') and not self.df_condiciones_iniciales.empty:
+                        df_condiciones = self.df_condiciones_iniciales.drop(columns=['_sa_instance_state'], errors='ignore')
+                        html_content += df_condiciones.to_html(classes='table table-striped', border=0, index=False)
+                    if hasattr(self, 'df_reaccion_quimica') and not self.df_reaccion_quimica.empty:
+                        df_reaccion = self.df_reaccion_quimica.drop(columns=['_sa_instance_state'], errors='ignore')
+                        html_content += df_reaccion.to_html(classes='table table-striped', border=0, index=False)
+
+                    html_content += "</body></html>"
+
+                    with open(ruta_archivo, 'w') as f:
+                        f.write(html_content)
+
+                QMessageBox.information(self, "Éxito", "El reporte se ha guardado correctamente.")
+            except Exception as e:
+                QMessageBox.critical(self, "Error", f"Ocurrió un error al guardar el reporte: {e}")
+
+
+    def evento_guardar_clicked(self):
+        # Ejecutar la lógica de impresión
+        self.imprimir_registro_seleccionado()
+        
+        # Si los datos están listos, guardar el reporte
+        if hasattr(self, 'df_datos_cineticos_listos') and not self.df_datos_cineticos_listos.empty:
+            self.guardar_reporte()
+
 
 class MatplotlibWidget(QWidget):
     def __init__(self, parent=None):

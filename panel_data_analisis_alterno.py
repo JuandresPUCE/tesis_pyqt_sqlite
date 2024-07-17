@@ -663,6 +663,9 @@ class Ui_MainWindow(object):
         self.nuevo_archivo_btn = QtWidgets.QPushButton(parent=self.tab_3)
         self.nuevo_archivo_btn.setGeometry(QtCore.QRect(290, 180, 181, 24))
         self.nuevo_archivo_btn.setObjectName("nuevo_archivo_btn")
+        self.rep1 = QtWidgets.QPushButton(parent=self.tab_3)
+        self.rep1.setGeometry(QtCore.QRect(620, 180, 75, 24))
+        self.rep1.setObjectName("rep1")
         self.tabWidget.addTab(self.tab_3, "")
         self.verticalLayout_6.addWidget(self.tabWidget)
         self.horizontalLayout.addWidget(self.panel_izquierdo)
@@ -814,6 +817,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.a_tab), _translate("MainWindow", "Arrhenius"))
         self.cambiar_config_btn.setText(_translate("MainWindow", "Cambiar conjunto de datos"))
         self.nuevo_archivo_btn.setText(_translate("MainWindow", "Nuevo conjunto de datos"))
+        self.rep1.setText(_translate("MainWindow", "PushButton"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "Configuracion"))
 
 

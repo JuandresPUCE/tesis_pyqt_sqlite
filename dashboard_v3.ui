@@ -1644,6 +1644,19 @@
                <string>Nuevo conjunto de datos</string>
               </property>
              </widget>
+             <widget class="QPushButton" name="rep1">
+              <property name="geometry">
+               <rect>
+                <x>620</x>
+                <y>180</y>
+                <width>75</width>
+                <height>24</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
             </widget>
            </widget>
           </item>
