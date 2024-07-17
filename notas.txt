@@ -21,3 +21,4 @@ pyuic6 -x .\dashboard_v2.ui -o panel_data_analisis_alterno.py
 pyuic6 -x .\dashboard_v3.ui -o panel_data_analisis_alterno.py
 
 pyuic6 -x .\flujo_datos_gui_v5.ui -o flujo_datos_vista.py
+pyuic6 -x flujo_datos_gui_v6_m.ui -o flujo

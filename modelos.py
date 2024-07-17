@@ -5,8 +5,7 @@ import os
 
 Base = declarative_base()
 
-# van primero
-# modelos de la base de datos
+# 1 modelos de la base de datos
 
 
 # modelo condiciones iniciales

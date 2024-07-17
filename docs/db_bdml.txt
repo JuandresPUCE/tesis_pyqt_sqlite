@@ -1,0 +1,117 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table condiciones_iniciales {
+    id Integer [pk]
+    temperatura Float
+    tiempo Float
+    presion_total Float
+    presion_parcial Float
+    fraccion_molar Float
+    especie_quimica String
+    tipo_especie String
+    detalle String
+    nombre_data String
+}
+
+Table datos_ingresados_cineticos {
+    id Integer [pk]
+    tiempo Float
+    concentracion Float
+    otra_propiedad Float
+    conversion_reactivo_limitante Float
+    tipo_especie String
+    id_condiciones_iniciales Integer [ref: > condiciones_iniciales.id]
+    nombre_data String
+    nombre_reaccion String
+    especie_quimica String
+}
+
+Table registro_data_experimental {
+    id Integer [pk]
+    nombre_data String [unique]
+    fecha String
+    detalle String
+}
+
+Table reaccion_quimica {
+    id Integer [pk]
+    especie_quimica String
+    formula String
+    coeficiente_estequiometrico Float
+    detalle String
+    tipo_especie String
+    nombre_reaccion String
+}
+
+Table registro_unidades {
+    id Integer [pk]
+    presion String
+    temperatura String
+    tiempo String
+    concentracion String
+    energia String
+    r Float
+    nombre_data String [unique]
+}
+
+Table datos_salida {
+    id Integer [pk]
+    nombre_data_salida String
+    fecha String
+    id_nombre_data Integer
+    id_condiciones_iniciales Integer [ref: > condiciones_iniciales.id]
+    id_registro_unidades Integer
+    r_utilizada Float
+    nombre_data String
+    nombre_reaccion String
+    delta_n_reaccion Float
+    epsilon_reactivo_limitante Float
+    tipo_especie String
+    especie_quimica String
+    constante_cinetica Float
+    orden_reaccion Float
+    modelo_cinetico String
+    tipo_calculo String
+    detalles String
+}
+
+Table datos_salida_proceso_arrhenius {
+    id Integer [pk]
+    nombre_caso String
+    id_nombre_data_salida Integer
+    id_nombre_data Integer
+    fecha String
+    temperatura Float
+    reciproco_temperatura_absoluta Float
+    constante_cinetica Float
+    logaritmo_constante_cinetica Float
+    energia_activacion_r Float
+    r_utilizada Float
+    energia_activacion Float
+    constante_cinetica_0 Float
+    logaritmo_constante_cinetica_0 Float
+    detalles String
+}
+
+
+Ref: "registro_data_experimental"."nombre_data" < "condiciones_iniciales"."nombre_data"
+
+Ref: "registro_data_experimental"."nombre_data" - "registro_unidades"."nombre_data"
+
+Ref: "datos_ingresados_cineticos"."nombre_reaccion" > "reaccion_quimica"."nombre_reaccion"
+
+
+
+
+Ref: "datos_salida"."id" < "datos_salida_proceso_arrhenius"."id_nombre_data_salida"
+
+Ref: "registro_data_experimental"."id" < "datos_salida_proceso_arrhenius"."id_nombre_data"
+
+Ref: "registro_data_experimental"."nombre_data" < "datos_ingresados_cineticos"."nombre_data"
+
+Ref: "reaccion_quimica"."nombre_reaccion" < "datos_salida"."nombre_reaccion"
+
+Ref: "registro_unidades"."id" < "datos_salida"."id_registro_unidades"
+
+Ref: "registro_data_experimental"."id" < "datos_salida"."id_nombre_data"

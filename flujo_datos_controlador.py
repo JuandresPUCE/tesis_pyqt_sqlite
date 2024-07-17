@@ -21,6 +21,9 @@ from funciones import *
 # metodos comunes
 from servicios import *
 
+#respaldos 
+from respaldos import Respaldos
+
 class FlujoDatos(QMainWindow):
     def __init__(self,parent=None):
         self.parent = parent
@@ -178,6 +181,7 @@ class FlujoDatos(QMainWindow):
         self.conversion_reactivo_limitante_gas = self.ui.conversion_reactivo_limitante_dc_edit_3
         self.concentracion_reactivo_limitante_calculo_2=self.ui.concentracion_reactivo_limitante_calculo_2
         self.agregar_dc_archivo_btn=self.ui.agregar_dc_archivo_btn
+        self.respaldar_btn = self.ui.respaldar_btn
 
         self.calculos_adicionales_btn=self.ui.calculos_adicionales_btn
 
@@ -221,10 +225,12 @@ class FlujoDatos(QMainWindow):
         self.nombre_data_experimental.textChanged.connect(self.buscar_unidades_nombre_data)
         self.nombre_data_experimental.editingFinished.connect(self.buscar_unidades_nombre_data)
 
+        self.respaldar_btn.clicked.connect(self.generar_respaldo)
+
 
     def ocultar_elementos_vista(self):
         # Lista de nombres de elementos a ocultar
-        elementos_ocultar = ['groupBox_33', 'nombre_data_rde_edit','nombre_reaccion_rq_edit','groupBox_41','nombre_data_ci_edit','groupBox_61','nombre_data_dc_edit','groupBox_60','nombre_reaccion_dc_edit','groupBox_14','groupBox_2', 'groupBox_3', 'groupBox_4', 'groupBox_5','groupBox_21','groupBox_17','groupBox_22','groupBox_24','groupBox_25','groupBox_29','groupBox_30','groupBox_31','groupBox_32','groupBox_52','group_box_computo']
+        elementos_ocultar = ['groupBox_33', 'nombre_data_rde_edit','nombre_reaccion_rq_edit','groupBox_41','nombre_data_ci_edit','groupBox_61','nombre_data_dc_edit','groupBox_60','nombre_reaccion_dc_edit','groupBox_14','groupBox_2', 'groupBox_3', 'groupBox_4', 'groupBox_5','groupBox_21','groupBox_17','groupBox_22','groupBox_24','groupBox_25','groupBox_29','groupBox_30','groupBox_31','groupBox_32','groupBox_52','group_box_computo','a_tab']
         for nombre in elementos_ocultar:
             getattr(self.ui, nombre).hide()
 
@@ -1534,6 +1540,26 @@ class FlujoDatos(QMainWindow):
                 elemento.hide()  # Oculta el elemento si está visible
             else:
                 elemento.show()  # Muestra el elemento si está oculto
+
+    def generar_respaldo(self):
+        try:
+            # Obtén la ruta del directorio actual
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+
+            metodos_comunes = Servicios()
+            dir_db = r"config\config.json"
+            db_path = metodos_comunes.cargar_configuracion_json(dir_db, "db_path")
+
+            engine = create_engine(f'sqlite:///{db_path}', poolclass=QueuePool, pool_size=20, max_overflow=0)
+            Session = sessionmaker(bind=engine)
+            session = Session()
+
+            # Crear una instancia de la clase Respaldos y guardar el archivo
+            respaldos = Respaldos(session)
+            respaldos.guardar_archivo()
+        except Exception as e:
+            #print(f"Ocurrió un error al generar el respaldo: {e}")
+            QMessageBox.critical(self, "Error", f"Ocurrió un error al generar el respaldo: {e}", QMessageBox.StandardButton.Ok)
 
 
 if __name__ == "__main__":
