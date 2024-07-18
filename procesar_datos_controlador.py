@@ -313,8 +313,8 @@ class PanelDataAnalisis(QMainWindow):
             self.ajustar_modelo_box.addItem(metodo)
 
     # Maneja la selección del modelo de ajuste
-    def manejador_seleccion_modelo(self, index):
-        if index == 0:  # Si se selecciona "Modelos cinéticos", no computa
+    def manejador_seleccion_modelo(self, index=None, guardar_reporte=False):
+        if index == 0 and not guardar_reporte:  # Si se selecciona "Modelos cinéticos", no computa
             QMessageBox.warning(self, "Selección requerida", "Por favor, escoja un modelo.")
             return
 
@@ -325,7 +325,7 @@ class PanelDataAnalisis(QMainWindow):
                 return
 
             # Obtener el nombre del método seleccionado
-            nombre_metodo = self.ajustar_modelo_box.itemText(index)
+            nombre_metodo = self.ajustar_modelo_box.itemText(index) if index is not None else self.ajustar_modelo_box.currentText()
 
             # Obtener el método de la clase MetodoIntegralAjustador
             metodo = getattr(MetodoIntegralAjustador, nombre_metodo)
@@ -337,7 +337,7 @@ class PanelDataAnalisis(QMainWindow):
             # Verificar si los valores son numéricos antes de convertirlos
             try:
                 estimacion_inicial_k = float(estimacion_inicial_k)
-                estimacion_inicial_n = float(estimacion_inicial_n)  # Asumimos que n es un entero
+                estimacion_inicial_n = float(estimacion_inicial_n)
             except ValueError:
                 QMessageBox.warning(self, "Error", "Por favor ingrese valores numéricos válidos.", QMessageBox.StandardButton.Ok)
                 return
@@ -349,52 +349,40 @@ class PanelDataAnalisis(QMainWindow):
             else:
                 resultado = metodo(dataframe, "tiempo", "concentracion", estimacion_inicial_k, estimacion_inicial_n)
 
+            # Mostrar resultados
             QMessageBox.information(self, "Resultado", f"El modelo se ajustó. Resultado: {resultado[0],resultado[2],resultado[3]}", QMessageBox.StandardButton.Ok)
-            self.statusbar.showMessage(f"El modelo se ajustó. Resultado: {resultado[0],resultado[2],resultado[3]}",5000)
+            self.statusbar.showMessage(f"El modelo se ajustó. Resultado: {resultado[0],resultado[2],resultado[3]}", 5000)
             print(resultado)
-            #colocar en un box para enviar a la base de datos
+            
+            # Actualizar los campos de la interfaz
             self.reactivo_limitante_calculado.setText(str(resultado[1]))
             self.k_calculado.setText(str(resultado[0]))
             self.n_calculado.setText(str(resultado[2]))
-
             self.modelo_utilizado.setText(str(resultado[3]))
 
             # Graficar utilizando el resultado obtenido
             MetodoIntegralGraficador.graficar_modelo_salida_opcional_ecuacion(
-            dataframe,
-            "tiempo",
-            "concentracion",
-            resultado[0],  # Suponiendo que el primer valor retornado es k_ord_n_optimo
-            dataframe['concentracion'].iloc[0],  # Suponiendo que el segundo valor retornado es A_0_optimo
-            resultado[2],  # Suponiendo que el tercer valor retornado es n_optimo
-            resultado[3],
-            resultado[4], #ecuacion
-            data_producto=None,
-            columna_concentracion_producto=None,
+                dataframe,
+                "tiempo",
+                "concentracion",
+                resultado[0],
+                dataframe['concentracion'].iloc[0],
+                resultado[2],
+                resultado[3],
+                resultado[4],
+                data_producto=None,
+                columna_concentracion_producto=None,
+                grafico="MatplotlibWidget",
+                ax=self.matplotlib_widget.ax,
+                canvas=self.matplotlib_widget.canvas
             )
 
-            MetodoIntegralGraficador.graficar_modelo_salida_opcional_ecuacion(
-            dataframe,
-            "tiempo",
-            "concentracion",
-            resultado[0],  # Suponiendo que el primer valor retornado es k_ord_n_optimo
-            dataframe['concentracion'].iloc[0],  # Suponiendo que el segundo valor retornado es A_0_optimo
-            resultado[2],  # Suponiendo que el tercer valor retornado es n_optimo
-            resultado[3],
-            resultado[4], #ecuacion
-            data_producto=None,
-            columna_concentracion_producto=None,
-            grafico="MatplotlibWidget", 
-            ax=self.matplotlib_widget.ax, 
-            canvas=self.matplotlib_widget.canvas
-            )
-            # Mostrar mensaje indicando que el modelado fue exitoso
-            #QMessageBox.information(self, "Modelado Exitoso", "Modelado con éxito. Por favor, escoja dónde grabar los datos modelados.") 
-            #self.statusBar().showMessage("Modelado con éxito. Por favor, escoja dónde grabar los datos modelados.",5000)
-            
+            if guardar_reporte:
+                self.guardar_reporte_metodo_integral(resultado)
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Ocurrió un error al ejecutar el modelo: {str(e)}", QMessageBox.StandardButton.Ok)
             return None
+
             
     def ejecutar_modelo(self):
         index = self.ajustar_modelo_box.currentIndex()
@@ -813,6 +801,14 @@ class PanelDataAnalisis(QMainWindow):
                 html_content += f"<h2>Gráfico</h2><img src='{grafico_path}' alt='Gráfico'>"
 
                 # Agregar tablas y resultados al HTML
+                if hasattr(self, 'df_reaccion_quimica') and not self.df_reaccion_quimica.empty:
+                    df_reaccion = self.df_reaccion_quimica.drop(columns=['_sa_instance_state'], errors='ignore')
+                    html_content += f"<h2>Reacción Química</h2>"
+                    html_content += df_reaccion.to_html(classes='table table-striped', border=0, index=False)
+                if hasattr(self, 'df_unidades') and not self.df_unidades.empty:
+                    df_unidades = self.df_unidades.drop(columns=['_sa_instance_state'], errors='ignore')
+                    html_content += f"<h2>Set de Unidades</h2>"
+                    html_content += df_unidades.to_html(classes='table table-striped', border=0, index=False)
                 if hasattr(self, 'df_datos_cineticos_listos'):
                     df_datos_cineticos = self.df_datos_cineticos_listos.drop(columns=['_sa_instance_state'], errors='ignore')
                     html_content += f"<h2>Datos Cinéticos Listos</h2>"
@@ -836,67 +832,13 @@ class PanelDataAnalisis(QMainWindow):
                 QMessageBox.critical(self, "Error", f"Ocurrió un error al guardar el reporte: {e}")
     
     def evento_guardar_metodo_integral_clicked(self):
-        if self.ajustar_modelo_box.currentIndex() == 0:
-            QMessageBox.warning(self, "Selección requerida", "Por favor, escoja un modelo.")
-            return
 
         try:
-            dataframe = self.df_datos_cineticos_listos
-            if dataframe is None:
-                QMessageBox.information(self, "Datos no disponibles", "No se han cargado datos cinéticos para ejecutar el modelo.", QMessageBox.StandardButton.Ok)
-                return
+            self.manejador_seleccion_modelo(index=self.ajustar_modelo_box.currentIndex(), guardar_reporte=True)
 
-            nombre_metodo = self.ajustar_modelo_box.itemText(self.ajustar_modelo_box.currentIndex())
-            metodo = getattr(MetodoIntegralAjustador, nombre_metodo)
-
-            estimacion_inicial_k = self.estimacion_inicial_k_edit.text().strip()
-            estimacion_inicial_n = self.estimacion_inicial_n_edit.text().strip()
-
-            try:
-                estimacion_inicial_k = float(estimacion_inicial_k)
-                estimacion_inicial_n = float(estimacion_inicial_n)
-            except ValueError:
-                QMessageBox.warning(self, "Error", "Por favor ingrese valores numéricos válidos.", QMessageBox.StandardButton.Ok)
-                return
-
-            if self.reactivo_limitante_inicial_edit.text().strip():
-                reactivo_limitante_inicial = float(self.reactivo_limitante_inicial_edit.text().strip())
-                resultado = metodo(dataframe, "tiempo", "concentracion", estimacion_inicial_k, estimacion_inicial_n, reactivo_limitante_inicial)
-            else:
-                resultado = metodo(dataframe, "tiempo", "concentracion", estimacion_inicial_k, estimacion_inicial_n)
-
-            QMessageBox.information(self, "Resultado", f"El modelo se ajustó. Resultado: {resultado[0], resultado[2], resultado[3]}", QMessageBox.StandardButton.Ok)
-            self.statusbar.showMessage(f"El modelo se ajustó. Resultado: {resultado[0], resultado[2], resultado[3]}", 5000)
-            print(resultado)
-
-            self.reactivo_limitante_calculado.setText(str(resultado[1]))
-            self.k_calculado.setText(str(resultado[0]))
-            self.n_calculado.setText(str(resultado[2]))
-            self.modelo_utilizado.setText(str(resultado[3]))
-
-            MetodoIntegralGraficador.graficar_modelo_salida_opcional_ecuacion(
-                dataframe,
-                "tiempo",
-                "concentracion",
-                resultado[0],
-                dataframe['concentracion'].iloc[0],
-                resultado[2],
-                resultado[3],
-                resultado[4],
-                data_producto=None,
-                columna_concentracion_producto=None,
-                grafico="MatplotlibWidget",
-                ax=self.matplotlib_widget.ax,
-                canvas=self.matplotlib_widget.canvas
-            )
-
-            self.guardar_reporte_metodo_integral(resultado)
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Ocurrió un error al ejecutar el modelo: {str(e)}", QMessageBox.StandardButton.Ok)
             return None
-
-
-
 
 
 class MatplotlibWidget(QWidget):
