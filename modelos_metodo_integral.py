@@ -41,13 +41,14 @@ class MetodoIntegralAjustador:
 
         # Generar la cadena de texto con la ecuación del modelo ajustado
         ecuacion_texto = f'$A(t) = \\left(\\left({A_0_optimo:.4e}^{{(1-{n_optimo:.4f})}}\\right) - (1-{n_optimo:.4f}) \cdot {k_ord_n_optimo:.4e} \cdot t\\right)^{{\\frac{{1}}{{1-{n_optimo:.4f}}}}}$'
+        ecuacion_texto_cadena = f"A(t) = ({A_0_optimo:.4e}^(1-{n_optimo:.4f}) - (1-{n_optimo:.4f}) * {k_ord_n_optimo:.4e} * t)^(1/(1-{n_optimo:.4f}))"
 
         print('k_ord_n_optimo:', k_ord_n_optimo)
         print('A_0_optimo:', A_0_optimo)
         print('n_optimo:', n_optimo)
 
 
-        return k_ord_n_optimo, A_0_optimo, n_optimo, 'modelo_n_orden' , ecuacion_texto
+        return k_ord_n_optimo, A_0_optimo, n_optimo, 'modelo_n_orden' , ecuacion_texto,ecuacion_texto_cadena
     
     @staticmethod
     def ajustar_modelo_primer_orden(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, estimacion_inicial_k, n, estimacion_inicial_A0=None):
@@ -69,12 +70,13 @@ class MetodoIntegralAjustador:
 
         # Generar la cadena de texto con la ecuación del modelo ajustado
         ecuacion_texto = f'$A(t) = {A_0_optimo:.4e} \cdot e^{{-{k_ord_1_optimo:.4e} \cdot t}}$'
+        ecuacion_texto_cadena = f"A(t) = {A_0_optimo:.4e} * e^(-{k_ord_1_optimo:.4e} * t)"
 
         print('k_ord_n_optimo:', k_ord_1_optimo)
         print('A_0_optimo:', A_0_optimo)
         print('n_optimo:', n)
 
-        return k_ord_1_optimo, A_0_optimo, n, 'modelo_primer_orden' , ecuacion_texto
+        return k_ord_1_optimo, A_0_optimo, n, 'modelo_primer_orden' , ecuacion_texto,ecuacion_texto_cadena
     
     @staticmethod
     def ajustar_modelo_segundo_orden(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, estimacion_inicial_k,n, estimacion_inicial_A0=None):
@@ -95,12 +97,13 @@ class MetodoIntegralAjustador:
         n=2
         # Generar la cadena de texto con la ecuación del modelo ajustado
         ecuacion_texto = (f'$A(t) = \\frac{{1}}{{\\left(\\frac{{1}}{{{A_0_optimo:.4e}}}\\right) + {k_ord_2_optimo:.4e} \cdot t}}$')
+        ecuacion_texto_cadena = f"A(t) = 1/((1/{A_0_optimo:.4e}) + {k_ord_2_optimo:.4e} * t)"
 
         print('k_ord_n_optimo:', k_ord_2_optimo)
         print('A_0_optimo:', A_0_optimo)
         print('n_optimo:', n)
 
-        return k_ord_2_optimo, A_0_optimo, n , 'modelo_segundo_orden', ecuacion_texto
+        return k_ord_2_optimo, A_0_optimo, n , 'modelo_segundo_orden', ecuacion_texto,ecuacion_texto_cadena
     
     @staticmethod
     def ajustar_modelo(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, estimacion_inicial_k, n, estimacion_inicial_A0=None):
@@ -133,19 +136,23 @@ class MetodoIntegralAjustador:
 
         if nombre_modelo == 'modelo_n_orden':
             ecuacion_texto = f'$A(t) = \\left(\\left({A_0_optimo:.4e}^{{(1-{n:.4e})}}\\right) - (1-{n}) \cdot {k_optimo:.4e} \cdot t\\right)^{{\\frac{{1}}{{1-{n:.4e}}}}}$'
+            ecuacion_texto_cadena = f"A(t) = ({A_0_optimo:.4e}^(1-{n:.4e}) - (1-{n:.4e}) * {k_optimo:.4e} * t)^(1/(1-{n:.4e}))"
         elif nombre_modelo == 'modelo_cero_orden':
             ecuacion_texto = f'$A(t) = {A_0_optimo:.4e} - {k_optimo:.4e} \cdot t$'
+            ecuacion_texto_cadena = f"A(t) = {A_0_optimo:.4e} - {k_optimo:.4e} * t"
         elif nombre_modelo == 'modelo_primer_orden':
             ecuacion_texto = f'$A(t) = {A_0_optimo:.4e} \cdot e^{{-{k_optimo:.4e} \cdot t}}$'
+            ecuacion_texto_cadena = f"A(t) = {A_0_optimo:.4e} * e^(-{k_optimo:.4e} * t)"
         elif nombre_modelo == 'modelo_segundo_orden':
             ecuacion_texto = (f'$A(t) = \\frac{{1}}{{\\left(\\frac{{1}}{{{A_0_optimo:.4e}}}\\right) + {k_optimo:.4e} \cdot t}}$')
+            ecuacion_texto_cadena = f"A(t) = 1/((1/{A_0_optimo:.4e}) + {k_optimo:.4e} * t)"
             
 
         print('k_ord_n_optimo:', k_optimo)
         print('A_0_optimo:', A_0_optimo)
         print('n_optimo:', n)
 
-        return k_optimo, A_0_optimo, n , nombre_modelo , ecuacion_texto
+        return k_optimo, A_0_optimo, n , nombre_modelo , ecuacion_texto,ecuacion_texto_cadena
 #ämetodo ocupado dashboard
 class MetodoIntegralGraficador:
     @staticmethod

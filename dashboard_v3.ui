@@ -435,18 +435,134 @@
                   <number>0</number>
                  </property>
                  <item>
-                  <widget class="QPushButton" name="ingreso_datos_btn">
-                   <property name="text">
-                    <string>Ingreso de datos</string>
+                  <spacer name="verticalSpacer_11">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
                    </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QGroupBox" name="groupBox_20">
+                   <property name="title">
+                    <string>Panel de datos</string>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_20">
+                    <item>
+                     <spacer name="verticalSpacer_16">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="panel_datos_btn">
+                      <property name="text">
+                       <string>Panel de datos</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer name="verticalSpacer_12">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="ingreso_datos_btn">
+                      <property name="text">
+                       <string>Ingreso de datos</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer name="verticalSpacer_13">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                   </layout>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="panel_datos_btn">
-                   <property name="text">
-                    <string>Panel de datos</string>
+                  <spacer name="verticalSpacer_14">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
                    </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QGroupBox" name="groupBox_21">
+                   <property name="title">
+                    <string>Reportes</string>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_21">
+                    <item>
+                     <spacer name="verticalSpacer_17">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="rep1">
+                      <property name="text">
+                       <string>Generar Reporte 1</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
                   </widget>
+                 </item>
+                 <item>
+                  <spacer name="verticalSpacer_15">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
                  </item>
                 </layout>
                </item>
@@ -1026,17 +1142,24 @@
                          </widget>
                         </item>
                         <item>
-                         <spacer name="horizontalSpacer_9">
+                         <spacer name="verticalSpacer_18">
                           <property name="orientation">
-                           <enum>Qt::Horizontal</enum>
+                           <enum>Qt::Vertical</enum>
                           </property>
                           <property name="sizeHint" stdset="0">
                            <size>
-                            <width>40</width>
-                            <height>20</height>
+                            <width>20</width>
+                            <height>40</height>
                            </size>
                           </property>
                          </spacer>
+                        </item>
+                        <item>
+                         <widget class="QPushButton" name="rep2">
+                          <property name="text">
+                           <string>Generar reporte </string>
+                          </property>
+                         </widget>
                         </item>
                        </layout>
                       </widget>
@@ -1847,19 +1970,6 @@
               </property>
               <property name="text">
                <string>Nuevo conjunto de datos</string>
-              </property>
-             </widget>
-             <widget class="QPushButton" name="rep1">
-              <property name="geometry">
-               <rect>
-                <x>620</x>
-                <y>180</y>
-                <width>75</width>
-                <height>24</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>PushButton</string>
               </property>
              </widget>
             </widget>

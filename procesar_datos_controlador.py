@@ -21,7 +21,7 @@ from modelos_metodo_integral import *
 from modelos_metodo_arrhenius import *
 
 #otras ventanas
-from test_crud_db_controlador import PantallaCrud
+from crud_db_controlador import PantallaCrud
 from flujo_datos_controlador import FlujoDatos
 
 # metodos comunes
@@ -170,6 +170,7 @@ class PanelDataAnalisis(QMainWindow):
 
         #reoirte de datos
         self.ui.rep1.clicked.connect(self.evento_guardar_clicked)
+        self.ui.rep2.clicked.connect(self.evento_guardar_metodo_integral_clicked)
 
         self.vista_tabla_df = DataFrameWidget(self)
         #self.ui.vista_tabla_df.addWidget(self.vista_tabla_df)
@@ -722,139 +723,180 @@ class PanelDataAnalisis(QMainWindow):
             QMessageBox.critical(self, "Error", "La imagen no se encuentra en la ruta especificada.", QMessageBox.StandardButton.Ok)
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Se produjo un error al mostrar la imagen: {e}", QMessageBox.StandardButton.Ok)
-    
-    def guardar_reporte_grafico(self):
-        # Definir el nombre del archivo y la ruta
-        file_dialog = QFileDialog(self)
-        file_dialog.setWindowTitle("Guardar Reporte")
-        file_dialog.setDefaultSuffix("pdf")
-        file_dialog.setNameFilter("PDF Files (*.pdf);;Excel Files (*.xlsx)")
-
-        if file_dialog.exec():
-            ruta_archivo = file_dialog.selectedFiles()[0]
-
-            try:
-                if ruta_archivo.endswith(".xlsx"):
-                    # Guardar en formato Excel
-                    with pd.ExcelWriter(ruta_archivo) as writer:
-                        self.df_condiciones_iniciales.to_excel(writer, sheet_name="Condiciones Iniciales", index=False)
-                        self.df_datos_cineticos_listos.to_excel(writer, sheet_name="Datos Cinéticos", index=False)
-
-                        # Guardar el gráfico como imagen
-                        ruta_grafico = "grafico.png"  # Puedes cambiar el nombre o la ruta
-                        self.matplotlib_widget.canvas.figure.savefig(ruta_grafico, format='png')
-                        
-                        # Incluir el gráfico en el Excel
-                        worksheet = writer.sheets["Datos Cinéticos"]
-                        worksheet.insert_image('E2', ruta_grafico)
-
-                elif ruta_archivo.endswith(".pdf"):
-                    # Guardar el gráfico en formato PDF
-                    self.matplotlib_widget.canvas.figure.savefig(ruta_archivo, format='pdf')
-
-                QMessageBox.information(self, "Éxito", "El reporte se ha guardado correctamente.")
-            except Exception as e:
-                QMessageBox.critical(self, "Error", f"Ocurrió un error al guardar el reporte: {e}")
 
     def guardar_reporte(self):
         # Definir el nombre del archivo y la ruta
         file_dialog = QFileDialog(self)
         file_dialog.setWindowTitle("Guardar Reporte")
-        file_dialog.setNameFilter("PDF Files (*.pdf);;HTML Files (*.html)")
+        file_dialog.setNameFilter("HTML Files (*.html)")
 
         if file_dialog.exec():
             ruta_archivo = file_dialog.selectedFiles()[0]
-            selected_filter = file_dialog.selectedNameFilter()
 
             # Asegurarse de que la extensión del archivo sea correcta
-            if "PDF" in selected_filter and not ruta_archivo.endswith(".pdf"):
-                ruta_archivo += ".pdf"
-            elif "HTML" in selected_filter and not ruta_archivo.endswith(".html"):
+            if not ruta_archivo.endswith(".html"):
                 ruta_archivo += ".html"
 
             try:
-                if "PDF" in selected_filter:
-                    from matplotlib.backends.backend_pdf import PdfPages
-                    from matplotlib import pyplot as plt
+                # Usar el nombre del archivo HTML para el gráfico
+                grafico_path = ruta_archivo.replace('.html', '.png')
+                self.matplotlib_widget.canvas.figure.savefig(grafico_path, format='png')
 
-                    with PdfPages(ruta_archivo) as pdf:
-                        # Guardar el gráfico en el PDF
-                        self.matplotlib_widget.canvas.figure.set_size_inches(8, 6)
-                        self.matplotlib_widget.canvas.figure.savefig(pdf, format='pdf')
+                # Crear contenido HTML
+                html_content = "<html><head><title>Reporte</title></head><body>"
+                html_content += f"<h1>Reporte de Datos</h1>"
+                html_content += f"<h2>Gráfico</h2><img src='{grafico_path}' alt='Gráfico'>"
 
-                        def agregar_tabla(df, nombre_tabla):
-                            plt.figure(figsize=(8, 6))
-                            plt.title(nombre_tabla, fontsize=16)
-                            plt.axis('off')
+                # Agregar tablas al HTML
+                if hasattr(self, 'df_unidades') and not self.df_unidades.empty:
+                    df_unidades = self.df_unidades.drop(columns=['_sa_instance_state'], errors='ignore')
+                    html_content += f"<h2>Set de Unidades</h2>"
+                    html_content += df_unidades.to_html(classes='table table-striped', border=0, index=False)
+                if hasattr(self, 'df_datos_cineticos_listos'):
+                    df_datos_cineticos = self.df_datos_cineticos_listos.drop(columns=['_sa_instance_state'], errors='ignore')
+                    html_content += f"<h2>Datos Cinéticos Listos</h2>"
+                    html_content += df_datos_cineticos.to_html(classes='table table-striped', border=0, index=False)
+                if hasattr(self, 'df_condiciones_iniciales') and not self.df_condiciones_iniciales.empty:
+                    df_condiciones = self.df_condiciones_iniciales.drop(columns=['_sa_instance_state'], errors='ignore')
+                    html_content += f"<h2>Condiciones Iniciales</h2>"
+                    html_content += df_condiciones.to_html(classes='table table-striped', border=0, index=False)
+                if hasattr(self, 'df_reaccion_quimica') and not self.df_reaccion_quimica.empty:
+                    df_reaccion = self.df_reaccion_quimica.drop(columns=['_sa_instance_state'], errors='ignore')
+                    html_content += f"<h2>Reacción Química</h2>"
+                    html_content += df_reaccion.to_html(classes='table table-striped', border=0, index=False)
 
-                            # Eliminar la columna _sa_instance_state si existe
-                            if '_sa_instance_state' in df.columns:
-                                df = df.drop(columns=['_sa_instance_state'])
+                html_content += "</body></html>"
 
-                            cell_text = df.values.tolist()
-                            col_labels = df.columns.tolist()
-                            plt.table(cellText=cell_text,
-                                    colLabels=col_labels,
-                                    cellLoc='center',
-                                    loc='center',
-                                    colColours=["#f0f0f0"] * len(col_labels))
-                            plt.xticks(fontsize=12)
-                            plt.yticks(fontsize=12)
-                            pdf.savefig()
-                            plt.close()
-
-                        # Agregar tablas al PDF
-                        if hasattr(self, 'df_unidades') and not self.df_unidades.empty:
-                            agregar_tabla(self.df_unidades, "Set de Unidades")
-                        if hasattr(self, 'df_datos_cineticos_listos'):
-                            agregar_tabla(self.df_datos_cineticos_listos, "Datos Cinéticos Listos")
-                        if hasattr(self, 'df_condiciones_iniciales') and not self.df_condiciones_iniciales.empty:
-                            agregar_tabla(self.df_condiciones_iniciales, "Condiciones Iniciales")
-                        if hasattr(self, 'df_reaccion_quimica') and not self.df_reaccion_quimica.empty:
-                            agregar_tabla(self.df_reaccion_quimica, "Reacción Química")
-
-
-                elif "HTML" in selected_filter:
-                    # Usar el nombre del archivo HTML para el gráfico
-                    grafico_path = ruta_archivo.replace('.html', '.png')
-                    self.matplotlib_widget.canvas.figure.savefig(grafico_path, format='png')
-
-                    # Crear contenido HTML
-                    html_content = "<html><head><title>Reporte</title></head><body>"
-                    html_content += f"<h1>Reporte de Datos</h1>"
-                    html_content += f"<h2>Gráfico</h2><img src='{grafico_path}' alt='Gráfico'>"
-
-                    # Agregar tablas al HTML
-                    if hasattr(self, 'df_unidades') and not self.df_unidades.empty:
-                        df_unidades = self.df_unidades.drop(columns=['_sa_instance_state'], errors='ignore')
-                        html_content += df_unidades.to_html(classes='table table-striped', border=0, index=False)
-                    if hasattr(self, 'df_datos_cineticos_listos'):
-                        df_datos_cineticos = self.df_datos_cineticos_listos.drop(columns=['_sa_instance_state'], errors='ignore')
-                        html_content += df_datos_cineticos.to_html(classes='table table-striped', border=0, index=False)
-                    if hasattr(self, 'df_condiciones_iniciales') and not self.df_condiciones_iniciales.empty:
-                        df_condiciones = self.df_condiciones_iniciales.drop(columns=['_sa_instance_state'], errors='ignore')
-                        html_content += df_condiciones.to_html(classes='table table-striped', border=0, index=False)
-                    if hasattr(self, 'df_reaccion_quimica') and not self.df_reaccion_quimica.empty:
-                        df_reaccion = self.df_reaccion_quimica.drop(columns=['_sa_instance_state'], errors='ignore')
-                        html_content += df_reaccion.to_html(classes='table table-striped', border=0, index=False)
-
-                    html_content += "</body></html>"
-
-                    with open(ruta_archivo, 'w') as f:
-                        f.write(html_content)
+                with open(ruta_archivo, 'w') as f:
+                    f.write(html_content)
 
                 QMessageBox.information(self, "Éxito", "El reporte se ha guardado correctamente.")
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Ocurrió un error al guardar el reporte: {e}")
 
-
     def evento_guardar_clicked(self):
-        # Ejecutar la lógica de impresión
-        self.imprimir_registro_seleccionado()
-        
-        # Si los datos están listos, guardar el reporte
-        if hasattr(self, 'df_datos_cineticos_listos') and not self.df_datos_cineticos_listos.empty:
-            self.guardar_reporte()
+        try:
+            # Ejecutar la lógica de impresión
+            self.imprimir_registro_seleccionado()
+
+            # Verificar si los datos están listos
+            if hasattr(self, 'df_datos_cineticos_listos') and self.df_datos_cineticos_listos is not None and not self.df_datos_cineticos_listos.empty:
+                self.guardar_reporte()
+            else:
+                QMessageBox.warning(self, "Advertencia", "No hay datos listos para guardar. Por favor, seleccione un conjunto de datos.")
+        except AttributeError as e:
+            QMessageBox.critical(self, "Error", f"Ocurrió un error de atributo: {e}")
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Ocurrió un error: {e}")
+    
+    def guardar_reporte_metodo_integral(self, resultado):
+        # Definir el nombre del archivo y la ruta
+        file_dialog = QFileDialog(self)
+        file_dialog.setWindowTitle("Guardar Reporte del Método Integral")
+        file_dialog.setNameFilter("HTML Files (*.html)")
+
+        if file_dialog.exec():
+            ruta_archivo = file_dialog.selectedFiles()[0]
+
+            # Asegurarse de que la extensión del archivo sea correcta
+            if not ruta_archivo.endswith(".html"):
+                ruta_archivo += ".html"
+
+            try:
+                # Usar el nombre del archivo HTML para el gráfico
+                grafico_path = ruta_archivo.replace('.html', '.png')
+                self.matplotlib_widget.canvas.figure.savefig(grafico_path, format='png')
+
+                # Crear contenido HTML
+                html_content = "<html><head><title>Reporte del Método Integral</title></head><body>"
+                html_content += f"<h1>Reporte del Método Integral</h1>"
+                html_content += f"<h2>Gráfico</h2><img src='{grafico_path}' alt='Gráfico'>"
+
+                # Agregar tablas y resultados al HTML
+                if hasattr(self, 'df_datos_cineticos_listos'):
+                    df_datos_cineticos = self.df_datos_cineticos_listos.drop(columns=['_sa_instance_state'], errors='ignore')
+                    html_content += f"<h2>Datos Cinéticos Listos</h2>"
+                    html_content += df_datos_cineticos.to_html(classes='table table-striped', border=0, index=False)
+
+                # Resultados del método integral
+                html_content += f"<h2>Resultados del Método Integral</h2>"
+                html_content += f"<p>k: {resultado[0]}</p>"
+                html_content += f"<p>n: {resultado[2]}</p>"
+                html_content += f"<p>Reactivo Limitante Calculado: {resultado[1]}</p>"
+                html_content += f"<p>Modelo Utilizado: {resultado[3]}</p>"
+                html_content += f"<p>Ecuación: {resultado[5]}</p>"
+
+                html_content += "</body></html>"
+
+                with open(ruta_archivo, 'w') as f:
+                    f.write(html_content)
+
+                QMessageBox.information(self, "Éxito", "El reporte se ha guardado correctamente.")
+            except Exception as e:
+                QMessageBox.critical(self, "Error", f"Ocurrió un error al guardar el reporte: {e}")
+    
+    def evento_guardar_metodo_integral_clicked(self):
+        if self.ajustar_modelo_box.currentIndex() == 0:
+            QMessageBox.warning(self, "Selección requerida", "Por favor, escoja un modelo.")
+            return
+
+        try:
+            dataframe = self.df_datos_cineticos_listos
+            if dataframe is None:
+                QMessageBox.information(self, "Datos no disponibles", "No se han cargado datos cinéticos para ejecutar el modelo.", QMessageBox.StandardButton.Ok)
+                return
+
+            nombre_metodo = self.ajustar_modelo_box.itemText(self.ajustar_modelo_box.currentIndex())
+            metodo = getattr(MetodoIntegralAjustador, nombre_metodo)
+
+            estimacion_inicial_k = self.estimacion_inicial_k_edit.text().strip()
+            estimacion_inicial_n = self.estimacion_inicial_n_edit.text().strip()
+
+            try:
+                estimacion_inicial_k = float(estimacion_inicial_k)
+                estimacion_inicial_n = float(estimacion_inicial_n)
+            except ValueError:
+                QMessageBox.warning(self, "Error", "Por favor ingrese valores numéricos válidos.", QMessageBox.StandardButton.Ok)
+                return
+
+            if self.reactivo_limitante_inicial_edit.text().strip():
+                reactivo_limitante_inicial = float(self.reactivo_limitante_inicial_edit.text().strip())
+                resultado = metodo(dataframe, "tiempo", "concentracion", estimacion_inicial_k, estimacion_inicial_n, reactivo_limitante_inicial)
+            else:
+                resultado = metodo(dataframe, "tiempo", "concentracion", estimacion_inicial_k, estimacion_inicial_n)
+
+            QMessageBox.information(self, "Resultado", f"El modelo se ajustó. Resultado: {resultado[0], resultado[2], resultado[3]}", QMessageBox.StandardButton.Ok)
+            self.statusbar.showMessage(f"El modelo se ajustó. Resultado: {resultado[0], resultado[2], resultado[3]}", 5000)
+            print(resultado)
+
+            self.reactivo_limitante_calculado.setText(str(resultado[1]))
+            self.k_calculado.setText(str(resultado[0]))
+            self.n_calculado.setText(str(resultado[2]))
+            self.modelo_utilizado.setText(str(resultado[3]))
+
+            MetodoIntegralGraficador.graficar_modelo_salida_opcional_ecuacion(
+                dataframe,
+                "tiempo",
+                "concentracion",
+                resultado[0],
+                dataframe['concentracion'].iloc[0],
+                resultado[2],
+                resultado[3],
+                resultado[4],
+                data_producto=None,
+                columna_concentracion_producto=None,
+                grafico="MatplotlibWidget",
+                ax=self.matplotlib_widget.ax,
+                canvas=self.matplotlib_widget.canvas
+            )
+
+            self.guardar_reporte_metodo_integral(resultado)
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Ocurrió un error al ejecutar el modelo: {str(e)}", QMessageBox.StandardButton.Ok)
+            return None
+
+
+
 
 
 class MatplotlibWidget(QWidget):

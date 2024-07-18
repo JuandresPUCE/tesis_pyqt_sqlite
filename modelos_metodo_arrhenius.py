@@ -42,6 +42,7 @@ class ArrheniusAjustador:
 
                 #Generar la cadena de texto con la ecuacion del modelo ajustado
         ecuacion_modelo = f'$\\ln(k) = \\ln({k_0:.4e}) - \\frac{{{energia_activacion_R:.6e}}}{{R}} \\left(\\frac{{1}}{{T}}\\right)$'
+        ecuacion_modelo_cadena = f'ln(k) = ln({k_0:.4e}) - {energia_activacion_R:.6e}/R * (1/T)'
 
         print(f"K0: {k_0:.6e}")
         print(f"ln(K0): {ln_k0}")
@@ -49,7 +50,7 @@ class ArrheniusAjustador:
 
 
         
-        return k_0,ln_k0, energia_activacion_R,ecuacion_modelo
+        return k_0,ln_k0, energia_activacion_R,ecuacion_modelo,ecuacion_modelo_cadena
 
 class ArrheniusGraficador:
     
