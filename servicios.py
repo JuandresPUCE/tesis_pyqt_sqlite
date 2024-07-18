@@ -38,6 +38,9 @@ class Servicios:
 
 
     #mostar tablas
+    def mostrar_datos_tabla_arrenhius(self, tabla_datos_arrenhius, resultados):
+        columnas = ["id","nombre_caso","id_nombre_data_salida","id_nombre_data","fecha","temperatura","reciproco_temperatura_absoluta","constante_cinetica","logaritmo_constante_cinetica","energia_activacion_r","r_utilizada","energia_activacion","constante_cinetica_0","logaritmo_constante_cinetica_0","detalles"]
+        self.mostrar_datos_en_tabla(tabla_datos_arrenhius, resultados, columnas)
     
     def mostrar_datos_tabla_salida(self, tabla_datos_salida, resultados):
         columnas = ["id","nombre_data_salida","fecha","id_nombre_data","id_condiciones_iniciales","id_registro_unidades","r_utilizada","nombre_data","nombre_reaccion","delta_n_reaccion","epsilon_reactivo_limitante","tipo_especie","especie_quimica","constante_cinetica","orden_reaccion","modelo_cinetico","tipo_calculo","detalles"]
@@ -443,7 +446,7 @@ class Servicios:
                 limpiar_func()
                 buscar_func()
             else:
-                QMessageBox.critical(self.parent, "Error", f"Hubo un problema al agregar el {clase_objeto.__name__}", QMessageBox.StandardButton.Ok)
+                QMessageBox.critical(self.parent, "Error", f"Hubo un problema al agregar el {clase_objeto.__name__} revise el nombre del objeto puede que este deba ser único", QMessageBox.StandardButton.Ok)
 
         except ValueError as ve:
             QMessageBox.warning(self.parent, "Advertencia", f"Datos inválidos o incompletos: {ve}", QMessageBox.StandardButton.Ok)

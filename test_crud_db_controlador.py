@@ -200,7 +200,7 @@ class PantallaCrud(QMainWindow):
         self.orden_reaccion_ds_edit=self.ui.orden_reaccion_ds_edit
         self.modelo_cinetico_ds_edit=self.ui.modelo_cinetico_ds_edit
         self.tipo_calculo_ds_edit=self.ui.tipo_calculo_ds_edit
-        self.energia_activacion_ds_edit=self.ui.energia_activacion_ds_edit
+        
         self.detalles_ds_edit=self.ui.detalles_ds_edit
         #tabla de datos de salida
         self.tabla_datos_salida = self.ui.datos_salida_tabla
@@ -1181,7 +1181,7 @@ class PantallaCrud(QMainWindow):
             "orden_reaccion": self.orden_reaccion_ds_edit.text(),
             "modelo_cinetico": self.modelo_cinetico_ds_edit.text(),
             "tipo_calculo": self.tipo_calculo_ds_edit.text(),
-            "energia_activacion": self.energia_activacion_ds_edit.text(),
+            
             "detalles": self.detalles_ds_edit.text(),
         }
         datos_salida = self.RegistroDatosSalidaManejador.consultar(filtros, "like")
@@ -1204,7 +1204,7 @@ class PantallaCrud(QMainWindow):
         self.orden_reaccion_ds_edit.clear()
         self.modelo_cinetico_ds_edit.clear()
         self.tipo_calculo_ds_edit.clear()
-        self.energia_activacion_ds_edit.clear()
+        
         self.detalles_ds_edit.clear()
     
     def seleccionar_datos_salida(self):
@@ -1246,7 +1246,7 @@ class PantallaCrud(QMainWindow):
             self.orden_reaccion_ds_edit.setText(orden_reaccion)
             self.modelo_cinetico_ds_edit.setText(modelo_cinetico)
             self.tipo_calculo_ds_edit.setText(tipo_calculo)
-            self.energia_activacion_ds_edit.setText(energia_activacion)
+            
             self.detalles_ds_edit.setText(detalles)
         else:
             QMessageBox.information(self, "Información", "Seleccione una fila", QMessageBox.StandardButton.Ok)
@@ -1293,10 +1293,10 @@ class PantallaCrud(QMainWindow):
             orden_reaccion=float(self.orden_reaccion_ds_edit.text())
             modelo_cinetico=self.modelo_cinetico_ds_edit.text()
             tipo_calculo=self.tipo_calculo_ds_edit.text()
-            energia_activacion=float(self.energia_activacion_ds_edit.text())
+            
             detalles_ds=self.detalles_ds_edit.text()
 
-            if not nombre_data_salida or not fecha_ds or not id_nombre_data or not id_condiciones_iniciales or not id_registro_unidades or not r_utilizada or not nombre_data or not delta_n_reaccion or not epsilon_reactivo_limitante or not tipo_especie or not especie_quimica or not constante_cinetica or not orden_reaccion or not modelo_cinetico or not tipo_calculo or not energia_activacion or not detalles_ds:
+            if not nombre_data_salida or not fecha_ds or not id_nombre_data or not id_condiciones_iniciales or not id_registro_unidades or not r_utilizada or not nombre_data or not delta_n_reaccion or not epsilon_reactivo_limitante or not tipo_especie or not especie_quimica or not constante_cinetica or not orden_reaccion or not modelo_cinetico or not tipo_calculo  or not detalles_ds:
                 raise ValueError("Todos los campos de texto deben estar llenos")
         
             # Crear el objeto de datos de salida actualizados
@@ -1317,7 +1317,7 @@ class PantallaCrud(QMainWindow):
                 "orden_reaccion": orden_reaccion,
                 "modelo_cinetico": modelo_cinetico,
                 "tipo_calculo": tipo_calculo,
-                "energia_activacion": energia_activacion,
+                
                 "detalles": detalles_ds,
             }
 
@@ -1360,11 +1360,11 @@ class PantallaCrud(QMainWindow):
             orden_reaccion=float(self.orden_reaccion_ds_edit.text())
             modelo_cinetico=self.modelo_cinetico_ds_edit.text()
             tipo_calculo=self.tipo_calculo_ds_edit.text()
-            energia_activacion=float(self.energia_activacion_ds_edit.text())
+            
             detalles_ds=self.detalles_ds_edit.text()
 
             #if not nombre_data_salida or not fecha_ds or not id_nombre_data or not id_condiciones_iniciales or not id_registro_unidades or not r_utilizada or not nombre_data or not delta_n_reaccion or not epsilon_reactivo_limitante :
-            if not nombre_data_salida or not fecha_ds or not id_nombre_data or not id_condiciones_iniciales or not id_registro_unidades or not r_utilizada or not nombre_data or not delta_n_reaccion or not epsilon_reactivo_limitante or not tipo_especie or not especie_quimica or not constante_cinetica or not orden_reaccion or not modelo_cinetico or not tipo_calculo or not energia_activacion or not detalles_ds:
+            if not nombre_data_salida or not fecha_ds or not id_nombre_data or not id_condiciones_iniciales or not id_registro_unidades or not r_utilizada or not nombre_data or not delta_n_reaccion or not epsilon_reactivo_limitante or not tipo_especie or not especie_quimica or not constante_cinetica or not orden_reaccion or not modelo_cinetico or not tipo_calculo or not detalles_ds:
                 raise ValueError("Todos los campos de texto deben estar llenos")
         except ValueError as e:
             QMessageBox.warning(self, "Advertencia", f"Datos inválidos o incompletos: {e}", QMessageBox.StandardButton.Ok)
@@ -1388,7 +1388,7 @@ class PantallaCrud(QMainWindow):
             orden_reaccion=orden_reaccion,
             modelo_cinetico=modelo_cinetico,
             tipo_calculo=tipo_calculo,
-            energia_activacion=energia_activacion,
+            
             detalles=detalles_ds
         )
 

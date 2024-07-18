@@ -425,6 +425,11 @@ class PanelDataAnalisis(QMainWindow):
         condiciones = self.CondicionesInicialesManejador.consultar(filtros=filtros)
         self.df_condiciones_iniciales = pd.DataFrame.from_records([condicion.__dict__ for condicion in condiciones])
         print("Condiciones iniciales:", self.df_condiciones_iniciales)
+        
+        filtos_nombre_data = {'nombre_data': nombre_data}
+        unidades = self.RegistroUnidadesManejador.consultar(filtros=filtos_nombre_data)
+        self.df_unidades = pd.DataFrame.from_records([unidad.__dict__ for unidad in unidades])
+        print("Unidades:", self.df_unidades)
 
         filtros_dc = {'id_condiciones_iniciales': id_condiciones_iniciales}
         datos_cineticos = self.DatosCineticosManejador.consultar(filtros=filtros_dc)
@@ -799,12 +804,15 @@ class PanelDataAnalisis(QMainWindow):
                             plt.close()
 
                         # Agregar tablas al PDF
+                        if hasattr(self, 'df_unidades') and not self.df_unidades.empty:
+                            agregar_tabla(self.df_unidades, "Set de Unidades")
                         if hasattr(self, 'df_datos_cineticos_listos'):
                             agregar_tabla(self.df_datos_cineticos_listos, "Datos Cinéticos Listos")
                         if hasattr(self, 'df_condiciones_iniciales') and not self.df_condiciones_iniciales.empty:
                             agregar_tabla(self.df_condiciones_iniciales, "Condiciones Iniciales")
                         if hasattr(self, 'df_reaccion_quimica') and not self.df_reaccion_quimica.empty:
                             agregar_tabla(self.df_reaccion_quimica, "Reacción Química")
+
 
                 elif "HTML" in selected_filter:
                     # Usar el nombre del archivo HTML para el gráfico
@@ -817,6 +825,9 @@ class PanelDataAnalisis(QMainWindow):
                     html_content += f"<h2>Gráfico</h2><img src='{grafico_path}' alt='Gráfico'>"
 
                     # Agregar tablas al HTML
+                    if hasattr(self, 'df_unidades') and not self.df_unidades.empty:
+                        df_unidades = self.df_unidades.drop(columns=['_sa_instance_state'], errors='ignore')
+                        html_content += df_unidades.to_html(classes='table table-striped', border=0, index=False)
                     if hasattr(self, 'df_datos_cineticos_listos'):
                         df_datos_cineticos = self.df_datos_cineticos_listos.drop(columns=['_sa_instance_state'], errors='ignore')
                         html_content += df_datos_cineticos.to_html(classes='table table-striped', border=0, index=False)
