@@ -544,9 +544,62 @@
                     <item>
                      <widget class="QPushButton" name="rep1">
                       <property name="text">
-                       <string>Generar Reporte 1</string>
+                       <string>Datos</string>
                       </property>
                      </widget>
+                    </item>
+                    <item>
+                     <spacer name="verticalSpacer_19">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="rep_mi">
+                      <property name="text">
+                       <string>Datos metodo integral</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer name="verticalSpacer_20">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="rep_arrh">
+                      <property name="text">
+                       <string>Datos Arrhenius</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer name="verticalSpacer_9">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
                     </item>
                    </layout>
                   </widget>
@@ -776,7 +829,7 @@
                             </spacer>
                            </item>
                            <item>
-                            <layout class="QVBoxLayout" name="vista_grafica">
+                            <layout class="QVBoxLayout" name="vista_grafica_datos">
                              <property name="spacing">
                               <number>0</number>
                              </property>
@@ -1633,23 +1686,53 @@
                     </spacer>
                    </item>
                    <item>
-                    <layout class="QVBoxLayout" name="vista_grafico"/>
-                   </item>
-                   <item>
-                    <spacer name="verticalSpacer_9">
-                     <property name="orientation">
-                      <enum>Qt::Vertical</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>20</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                   <item>
-                    <layout class="QVBoxLayout" name="vista_tabla_df"/>
+                    <layout class="QHBoxLayout" name="horizontalLayout_25">
+                     <item>
+                      <spacer name="horizontalSpacer_9">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>40</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item>
+                      <layout class="QVBoxLayout" name="vista_grafica_arrhenius"/>
+                     </item>
+                     <item>
+                      <spacer name="horizontalSpacer_18">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>40</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item>
+                      <layout class="QVBoxLayout" name="vista_tabla_df"/>
+                     </item>
+                     <item>
+                      <spacer name="horizontalSpacer_19">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>40</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                    </layout>
                    </item>
                    <item>
                     <spacer name="verticalSpacer_10">
@@ -1788,7 +1871,7 @@
                   </property>
                   <layout class="QHBoxLayout" name="horizontalLayout_21">
                    <item>
-                    <widget class="QLineEdit" name="lineEdit"/>
+                    <widget class="QLineEdit" name="nombre_caso_a_edit"/>
                    </item>
                    <item>
                     <spacer name="horizontalSpacer_15">
@@ -1804,7 +1887,7 @@
                     </spacer>
                    </item>
                    <item>
-                    <widget class="QPushButton" name="pushButton">
+                    <widget class="QPushButton" name="agregar_a_btn">
                      <property name="text">
                       <string>Guardar</string>
                      </property>
@@ -1823,6 +1906,13 @@
                     <widget class="QPushButton" name="graficar_arrhenius">
                      <property name="text">
                       <string>Graficar Arrenius</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="rep3">
+                     <property name="text">
+                      <string>Generar Reporte 3</string>
                      </property>
                     </widget>
                    </item>

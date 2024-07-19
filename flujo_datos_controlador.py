@@ -230,7 +230,7 @@ class FlujoDatos(QMainWindow):
 
     def ocultar_elementos_vista(self):
         # Lista de nombres de elementos a ocultar
-        elementos_ocultar = ['groupBox_33', 'nombre_data_rde_edit','nombre_reaccion_rq_edit','groupBox_41','nombre_data_ci_edit','groupBox_61','nombre_data_dc_edit','groupBox_60','nombre_reaccion_dc_edit','groupBox_14','groupBox_2', 'groupBox_3', 'groupBox_4', 'groupBox_5','groupBox_21','groupBox_17','groupBox_22','groupBox_24','groupBox_25','groupBox_29','groupBox_30','groupBox_31','groupBox_32','groupBox_52','group_box_computo','a_tab']
+        elementos_ocultar = ['groupBox_33', 'nombre_data_rde_edit','nombre_reaccion_rq_edit','groupBox_41','nombre_data_ci_edit','groupBox_61','nombre_data_dc_edit','groupBox_60','nombre_reaccion_dc_edit','groupBox_14','groupBox_2', 'groupBox_3', 'groupBox_4', 'groupBox_5','groupBox_21','groupBox_17','groupBox_22','groupBox_24','groupBox_25','groupBox_29','groupBox_30','groupBox_31','groupBox_32','groupBox_52','group_box_computo']
         for nombre in elementos_ocultar:
             getattr(self.ui, nombre).hide()
 

@@ -43,8 +43,7 @@ class PanelDataAnalisis(QMainWindow):
         self.DatosCineticosManejador = DatosCineticosManejador()
         self.ReaccionQuimicaManejador = ReaccionQuimicaManejador()
         self.RegistroUnidadesManejador = RegistroUnidadesManejador()
-        self.RegistroDatosSalidaManejador = RegistroDatosSalidaManejador()  
-        self.RegistroDatosSalidaArrheniusManejador = RegistroDatosSalidaArrheniusManejador()   
+        self.RegistroDatosSalidaManejador = RegistroDatosSalidaManejador()     
         #traer funciones
         self.funciones = Funciones()
         self.modelos_metodo_integral = MetodoIntegralGraficador()
@@ -63,7 +62,6 @@ class PanelDataAnalisis(QMainWindow):
         self.buscar_dato()
         self.buscar_condiciones_iniciales()
         self.buscar_datos_salida()
-        self.buscar_datos_salida_arrhenius()
         self.crud_db = PantallaCrud()
         self.flujo_datos = FlujoDatos()
         self.init_panel_menu()
@@ -77,9 +75,6 @@ class PanelDataAnalisis(QMainWindow):
         #mensajes barra de estado
         self.statusbar=self.ui.statusbar
         self.statusbar.showMessage("Bienvenido al panel para modelar datos")
-
-        # graficos iniciales de arrhenius
-        self.grafico_inicial_calcular_arrhenius()
 
     def iniciar_iu_elementos(self):
         # Tabla de datos cineticos
@@ -97,9 +92,6 @@ class PanelDataAnalisis(QMainWindow):
         #tabla de datos de salida
         self.tabla_datos_salida = self.ui.datos_salida_tabla
         self.tabla_datos_salida.setSortingEnabled(False)
-    
-        self.datos_salida_arrhenius_tabla = self.ui.datos_salida_arrhenius_tabla
-        self.datos_salida_arrhenius_tabla.setSortingEnabled(False)
         
         #cambio de columnas para la tabla de datos de salida
         # Combobox de registro datos experimentales
@@ -125,8 +117,8 @@ class PanelDataAnalisis(QMainWindow):
         self.matplotlib_widget_1 = MatplotlibWidget(self)
 
         # Agregar el widget de Matplotlib al QVBoxLayout vista_grafica
-        self.ui.vista_grafica_datos.addWidget(self.matplotlib_widget)
-        self.ui.vista_grafica_arrhenius.addWidget(self.matplotlib_widget_1)
+        self.ui.vista_grafica.addWidget(self.matplotlib_widget)
+        self.ui.vista_grafico.addWidget(self.matplotlib_widget_1)
 
         #combo box de ajustar_modelo_box
         self.ajustar_modelo_box=self.ui.ajustar_modelo_box
@@ -137,7 +129,7 @@ class PanelDataAnalisis(QMainWindow):
         self.ajustar_modelo_box.currentIndexChanged.connect(self.manejador_seleccion_modelo)
         
         self.graficar_arrhenius = self.ui.graficar_arrhenius
-        self.graficar_arrhenius.clicked.connect(self.calcular_arrhenius)
+        self.graficar_arrhenius.clicked.connect(self.calcular_arrenius)
 
         #botones para abrir otros paneles
         # line edit de modelo de ajuste
@@ -150,10 +142,7 @@ class PanelDataAnalisis(QMainWindow):
         self.n_calculado = self.ui.n_calculado
         self.modelo_utilizado = self.ui.modelo_utilizado
         self.guardar_caso_btn = self.ui.guardar_caso_btn
-        self.guardar_caso_btn.clicked.connect(self.actualizar_datos_salida)  
-        #arrhenius
-        self.agregar_a_btn = self.ui.agregar_a_btn  
-        self.agregar_a_btn.clicked.connect(self.agregar_datos_salida_arrhenius)
+        self.guardar_caso_btn.clicked.connect(self.actualizar_datos_salida)    
 
         #boton de ejecutar modelo
         self.ejecutar_modelo_button = self.ui.graficar_btn
@@ -179,18 +168,13 @@ class PanelDataAnalisis(QMainWindow):
         self.nuevo_archivo_btn=self.ui.nuevo_archivo_btn
         self.nuevo_archivo_btn.clicked.connect(self.crear_base_datos)
 
-        #reportes de datos
+        #reoirte de datos
         self.ui.rep1.clicked.connect(self.evento_guardar_clicked)
         self.ui.rep2.clicked.connect(self.evento_guardar_metodo_integral_clicked)
-        self.ui.rep3.clicked.connect(self.evento_guardar_metodo_arrhenius_clicked)
-        #botones auxiliares
-        self.ui.rep_mi.clicked.connect(self.evento_guardar_metodo_integral_clicked)
-        self.ui.rep_arrh.clicked.connect(self.evento_guardar_metodo_arrhenius_clicked)
 
         self.vista_tabla_df = DataFrameWidget(self)
         #self.ui.vista_tabla_df.addWidget(self.vista_tabla_df)
         self.ui.vista_tabla_df.layout().addWidget(self.vista_tabla_df)
-        self.vista_tabla_df.hide() # Ocultar la tabla al inicio
 
         self.ea_r_final=self.ui.ea_r_final
         self.k_0_calculado=self.ui.k_0_calculado
@@ -215,10 +199,6 @@ class PanelDataAnalisis(QMainWindow):
         self.reaccion_quimica_tabla.setHorizontalHeaderLabels(titulos_columnas_reaccion_q)
         # Autoajustar el ancho de las columnas al contenido
         self.reaccion_quimica_tabla.resizeColumnsToContents()
-
-        titulos_columnas_datos_salida_arrhenius = ["id","Nombre\ncaso","id\nNombre\ndata\nsalida","id\nNombre\ndata","Fecha","Temperatura","1/Temperatura absoluta","Constante\ncinética","ln\nConstante\ncinética\n0","Energía\nactivación\nR","R\nutilizada","Energía\nactivación","Constante\ncinética\n0","ln\nConstante\ncinética","Detalles"]
-        self.datos_salida_arrhenius_tabla.setHorizontalHeaderLabels(titulos_columnas_datos_salida_arrhenius)
-        self.datos_salida_arrhenius_tabla.resizeColumnsToContents()
 
         # funciones de la barra de menu
     def init_panel_menu(self):
@@ -260,10 +240,6 @@ class PanelDataAnalisis(QMainWindow):
     def buscar_datos_salida(self):
         condiciones = self.RegistroDatosSalidaManejador.consultar()
         self.mostrar_datos_tabla_salida(condiciones)
-    
-    def buscar_datos_salida_arrhenius(self):
-        condiciones = self.RegistroDatosSalidaArrheniusManejador.consultar()
-        self.mostrar_datos_salida_arrhenius_tabla(condiciones)
 
     def mostrar_condiciones_iniciales(self,condiciones):
         self.mensaje_error = "No se encontraron condiciones iniciales en la base de datos."
@@ -327,9 +303,6 @@ class PanelDataAnalisis(QMainWindow):
     
     def mostrar_datos_tabla_salida(self, resultados):
         self.metodos_comunes.mostrar_datos_tabla_salida(self.tabla_datos_salida, resultados)
-    
-    def mostrar_datos_salida_arrhenius_tabla(self, resultados):
-        self.metodos_comunes.mostrar_datos_tabla_arrenhius(self.datos_salida_arrhenius_tabla, resultados)
 
 
     def mostrar_metodos_ajustador(self):
@@ -386,7 +359,6 @@ class PanelDataAnalisis(QMainWindow):
             self.k_calculado.setText(str(resultado[0]))
             self.n_calculado.setText(str(resultado[2]))
             self.modelo_utilizado.setText(str(resultado[3]))
-            self.ecuacion_utilizada=(resultado[5])
 
             # Graficar utilizando el resultado obtenido
             MetodoIntegralGraficador.graficar_modelo_salida_opcional_ecuacion(
@@ -427,7 +399,7 @@ class PanelDataAnalisis(QMainWindow):
         nombre_data = self.registro_datos_box.currentText()
 
         if nombre_data == "Seleccione una opción":
-            self.mostrar_imagen_datos_vacios('assets/_2dcfdd65-68b6-4c73-ab67-0c542d136375.jpeg', grafico_mostrar=self.matplotlib_widget)
+            self.mostrar_imagen_datos_vacios()
             self.statusBar().showMessage("Por favor, seleccione un nombre de conjunto de datos para modelar.", 5000)
             return
         
@@ -453,19 +425,19 @@ class PanelDataAnalisis(QMainWindow):
 
         nombres_datos = [dato.nombre_data for dato in datos_cineticos]
         if nombre_data not in nombres_datos:
-            self.mostrar_imagen_datos_vacios('assets/_2dcfdd65-68b6-4c73-ab67-0c542d136375.jpeg', grafico_mostrar=self.matplotlib_widget)
+            self.mostrar_imagen_datos_vacios()
             self.statusBar().showMessage("Por favor, seleccione un nombre de conjunto de datos válido para modelar.", 5000)
             return
 
         tipos_datos = [dato.tipo_especie for dato in datos_cineticos]
         if tipo_especie not in tipos_datos:
-            self.mostrar_imagen_datos_vacios('assets/_2dcfdd65-68b6-4c73-ab67-0c542d136375.jpeg', grafico_mostrar=self.matplotlib_widget)
+            self.mostrar_imagen_datos_vacios()
             self.statusBar().showMessage("Por favor, seleccione un tipo de especie válido.", 5000)
             return
 
         especies_datos = [dato.especie_quimica for dato in datos_cineticos]
         if especie_quimica not in especies_datos:
-            self.mostrar_imagen_datos_vacios('assets/_2dcfdd65-68b6-4c73-ab67-0c542d136375.jpeg', grafico_mostrar=self.matplotlib_widget)
+            self.mostrar_imagen_datos_vacios()
             self.statusBar().showMessage("Por favor, seleccione una especie química válida.", 5000)
             return
 
@@ -483,7 +455,7 @@ class PanelDataAnalisis(QMainWindow):
         print("Datos cinéticos listos:", self.df_datos_cineticos_listos)
 
         if self.df_datos_cineticos_listos.empty:
-            self.mostrar_imagen_datos_vacios('assets/_2dcfdd65-68b6-4c73-ab67-0c542d136375.jpeg', grafico_mostrar=self.matplotlib_widget)
+            self.mostrar_imagen_datos_vacios()
             return
 
         if 'nombre_reaccion' in self.df_datos_cineticos_listos.columns:
@@ -532,186 +504,126 @@ class PanelDataAnalisis(QMainWindow):
         except KeyError as e:
             print(f"Error: {e}. La columna no existe en el DataFrame.")
 
-    def grafico_inicial_calcular_arrhenius(self):
-        try:
-            if self.registro_datos_box.currentText() == "Seleccione una opción":
-                self.mostrar_imagen_datos_vacios('assets/_a2764da6-9c43-41de-a6b4-5501b6265810.jpeg', grafico_mostrar=self.matplotlib_widget_1)
-                #self.statusBar().showMessage("Por favor, seleccione un nombre de conjunto de datos para modelar.", 5000)
-                return False
-            return True
-        except FileNotFoundError:
-            QMessageBox.critical(self, "Error", "La imagen no se encuentra en la ruta especificada.", QMessageBox.StandardButton.Ok)
-            return False
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"Se produjo un error: {e}", QMessageBox.StandardButton.Ok)
-            return False
-
                 
-    def calcular_arrhenius(self):
-        if self.registro_datos_box.currentText() == "Seleccione una opción":
-            self.mostrar_imagen_datos_vacios('assets/_a2764da6-9c43-41de-a6b4-5501b6265810.jpeg', grafico_mostrar=self.matplotlib_widget_1)
-            self.statusBar().showMessage("Por favor, seleccione un nombre de conjunto de datos para modelar.", 5000)
-            return
+    def calcular_arrenius(self):
         try:
             # Obtener los datos de la base de datos del combo box registro_datos_box
             filtros = {'nombre_data': self.registro_datos_box.currentText()}
-            # Consultar datos experimentales
-            resultados = self.RegistroDataExperimentalManejador.consultar(filtros=filtros)
+            #consultar datos experimentales
+            resultados= self.RegistroDataExperimentalManejador.consultar(filtros=filtros)
             # Verificar si se encontraron resultados
             if resultados:
-                #filtros_datos_salida = {'id_registro_data_experimental': resultados[0].id}
-                # Consultar datos en condiciones iniciales
+                filtros_datos_salida= {'id_registro_data_experimental': resultados[0].id}
+                #consultar datos en condiciones iniciales
                 resultados_a_ci = self.CondicionesInicialesManejador.consultar(filtros=filtros)
-                # Pasar a DataFrame las condiciones iniciales
-                self.df_resultados_a_ci = pd.DataFrame.from_records([condicion.__dict__ for condicion in resultados_a_ci])
-                #print("Condiciones iniciales_todo:", self.df_resultados_a_ci)
-                # Filtrado de CI
-                print("Condiciones iniciales:", self.df_resultados_a_ci[['id', 'temperatura']])
-                # Consultar unidades
+                #pasar a dataframe las condiciones iniciales
+                df_resultados_a_ci = pd.DataFrame.from_records([condicion.__dict__ for condicion in resultados_a_ci])
+                #imprimir condiciones iniciales
+                #print("Condiciones iniciales:", df_resultados_a_ci[['id', 'temperatura']])
+                #consultar unidades
                 resultados_unidades = self.RegistroUnidadesManejador.consultar(filtros=filtros)
-                # Pasar a DataFrame las unidades
-                self.df_resultados_unidades = pd.DataFrame.from_records([condicion.__dict__ for condicion in resultados_unidades])
+                #pasar a dataframe las unidades
+                df_resultados_unidades = pd.DataFrame.from_records([condicion.__dict__ for condicion in resultados_unidades])
+                #imprimir unidades
+                #print("Unidades:", df_resultados_unidades)
 
-                fitro_salida = {'id_nombre_data': resultados[0].id, 'id_condiciones_iniciales': self.df_resultados_a_ci["id"].to_string(index=False)}
+                fitro_salida={'id_nombre_data': resultados[0].id,'id_condiciones_iniciales': df_resultados_a_ci["id"].to_string(index=False)}
+                #print(fitro_salida)
                 resultados_ds = self.RegistroDatosSalidaManejador.consultar(filtros=fitro_salida)
-                self.df_resultados_ds = pd.DataFrame.from_records([condicion.__dict__ for condicion in resultados_ds])
+                df_resultados_ds = pd.DataFrame.from_records([condicion.__dict__ for condicion in resultados_ds])
+                #print("Datos Salida:", df_resultados_ds)
+                #print("CI T :", df_resultados_a_ci['temperatura'])
+                #print("Datos Salida:", df_resultados_ds['constante_cinetica'])
+                #return resultados[0].id, print(resultados[0].id)
+                # Primero, resetea el índice de las Series para evitar problemas de alineación.
+                temperatura_reset = df_resultados_a_ci['temperatura'].reset_index(drop=True)
+                constante_cinetica_reset = df_resultados_ds['constante_cinetica'].reset_index(drop=True)
 
-                # Resetea el índice de las Series para evitar problemas de alineación
-                temperatura_reset = self.df_resultados_a_ci['temperatura'].reset_index(drop=True)
-                constante_cinetica_reset = self.df_resultados_ds['constante_cinetica'].reset_index(drop=True)
-                id_data_salida_reset = self.df_resultados_ds['id'].reset_index(drop=True)
+                # Luego, concatena las dos Series en un nuevo DataFrame.
+                df_combinado = pd.concat([temperatura_reset, constante_cinetica_reset], axis=1)
 
-                # Concatena las dos Series en un nuevo DataFrame
-                self.df_combinado = pd.concat([temperatura_reset, constante_cinetica_reset], axis=1)
-                self.df_combinado.columns = ['temperatura', 'constante_cinetica']
-                self.df_combinado.dropna(inplace=True)
+                # Renombra las columnas del nuevo DataFrame para reflejar el contenido.
+                df_combinado.columns = ['temperatura', 'constante_cinetica']
+                df_combinado.dropna(inplace=True)
 
-                # Ejecutar modelo de n puntos
-                self.resultado_arrhenius = ArrheniusAjustador.ajustar_modelo_arrhenius_lineal_multiple(self.df_combinado, "temperatura", "constante_cinetica", self.ui.temp_u_l.text())
-                QMessageBox.information(self, "Resultado", f"El resultado de la energía de activación es: K0={self.resultado_arrhenius[0]:.4e} ln(K0)={self.resultado_arrhenius[1]:.6f} EA/R={self.resultado_arrhenius[2]:.6e} ", QMessageBox.StandardButton.Ok)
+                # Finalmente, imprime el DataFrame combinado.
+                #print(df_combinado.to_string(index=False))
+                
+                #ejecutar modelo de n puntos
+                resultado=ArrheniusAjustador.ajustar_modelo_arrhenius_lineal_multiple(df_combinado, "temperatura", "constante_cinetica",self.ui.temp_u_l.text())
+                QMessageBox.information(self, "Resultado", f"El resultado de la energía de activación es: K0={resultado[0]:.4e} ln(K0)={resultado[1]:.6f} EA/R={resultado[2]:.6e} ", QMessageBox.StandardButton.Ok)
 
-                # Actualizar la barra de estado
-                self.statusbar.showMessage(f"El resultado de la energía de activación es: K0={self.resultado_arrhenius[0]} ln(K0)={self.resultado_arrhenius[1]} EA/R={self.resultado_arrhenius[2]} ", 5000)
+                # Imprimir el resultado
+                #print("El resultado de la energía de activación es:", resultado)
+                
+                # Imprimir el resultado en la barra de estado
 
-                # Mostrar los resultados en la tabla de datos
-                #self.vista_tabla_df.set_data(self.df_combinado)
+                self.statusbar.showMessage(f"El resultado de la energía de activación es: K0={resultado[0]} ln(K0)={resultado[1]} EA/R={resultado[2]} ",5000)
 
-                # Mostrar los resultados en los campos de texto
-                self.k_0_calculado.setText(str(self.resultado_arrhenius[0]))
-                self.ln_k_0_calculado.setText(str(self.resultado_arrhenius[1]))
-                self.ea_r_final.setText(str(self.resultado_arrhenius[2]))
-                #anexo al dataframe
+                self.vista_tabla_df.set_data(df_combinado)
+                #asignar valores a los line edit
 
-                # Limpiar la figura por completo y crear un nuevo conjunto de ejes
+                self.k_0_calculado.setText(str(resultado[0]))
+                self.ln_k_0_calculado.setText(str(resultado[1]))
+                self.ea_r_final.setText(str(resultado[2]))
+
+                # Limpiar la figura por completo
                 self.matplotlib_widget_1.canvas.figure.clf()
+                # Crear un nuevo conjunto de ejes
                 self.matplotlib_widget_1.ax = self.matplotlib_widget_1.canvas.figure.subplots()
-                self.escala_temperatura = self.ui.temp_u_l.text()
+                self.escala_temperatura=self.ui.temp_u_l.text()
 
-                # Convertir temperaturas a absolutas y luego a recíprocas
+                 # Convertir temperaturas a absolutas y luego a recíprocas
                 if self.escala_temperatura == 'C':
-                    T_absoluta = self.df_combinado['temperatura'] + 273.15  # Convertir a Kelvin
+                    T_absoluta = df_combinado['temperatura'] + 273.15  # Convertir a Kelvin
                 elif self.escala_temperatura == 'F':
-                    T_absoluta = self.df_combinado['temperatura'] + 459.67  # Convertir a Kelvin
+                    T_absoluta = df_combinado['temperatura'] + 459.67  # Convertir a Kelvin
                 elif self.escala_temperatura == 'K':
-                    T_absoluta = self.df_combinado['temperatura']
+                    T_absoluta = df_combinado['temperatura']
                 elif self.escala_temperatura == 'R':
-                    T_absoluta = self.df_combinado['temperatura']  # Convertir a Kelvin
+                    T_absoluta = df_combinado['temperatura']  # Convertir a Kelvin
                 else:
                     raise ValueError("Escala de temperatura no reconocida. Elija entre 'C', 'F', 'K' o 'R'.")
                 reciproco_T = 1 / T_absoluta
-                #columna 1/T reciproco de la temperatura absoluta               
-                ln_k = np.log(self.df_combinado['constante_cinetica'])
-                #columna logaritmo de la constante cinetica
-                self.df_combinado['reciproco_temperatura_absoluta'] = reciproco_T
-                self.df_combinado['logaritmo_constante_cinetica'] = ln_k
+                ln_k = np.log(df_combinado['constante_cinetica'])
+                #print(ln_k)
+                #print(reciproco_T)
 
-                titulos_columna_mini_tabla_arrenius = ["Temperatura","Constante\ncinética","1/Temperatura absoluta","ln\nConstante\ncinética"]
-                self.vista_tabla_df.set_data(self.df_combinado,titulos_columna_mini_tabla_arrenius)
-
-                self.df_combinado['energia_activacion_R'] = self.resultado_arrhenius[2]
-                self.df_combinado['constante_cinetica_0'] = self.resultado_arrhenius[0]
-                self.df_combinado['ln_constante_cinetica_0'] = self.resultado_arrhenius[1]
-                self.df_combinado['detalles'] = self.resultado_arrhenius[4]
-                self.df_combinado['id_nombre_data']=resultados[0].id
-                self.df_combinado['id_nombre_data_salida'] = id_data_salida_reset
 
                 ArrheniusGraficador.graficar_modelo_arrhenius_lineal_multiple(
-                    data_cinetica=self.df_combinado,
+                    data_cinetica=df_combinado,
                     columna_temperatura='temperatura',
                     columna_contante_cinetica='constante_cinetica',
                     escala_temperatura=self.escala_temperatura,
-                    k_0=self.resultado_arrhenius[0],
-                    energia_activacion_R=self.resultado_arrhenius[2],
-                    ecuacion_texto=self.resultado_arrhenius[3],
+                    k_0=resultado[0],
+                    energia_activacion_R=resultado[2],
+                    ecuacion_texto=resultado[3],
                     grafico='MatplotlibWidget',
                     ax=self.matplotlib_widget_1.ax,
                     canvas=self.matplotlib_widget_1.canvas
                 )
 
                 # Configurar los límites y las etiquetas de los ejes
+                
+                #print(f"Reciproco_T: {reciproco_T}, ln_k: {ln_k}")
                 self.matplotlib_widget_1.ax.set_xlim([reciproco_T.min(), reciproco_T.max()])
                 self.matplotlib_widget_1.ax.set_ylim([ln_k.min(), ln_k.max()])
                 self.matplotlib_widget_1.ax.set_xlabel("1/T")
                 self.matplotlib_widget_1.ax.set_ylabel("ln(k)")
+                # Actualizar el gráfico
+                
+                #print("Actualizando el gráfico")
                 self.matplotlib_widget_1.canvas.draw()
+
             else:
                 logging.warning(f"No se encontró un registro con el nombre: {self.registro_datos_box.currentText()}")
-                self.statusbar.showMessage(f"No se encontró un registro con el nombre: {self.registro_datos_box.currentText()}", 5000)
+                self.statusbar.showMessage(f"No se encontró un registro con el nombre: {self.registro_datos_box.currentText()}",5000)
                 QMessageBox.warning(self, "Advertencia", f"No se encontró un registro con el nombre: {self.registro_datos_box.currentText()}", QMessageBox.StandardButton.Ok)
                 return None
+            
         except Exception as e:
             logging.error(f"Error al calcular la energía de activación: {str(e)}")
-            return None
-    
-    def agregar_datos_salida_arrhenius(self):
-        try:
-            # Verificar si el campo nombre_caso está vacío
-            nombre_caso = self.ui.nombre_caso_a_edit.text().strip()
-            if not nombre_caso:
-                QMessageBox.warning(self, "Advertencia", "El campo 'Nombre del caso' está vacío. Por favor, ingrese un nombre para continuar.", QMessageBox.StandardButton.Ok)
-                return
-            # Verificar si el DataFrame self.df_combinado existe y no está vacío
-            if not hasattr(self, 'df_combinado') or self.df_combinado.empty:
-                QMessageBox.warning(self, "Advertencia", "No se han modelado o no se han seleccionado conjuto de datos. No hay datos para agregar.", QMessageBox.StandardButton.Ok)
-                return
-            
-            # Iterar sobre cada fila del DataFrame
-            for index, row in self.df_combinado.iterrows():
-                # Crear el objeto de datos de salida para cada fila
-                nuevos_datos_salida = DatosSalidaArrhenius(
-                    nombre_caso=self.ui.nombre_caso_a_edit.text(),
-                    id_nombre_data_salida=int(row['id_nombre_data_salida']),
-                    id_nombre_data=int(row['id_nombre_data']),
-                    #fecha=self.fecha_a_edit.text(),
-                    temperatura=float(row['temperatura']),
-                    reciproco_temperatura_absoluta=float(row['reciproco_temperatura_absoluta']),
-                    constante_cinetica=float(row['constante_cinetica']),
-                    logaritmo_constante_cinetica=float(row['logaritmo_constante_cinetica']),
-                    energia_activacion_r=float(row['energia_activacion_R']),
-                    #r_utilizada=float(self.r_a_edit.text()),
-                    #energia_activacion=float(row['energia_activacion']),
-                    constante_cinetica_0=float(row['constante_cinetica_0']),
-                    logaritmo_constante_cinetica_0=float(row['ln_constante_cinetica_0']),
-                    detalles=row['detalles']
-                )
-
-                # Intentar agregar los datos de salida en la base de datos
-                agregar_resultado = self.RegistroDatosSalidaArrheniusManejador.agregar(nuevos_datos_salida)
-
-                if not agregar_resultado:
-                    QMessageBox.critical(self, "Error", f"Hubo un problema al agregar los datos de salida en la fila {index}", QMessageBox.StandardButton.Ok)
-                    return
-
-            QMessageBox.information(self, "Información", "Datos de salida agregados correctamente", QMessageBox.StandardButton.Ok)
-            self.buscar_datos_salida_arrhenius()  # Actualizar la vista con los nuevos datos
-
-        except ValueError as ve:
-            QMessageBox.warning(self, "Advertencia", f"Datos inválidos o incompletos: {ve}", QMessageBox.StandardButton.Ok)
-
-        except Exception as e:
-            logging.error("Error al agregar los datos de salida: %s", str(e))
-            QMessageBox.critical(self, "Error", f"Se produjo un error al agregar los datos de salida: {e}", QMessageBox.StandardButton.Ok)
-
+            return None     
 
     def cambiar_config_base_datos(self):
         self.metodos_comunes.cambiar_configuracion_db()
@@ -733,8 +645,6 @@ class PanelDataAnalisis(QMainWindow):
             constante_cinetica=float(self.k_calculado.text())
             orden_reaccion=float(self.n_calculado.text())
             modelo_cinetico=self.modelo_utilizado.text()
-            detalles = self.ecuacion_utilizada
-            
 
             # Crear el objeto de datos de salida actualizados
             nuevos_datos_salida = {
@@ -745,7 +655,6 @@ class PanelDataAnalisis(QMainWindow):
                 "orden_reaccion": orden_reaccion,
                 "modelo_cinetico": modelo_cinetico,
                 "tipo_calculo": "método integral",
-                "detalles": detalles
                 
 
             }
@@ -794,17 +703,14 @@ class PanelDataAnalisis(QMainWindow):
             # Mostrar un mensaje de error en la interfaz de usuario
             self.statusbar.showMessage(f"Error al buscar registros por ID: {e}", 5000)
 
-    def mostrar_imagen_datos_vacios(self, ruta_imagen=None, grafico_mostrar=None):
-            try:
-                if grafico_mostrar is None:
-                    QMessageBox.warning(self, "Advertencia", "No se ha especificado un widget gráfico para mostrar la imagen.", QMessageBox.StandardButton.Ok)
-                    return
-                
-                grafico_mostrar.mostrar_imagen(ruta_imagen)
-            except FileNotFoundError:
-                QMessageBox.critical(self, "Error", "La imagen no se encuentra en la ruta especificada.", QMessageBox.StandardButton.Ok)
-            except Exception as e:
-                QMessageBox.critical(self, "Error", f"Se produjo un error al mostrar la imagen: {e}", QMessageBox.StandardButton.Ok)
+    def mostrar_imagen_datos_vacios(self):
+        ruta_imagen = 'assets/_2dcfdd65-68b6-4c73-ab67-0c542d136375.jpeg'
+        try:
+            self.matplotlib_widget.mostrar_imagen(ruta_imagen)
+        except FileNotFoundError:
+            QMessageBox.critical(self, "Error", "La imagen no se encuentra en la ruta especificada.", QMessageBox.StandardButton.Ok)
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Se produjo un error al mostrar la imagen: {e}", QMessageBox.StandardButton.Ok)
 
     def guardar_reporte(self):
         # Definir el nombre del archivo y la ruta
@@ -925,65 +831,6 @@ class PanelDataAnalisis(QMainWindow):
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Ocurrió un error al guardar el reporte: {e}")
     
-    def guardar_reporte_arrhenius(self, resultado):
-        # Definir el nombre del archivo y la ruta
-        file_dialog = QFileDialog(self)
-        file_dialog.setWindowTitle("Guardar Reporte de Arrhenius")
-        file_dialog.setNameFilter("HTML Files (*.html)")
-
-        if file_dialog.exec():
-            ruta_archivo = file_dialog.selectedFiles()[0]
-
-            # Asegurarse de que la extensión del archivo sea correcta
-            if not ruta_archivo.endswith(".html"):
-                ruta_archivo += ".html"
-
-            try:
-                # Usar el nombre del archivo HTML para el gráfico
-                grafico_path = ruta_archivo.replace('.html', '.png')
-                self.matplotlib_widget_1.canvas.figure.savefig(grafico_path, format='png')
-
-                # Crear contenido HTML
-                html_content = "<html><head><title>Reporte de Arrhenius</title></head><body>"
-                html_content += f"<h1>Reporte de Arrhenius</h1>"
-                html_content += f"<h2>Gráfico</h2><img src='{grafico_path}' alt='Gráfico'>"
-
-                # Agregar tablas y resultados al HTML
-                if hasattr(self, 'df_resultados_a_ci') and not self.df_resultados_a_ci.empty:
-                    df_condiciones_iniciales = self.df_resultados_a_ci.drop(columns=['_sa_instance_state'], errors='ignore')
-                    html_content += f"<h2>Condiciones Iniciales</h2>"
-                    html_content += df_condiciones_iniciales.to_html(classes='table table-striped', border=0, index=False)
-                if hasattr(self, 'df_resultados_unidades') and not self.df_resultados_unidades.empty:
-                    df_unidades = self.df_resultados_unidades.drop(columns=['_sa_instance_state'], errors='ignore')
-                    html_content += f"<h2>Unidades</h2>"
-                    html_content += df_unidades.to_html(classes='table table-striped', border=0, index=False)
-                if hasattr(self, 'df_combinado'):
-                    df_combinado = self.df_combinado.drop(columns=['_sa_instance_state'], errors='ignore')
-                    html_content += f"<h2>Datos Combinados</h2>"
-                    html_content += df_combinado.to_html(classes='table table-striped', border=0, index=False)
-                
-                if hasattr(self, 'df_resultados_ds') and not self.df_resultados_ds.empty:
-                    df_resultados_ds = self.df_resultados_ds.drop(columns=['_sa_instance_state'], errors='ignore')
-                    html_content += f"<h2>Datos de Salida</h2>"
-                    html_content += df_resultados_ds.to_html(classes='table table-striped', border=0, index=False)
-
-                # Resultados de Arrhenius
-                html_content += f"<h2>Resultados de Arrhenius</h2>"
-                html_content += f"<p>K0: {resultado[0]:.4e}</p>"
-                html_content += f"<p>ln(K0): {resultado[1]:.6f}</p>"
-                html_content += f"<p>EA/R: {resultado[2]:.6e}</p>"
-                html_content += f"<p>Ecuación: {resultado[4]}</p>"
-
-                html_content += "</body></html>"
-
-                with open(ruta_archivo, 'w') as f:
-                    f.write(html_content)
-
-                QMessageBox.information(self, "Éxito", "El reporte se ha guardado correctamente.")
-            except Exception as e:
-                QMessageBox.critical(self, "Error", f"Ocurrió un error al guardar el reporte: {e}")
-
-        
     def evento_guardar_metodo_integral_clicked(self):
 
         try:
@@ -991,18 +838,6 @@ class PanelDataAnalisis(QMainWindow):
 
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Ocurrió un error al ejecutar el modelo: {str(e)}", QMessageBox.StandardButton.Ok)
-            return None
-    
-    def evento_guardar_metodo_arrhenius_clicked(self):
-        try:
-            # Verificar que los resultados de Arrhenius estén disponibles
-            if hasattr(self, 'resultado_arrhenius'):
-                # Guardar el reporte de Arrhenius
-                self.guardar_reporte_arrhenius(self.resultado_arrhenius)
-            else:
-                QMessageBox.warning(self, "Advertencia", "No se han calculado los resultados de Arrhenius. Por favor, calcule los resultados primero.", QMessageBox.StandardButton.Ok)
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"Ocurrió un error al generar el reporte: {str(e)}", QMessageBox.StandardButton.Ok)
             return None
 
 
@@ -1047,7 +882,7 @@ class DataFrameWidget(QWidget):
         layout.addWidget(self.tableWidget)
         self.setLayout(layout)
 
-    def set_data(self, df, columnas=None):
+    def set_data(self, df):
         # Limpiar la tabla antes de actualizarla
         self.tableWidget.clear()
 
@@ -1063,9 +898,6 @@ class DataFrameWidget(QWidget):
             for col in range(df.shape[1]):
                 item = QTableWidgetItem(str(df.iloc[row, col]))
                 self.tableWidget.setItem(row, col, item)
-
-        # definir nombres columnas
-        self.tableWidget.setHorizontalHeaderLabels(columnas)
 
         # Ajustar tamaño de las columnas para que se ajusten al contenido
         self.tableWidget.resizeColumnsToContents()
