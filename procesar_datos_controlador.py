@@ -1,4 +1,6 @@
+import os
 import sys
+import subprocess
 from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
@@ -14,7 +16,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-from panel_data_analisis_alterno import Ui_MainWindow
+from procesar_datos_vista import Ui_MainWindow
 from repositorios import *
 
 from funciones import *
@@ -465,74 +467,93 @@ class PanelDataAnalisis(QMainWindow):
         id_condiciones_iniciales = self.filtro_datos_box_3.currentText()
         tipo_especie = self.filtro_datos_box.currentText()
         especie_quimica = self.filtro_datos_box_2.currentText()
-
-        filtros = {'id': id_condiciones_iniciales}
-        condiciones = self.CondicionesInicialesManejador.consultar(filtros=filtros)
-        self.df_condiciones_iniciales = pd.DataFrame.from_records([condicion.__dict__ for condicion in condiciones])
-        print("Condiciones iniciales:", self.df_condiciones_iniciales)
-        
-        filtos_nombre_data = {'nombre_data': nombre_data}
-        unidades = self.RegistroUnidadesManejador.consultar(filtros=filtos_nombre_data)
-        self.df_unidades = pd.DataFrame.from_records([unidad.__dict__ for unidad in unidades])
-        print("Unidades:", self.df_unidades)
-
-        filtros_dc = {'id_condiciones_iniciales': id_condiciones_iniciales}
-        datos_cineticos = self.DatosCineticosManejador.consultar(filtros=filtros_dc)
-
-        nombres_datos = [dato.nombre_data for dato in datos_cineticos]
-        if nombre_data not in nombres_datos:
-            self.mostrar_imagen_datos_vacios('assets/_2dcfdd65-68b6-4c73-ab67-0c542d136375.jpeg', grafico_mostrar=self.matplotlib_widget)
-            self.statusBar().showMessage("Por favor, seleccione un nombre de conjunto de datos válido para modelar.", 5000)
+        try:
+            filtros = {'id': id_condiciones_iniciales}
+            condiciones = self.CondicionesInicialesManejador.consultar(filtros=filtros)
+            self.df_condiciones_iniciales = pd.DataFrame.from_records([condicion.__dict__ for condicion in condiciones])
+            print("Condiciones iniciales:", self.df_condiciones_iniciales)
+        except Exception as e:
+            print(f"Error al consultar condiciones iniciales: {e}")
+            self.statusBar().showMessage("Error al consultar condiciones iniciales.", 5000)
             return
 
-        tipos_datos = [dato.tipo_especie for dato in datos_cineticos]
-        if tipo_especie not in tipos_datos:
-            self.mostrar_imagen_datos_vacios('assets/_2dcfdd65-68b6-4c73-ab67-0c542d136375.jpeg', grafico_mostrar=self.matplotlib_widget)
-            self.statusBar().showMessage("Por favor, seleccione un tipo de especie válido.", 5000)
+        try:
+            filtros_nombre_data = {'nombre_data': nombre_data}
+            unidades = self.RegistroUnidadesManejador.consultar(filtros=filtros_nombre_data)
+            self.df_unidades = pd.DataFrame.from_records([unidad.__dict__ for unidad in unidades])
+            print("Unidades:", self.df_unidades)
+        except Exception as e:
+            print(f"Error al consultar unidades: {e}")
+            self.statusBar().showMessage("Error al consultar unidades.", 5000)
             return
 
-        especies_datos = [dato.especie_quimica for dato in datos_cineticos]
-        if especie_quimica not in especies_datos:
-            self.mostrar_imagen_datos_vacios('assets/_2dcfdd65-68b6-4c73-ab67-0c542d136375.jpeg', grafico_mostrar=self.matplotlib_widget)
-            self.statusBar().showMessage("Por favor, seleccione una especie química válida.", 5000)
+        try:
+            filtros_dc = {'id_condiciones_iniciales': id_condiciones_iniciales}
+            datos_cineticos = self.DatosCineticosManejador.consultar(filtros=filtros_dc)
+
+            nombres_datos = [dato.nombre_data for dato in datos_cineticos]
+            if nombre_data not in nombres_datos:
+                self.mostrar_imagen_datos_vacios('assets/_2dcfdd65-68b6-4c73-ab67-0c542d136375.jpeg', grafico_mostrar=self.matplotlib_widget)
+                self.statusBar().showMessage("Por favor, seleccione un nombre de conjunto de datos válido para modelar.", 5000)
+                return
+
+            tipos_datos = [dato.tipo_especie for dato in datos_cineticos]
+            if tipo_especie not in tipos_datos:
+                self.mostrar_imagen_datos_vacios('assets/_2dcfdd65-68b6-4c73-ab67-0c542d136375.jpeg', grafico_mostrar=self.matplotlib_widget)
+                self.statusBar().showMessage("Por favor, seleccione un tipo de especie válido.", 5000)
+                return
+
+            especies_datos = [dato.especie_quimica for dato in datos_cineticos]
+            if especie_quimica not in especies_datos:
+                self.mostrar_imagen_datos_vacios('assets/_2dcfdd65-68b6-4c73-ab67-0c542d136375.jpeg', grafico_mostrar=self.matplotlib_widget)
+                self.statusBar().showMessage("Por favor, seleccione una especie química válida.", 5000)
+                return
+
+            if tipo_especie != "Seleccione una opción":
+                datos_cineticos = [dato for dato in datos_cineticos if dato.tipo_especie == tipo_especie]
+
+            if especie_quimica != "Seleccione una opción":
+                datos_cineticos = [dato for dato in datos_cineticos if dato.especie_quimica == especie_quimica]
+
+            self.df_datos_cineticos_listos = pd.DataFrame.from_records([dato.__dict__ for dato in datos_cineticos])
+
+            if not self.df_datos_cineticos_listos.empty:
+                self.df_datos_cineticos_listos = self.df_datos_cineticos_listos.sort_values(by=["tiempo", "especie_quimica", "tipo_especie"])
+            
+            print("Datos cinéticos listos:", self.df_datos_cineticos_listos)
+        except Exception as e:
+            print(f"Error al procesar datos cinéticos: {e}")
+            self.statusBar().showMessage("Error al procesar datos cinéticos.", 5000)
             return
-
-        if tipo_especie != "Seleccione una opción":
-            datos_cineticos = [dato for dato in datos_cineticos if dato.tipo_especie == tipo_especie]
-
-        if especie_quimica != "Seleccione una opción":
-            datos_cineticos = [dato for dato in datos_cineticos if dato.especie_quimica == especie_quimica]
-
-        self.df_datos_cineticos_listos = pd.DataFrame.from_records([dato.__dict__ for dato in datos_cineticos])
-
-        if not self.df_datos_cineticos_listos.empty:
-            self.df_datos_cineticos_listos = self.df_datos_cineticos_listos.sort_values(by=["tiempo", "especie_quimica", "tipo_especie"])
-        
-        print("Datos cinéticos listos:", self.df_datos_cineticos_listos)
 
         if self.df_datos_cineticos_listos.empty:
             self.mostrar_imagen_datos_vacios('assets/_2dcfdd65-68b6-4c73-ab67-0c542d136375.jpeg', grafico_mostrar=self.matplotlib_widget)
             return
 
-        if 'nombre_reaccion' in self.df_datos_cineticos_listos.columns:
-            nombre_reaccion = self.df_datos_cineticos_listos['nombre_reaccion'].iloc[0]
-            filtro_reaccion = {'nombre_reaccion': nombre_reaccion}
-            reaccion_quimica = self.ReaccionQuimicaManejador.consultar(filtros=filtro_reaccion)
-            reaccion_quimica_ecuacion = self.ReaccionQuimicaManejador.imprimir_ecuacion(nombre_reaccion)
-            self.ui.reaccion_label.setText(reaccion_quimica_ecuacion)
+        try:
+            if 'nombre_reaccion' in self.df_datos_cineticos_listos.columns:
+                nombre_reaccion = self.df_datos_cineticos_listos['nombre_reaccion'].iloc[0]
+                filtro_reaccion = {'nombre_reaccion': nombre_reaccion}
+                reaccion_quimica = self.ReaccionQuimicaManejador.consultar(filtros=filtro_reaccion)
+                reaccion_quimica_ecuacion = self.ReaccionQuimicaManejador.imprimir_ecuacion(nombre_reaccion)
+                self.ui.reaccion_label.setText(reaccion_quimica_ecuacion)
 
-            self.df_reaccion_quimica = pd.DataFrame.from_records([reaccion.__dict__ for reaccion in reaccion_quimica])
-            print("Reacción química:", self.df_reaccion_quimica)
+                self.df_reaccion_quimica = pd.DataFrame.from_records([reaccion.__dict__ for reaccion in reaccion_quimica])
+                print("Reacción química:", self.df_reaccion_quimica)
 
-            self.mostrar_reaccion_tabla(reaccion_quimica)
-        else:
-            print("La columna 'nombre_reaccion' no existe en el DataFrame.")
+                self.mostrar_reaccion_tabla(reaccion_quimica)
+            else:
+                print("La columna 'nombre_reaccion' no existe en el DataFrame.")
+        except Exception as e:
+            print(f"Error al procesar la reacción química: {e}")
+            self.statusBar().showMessage("Error al procesar la reacción química.", 5000)
+            return
 
         etiqueta_horizontal = "tiempo"
         etiqueta_vertical = "concentracion"
         titulo = "Concentracion vs Tiempo"
         componente = f"{tipo_especie} - {especie_quimica}"
-        
+            
         try:
             self.matplotlib_widget.canvas.figure.clf()
             self.matplotlib_widget.ax = self.matplotlib_widget.canvas.figure.subplots()
@@ -777,10 +798,62 @@ class PanelDataAnalisis(QMainWindow):
 
 
     def cambiar_config_base_datos(self):
-        self.metodos_comunes.cambiar_configuracion_db()
+        try:
+            self.metodos_comunes.cambiar_configuracion_db()
+
+            # Confirmar al usuario que la aplicación se reiniciará
+            reply = QMessageBox.question(
+                self, 
+                'Reinicio necesario', 
+                'La configuración de la base de datos se ha actualizado. La aplicación se reiniciará para aplicar los cambios.',
+                QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel,
+                QMessageBox.StandardButton.Ok
+            )
+
+            if reply == QMessageBox.StandardButton.Ok:
+                self.reiniciar_aplicacion()
+
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Se produjo un error al cambiar la configuración de la base de datos: {e}")
+
+    def reiniciar_aplicacion(self):
+        try:
+            # Cerrar la aplicación actual
+            QApplication.quit()
+
+            # Obtener el nombre del archivo de script actual (main.py)
+            script_name = os.path.abspath(sys.argv[0])
+
+            # Volver a ejecutar el script
+            subprocess.Popen([sys.executable, script_name])
+
+            # Salir del proceso actual
+            sys.exit()
+
+        except Exception as e:
+            # Mostrar un mensaje de error en caso de excepción
+            QMessageBox.critical(self, "Error", f"Se produjo un error al reiniciar la aplicación: {e}")
+
 
     def crear_base_datos(self):
-        self.metodos_comunes.nueva_configuracion_db()
+        try:
+            self.metodos_comunes.nueva_configuracion_db()
+            
+            # Confirmar al usuario que la aplicación se reiniciará
+            reply = QMessageBox.question(
+                self, 
+                'Reinicio necesario', 
+                'Se ha creado una nueva configuración de la base de datos. La aplicación se reiniciará para aplicar los cambios.',
+                QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel,
+                QMessageBox.StandardButton.Ok
+            )
+            
+            if reply == QMessageBox.StandardButton.Ok:
+                self.reiniciar_aplicacion()
+        
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Se produjo un error al crear la base de datos: {e}")
+
 
     def actualizar_datos_salida(self):
         try:

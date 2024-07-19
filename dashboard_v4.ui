@@ -467,9 +467,9 @@
                      </spacer>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="panel_datos_btn">
+                     <widget class="QPushButton" name="ingreso_datos_btn">
                       <property name="text">
-                       <string>Panel de datos</string>
+                       <string>Ingreso de datos</string>
                       </property>
                      </widget>
                     </item>
@@ -487,9 +487,9 @@
                      </spacer>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="ingreso_datos_btn">
+                     <widget class="QPushButton" name="panel_datos_btn">
                       <property name="text">
-                       <string>Ingreso de datos</string>
+                       <string>Panel de datos</string>
                       </property>
                      </widget>
                     </item>
@@ -2180,32 +2180,44 @@
              <attribute name="title">
               <string>Configuración</string>
              </attribute>
-             <widget class="QPushButton" name="cambiar_config_btn">
-              <property name="geometry">
-               <rect>
-                <x>70</x>
-                <y>180</y>
-                <width>181</width>
-                <height>24</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Cambiar conjunto de datos</string>
-              </property>
-             </widget>
-             <widget class="QPushButton" name="nuevo_archivo_btn">
-              <property name="geometry">
-               <rect>
-                <x>290</x>
-                <y>180</y>
-                <width>181</width>
-                <height>24</height>
-               </rect>
-              </property>
-              <property name="text">
-               <string>Nuevo conjunto de datos</string>
-              </property>
-             </widget>
+             <layout class="QVBoxLayout" name="verticalLayout_23">
+              <item>
+               <widget class="QGroupBox" name="groupBox_24">
+                <property name="title">
+                 <string>Cambiar configuración</string>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_22">
+                 <item>
+                  <widget class="QPushButton" name="cambiar_config_btn">
+                   <property name="text">
+                    <string>Cambiar conjunto de datos</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="nuevo_archivo_btn">
+                   <property name="text">
+                    <string>Nuevo conjunto de datos</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_22">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
             </widget>
            </widget>
           </item>
