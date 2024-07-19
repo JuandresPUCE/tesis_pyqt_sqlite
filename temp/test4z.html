@@ -1,0 +1,182 @@
+<html><head><title>Reporte de Arrhenius</title></head><body><h1>Reporte de Arrhenius</h1><h2>Gráfico</h2><img src='D:/candidatos_proyectof/tesis_tec/dataReactor/tesis_GUI_sqlite/tesis_pyqt_sqlite/temp/test4z.png' alt='Gráfico'><h2>Condiciones Iniciales</h2><table class="dataframe table table-striped">
+  <thead>
+    <tr style="text-align: right;">
+      <th>presion_parcial</th>
+      <th>id</th>
+      <th>presion_total</th>
+      <th>especie_quimica</th>
+      <th>detalle</th>
+      <th>temperatura</th>
+      <th>tiempo</th>
+      <th>fraccion_molar</th>
+      <th>tipo_especie</th>
+      <th>nombre_data</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0.5</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>A</td>
+      <td>50% A y 50% inerte parte a</td>
+      <td>200.0</td>
+      <td>0.0</td>
+      <td>0.5</td>
+      <td>reactivo_limitante</td>
+      <td>01_DisenoReactores_Roman_p7r_p32</td>
+    </tr>
+    <tr>
+      <td>0.5</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>A</td>
+      <td>50% A y 50% inerte</td>
+      <td>300.0</td>
+      <td>0.0</td>
+      <td>0.5</td>
+      <td>reactivo_limitante</td>
+      <td>01_DisenoReactores_Roman_p7r_p32</td>
+    </tr>
+  </tbody>
+</table><h2>Unidades</h2><table class="dataframe table table-striped">
+  <thead>
+    <tr style="text-align: right;">
+      <th>tiempo</th>
+      <th>id</th>
+      <th>energia</th>
+      <th>nombre_data</th>
+      <th>presion</th>
+      <th>temperatura</th>
+      <th>concentracion</th>
+      <th>r</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>min</td>
+      <td>1</td>
+      <td>atm*L</td>
+      <td>01_DisenoReactores_Roman_p7r_p32</td>
+      <td>atm</td>
+      <td>C</td>
+      <td>mol/L</td>
+      <td>0.0821</td>
+    </tr>
+  </tbody>
+</table><h2>Datos Combinados</h2><table class="dataframe table table-striped">
+  <thead>
+    <tr style="text-align: right;">
+      <th>temperatura</th>
+      <th>constante_cinetica</th>
+      <th>reciproco_temperatura_absoluta</th>
+      <th>logaritmo_constante_cinetica</th>
+      <th>energia_activacion_R</th>
+      <th>constante_cinetica_0</th>
+      <th>ln_constante_cinetica_0</th>
+      <th>detalles</th>
+      <th>id_nombre_data</th>
+      <th>id_nombre_data_salida</th>
+      <th>r_utilizada</th>
+      <th>nombre_caso</th>
+      <th>energia_activacion</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>200.0</td>
+      <td>1.967704</td>
+      <td>0.002113</td>
+      <td>0.676868</td>
+      <td>8014.741326</td>
+      <td>4.472220e+07</td>
+      <td>17.615981</td>
+      <td>ln(k) = ln(4.4722e+07) - 8.014741e+03/R * (1/T)</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.987</td>
+      <td>test2</td>
+      <td>15925.291014665685</td>
+    </tr>
+    <tr>
+      <td>300.0</td>
+      <td>37.800000</td>
+      <td>0.001745</td>
+      <td>3.632309</td>
+      <td>8014.741326</td>
+      <td>4.472220e+07</td>
+      <td>17.615981</td>
+      <td>ln(k) = ln(4.4722e+07) - 8.014741e+03/R * (1/T)</td>
+      <td>1</td>
+      <td>3</td>
+      <td>1.987</td>
+      <td>test2</td>
+      <td>15925.291014665685</td>
+    </tr>
+  </tbody>
+</table><h2>Datos de Salida</h2><table class="dataframe table table-striped">
+  <thead>
+    <tr style="text-align: right;">
+      <th>id</th>
+      <th>id_nombre_data</th>
+      <th>id_registro_unidades</th>
+      <th>nombre_data</th>
+      <th>delta_n_reaccion</th>
+      <th>tipo_especie</th>
+      <th>constante_cinetica</th>
+      <th>modelo_cinetico</th>
+      <th>tipo_calculo</th>
+      <th>nombre_data_salida</th>
+      <th>id_condiciones_iniciales</th>
+      <th>fecha</th>
+      <th>r_utilizada</th>
+      <th>nombre_reaccion</th>
+      <th>epsilon_reactivo_limitante</th>
+      <th>especie_quimica</th>
+      <th>orden_reaccion</th>
+      <th>detalles</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>01_DisenoReactores_Roman_p7r_p32</td>
+      <td>1.0</td>
+      <td>reactivo_limitante</td>
+      <td>1.967704</td>
+      <td>modelo_segundo_orden</td>
+      <td>método integral</td>
+      <td>01_DisenoReactores_Roman_p7r_p32_C1</td>
+      <td>1</td>
+      <td>12/07/2024</td>
+      <td>0.0821</td>
+      <td>A=&gt;2R</td>
+      <td>0.5</td>
+      <td>A</td>
+      <td>2.0</td>
+      <td>A(t) = 1/((1/1.2886e-02) + 1.9677e+00 * t)</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>1</td>
+      <td>1</td>
+      <td>01_DisenoReactores_Roman_p7r_p32</td>
+      <td>1.0</td>
+      <td>reactivo_limitante</td>
+      <td>37.800000</td>
+      <td>modelo_segundo_orden</td>
+      <td>método integral</td>
+      <td>01_DisenoReactores_Roman_p7r_p32_C2</td>
+      <td>2</td>
+      <td>12/07/2024</td>
+      <td>0.0821</td>
+      <td>A=&gt;2R</td>
+      <td>0.5</td>
+      <td>A</td>
+      <td>2.0</td>
+      <td>A(t) = 1/((1/1.0630e-02) + 3.7800e+01 * t)</td>
+    </tr>
+  </tbody>
+</table><h2>Resultados de Arrhenius</h2><p>K0: 4.4722e+07</p><p>ln(K0): 17.615981</p><p>EA/R: 8.014741e+03</p><p>Ecuación: ln(k) = ln(4.4722e+07) - 8.014741e+03/R * (1/T)</p></body></html>

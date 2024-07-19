@@ -8,6 +8,7 @@ from modelos import *
 from repositorios import *
 import pandas as pd
 import matplotlib.image as mpimg
+from datetime import datetime
 
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -195,6 +196,20 @@ class PanelDataAnalisis(QMainWindow):
         self.ea_r_final=self.ui.ea_r_final
         self.k_0_calculado=self.ui.k_0_calculado
         self.ln_k_0_calculado=self.ui.ln_k_0_calculado
+
+        self.ea_final=self.ui.ea_final
+
+        self.r_box=self.ui.r_box
+        self.r_edit = self.ui.r_edit
+        #conexiones de r
+        self.r_box.currentIndexChanged.connect(self.actualizar_lineedit_constante_r)   
+        self.cargar_datos_json_constante_r(r"data\constante_R.json")
+        self.r_box.currentIndexChanged.connect(self.multiplicar_valores_ea_r)
+        self.r_edit.textChanged.connect(self.multiplicar_valores_ea_r)
+        self.r_edit.editingFinished.connect(self.multiplicar_valores_ea_r)
+
+        self.fecha_edit=self.ui.fecha_edit
+        self.establecer_fecha_sistema()
     
     def ajustes_visuales_tabla(self):
          #ajuste visual columnas tabla datos
@@ -231,6 +246,19 @@ class PanelDataAnalisis(QMainWindow):
             self.menu_derecho.hide()
         else:
             self.menu_derecho.show()
+    
+   
+    def cargar_datos_json_constante_r(self, archivo):
+        self.metodos_comunes.cargar_datos_json_box_group_box(archivo, "constante_R_gases", self.r_box, "valor",self.ui.groupBox_22)
+    
+    def actualizar_lineedit_constante_r(self):
+        self.metodos_comunes.actualizar_lineedit(self.r_box, self.r_edit,True)
+        self.actualizar_lineedit_unidades()
+    
+    def actualizar_lineedit_unidades(self):
+        # Obtener el objeto JSON seleccionado en el QComboBox de la constante R
+        elemento_seleccionado = self.r_box.currentData()
+
     #funciones de consulta de registros
 
     def buscar_registros(self):       
@@ -551,6 +579,7 @@ class PanelDataAnalisis(QMainWindow):
         if self.registro_datos_box.currentText() == "Seleccione una opción":
             self.mostrar_imagen_datos_vacios('assets/_a2764da6-9c43-41de-a6b4-5501b6265810.jpeg', grafico_mostrar=self.matplotlib_widget_1)
             self.statusBar().showMessage("Por favor, seleccione un nombre de conjunto de datos para modelar.", 5000)
+            QMessageBox.warning(self, "Selección requerida", "Por favor, seleccione un nombre de conjunto de datos para modelar.")
             return
         try:
             # Obtener los datos de la base de datos del combo box registro_datos_box
@@ -634,6 +663,9 @@ class PanelDataAnalisis(QMainWindow):
                 self.df_combinado['detalles'] = self.resultado_arrhenius[4]
                 self.df_combinado['id_nombre_data']=resultados[0].id
                 self.df_combinado['id_nombre_data_salida'] = id_data_salida_reset
+                #self.df_combinado['r_utilizada'] = self.ui.r_edit.text()
+                #self.df_combinado['nombre_caso'] = self.ui.nombre_caso_a_edit.text()
+                #self.df_combinado['energia_activacion'] = self.ea_final.text()
 
                 ArrheniusGraficador.graficar_modelo_arrhenius_lineal_multiple(
                     data_cinetica=self.df_combinado,
@@ -662,6 +694,37 @@ class PanelDataAnalisis(QMainWindow):
         except Exception as e:
             logging.error(f"Error al calcular la energía de activación: {str(e)}")
             return None
+        
+    def multiplicar_valores_ea_r(self):
+        # Obtener el texto del comboBox y el QTextEdit
+        valor_r_box = self.r_edit.text()
+        valor_ea_r_final = self.ea_r_final.text()
+
+        # Verificar si el valor del comboBox es "Otro" o "Seleccione una opción"
+        if valor_r_box == "Otro" or valor_r_box == "Seleccione una opción":
+            #QMessageBox.warning(self, "Advertencia", "Por favor, seleccione una opción válida en el comboBox.", QMessageBox.StandardButton.Ok)
+            return
+
+        # Verificar si el QTextEdit está vacío
+        if not valor_ea_r_final:
+            #QMessageBox.warning(self, "Advertencia", "El campo de texto está vacío.", QMessageBox.StandardButton.Ok)
+            return
+
+        try:
+            # Convertir el valor del QTextEdit a un número (float)
+            valor_ea_r_final_num = float(valor_ea_r_final)
+            
+            # Supongamos que los valores en el comboBox son números (para fines de multiplicación)
+            valor_r_box_num = float(valor_r_box)
+            
+            # Multiplicar los valores
+            ea_valor = valor_r_box_num * valor_ea_r_final_num
+            
+            # Mostrar el resultado
+            self.ea_final.setText(str(ea_valor))
+
+        except ValueError:
+            QMessageBox.critical(self, "Error", "Los valores deben ser numéricos.", QMessageBox.StandardButton.Ok)
     
     def agregar_datos_salida_arrhenius(self):
         try:
@@ -682,14 +745,14 @@ class PanelDataAnalisis(QMainWindow):
                     nombre_caso=self.ui.nombre_caso_a_edit.text(),
                     id_nombre_data_salida=int(row['id_nombre_data_salida']),
                     id_nombre_data=int(row['id_nombre_data']),
-                    #fecha=self.fecha_a_edit.text(),
+                    fecha=self.fecha_edit.text(),
                     temperatura=float(row['temperatura']),
                     reciproco_temperatura_absoluta=float(row['reciproco_temperatura_absoluta']),
                     constante_cinetica=float(row['constante_cinetica']),
                     logaritmo_constante_cinetica=float(row['logaritmo_constante_cinetica']),
                     energia_activacion_r=float(row['energia_activacion_R']),
-                    #r_utilizada=float(self.r_a_edit.text()),
-                    #energia_activacion=float(row['energia_activacion']),
+                    r_utilizada=float(self.r_edit.text()),
+                    energia_activacion=float(self.ea_final.text()),
                     constante_cinetica_0=float(row['constante_cinetica_0']),
                     logaritmo_constante_cinetica_0=float(row['ln_constante_cinetica_0']),
                     detalles=row['detalles']
@@ -855,21 +918,6 @@ class PanelDataAnalisis(QMainWindow):
                 QMessageBox.information(self, "Éxito", "El reporte se ha guardado correctamente.")
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Ocurrió un error al guardar el reporte: {e}")
-
-    def evento_guardar_clicked(self):
-        try:
-            # Ejecutar la lógica de impresión
-            self.imprimir_registro_seleccionado()
-
-            # Verificar si los datos están listos
-            if hasattr(self, 'df_datos_cineticos_listos') and self.df_datos_cineticos_listos is not None and not self.df_datos_cineticos_listos.empty:
-                self.guardar_reporte()
-            else:
-                QMessageBox.warning(self, "Advertencia", "No hay datos listos para guardar. Por favor, seleccione un conjunto de datos.")
-        except AttributeError as e:
-            QMessageBox.critical(self, "Error", f"Ocurrió un error de atributo: {e}")
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"Ocurrió un error: {e}")
     
     def guardar_reporte_metodo_integral(self, resultado):
         # Definir el nombre del archivo y la ruta
@@ -924,6 +972,7 @@ class PanelDataAnalisis(QMainWindow):
                 QMessageBox.information(self, "Éxito", "El reporte se ha guardado correctamente.")
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Ocurrió un error al guardar el reporte: {e}")
+    
     
     def guardar_reporte_arrhenius(self, resultado):
         # Definir el nombre del archivo y la ruta
@@ -983,6 +1032,20 @@ class PanelDataAnalisis(QMainWindow):
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Ocurrió un error al guardar el reporte: {e}")
 
+    def evento_guardar_clicked(self):
+        try:
+            # Ejecutar la lógica de impresión
+            self.imprimir_registro_seleccionado()
+
+            # Verificar si los datos están listos
+            if hasattr(self, 'df_datos_cineticos_listos') and self.df_datos_cineticos_listos is not None and not self.df_datos_cineticos_listos.empty:
+                self.guardar_reporte()
+            else:
+                QMessageBox.warning(self, "Advertencia", "No hay datos listos para guardar. Por favor, seleccione un conjunto de datos.")
+        except AttributeError as e:
+            QMessageBox.critical(self, "Error", f"Ocurrió un error de atributo: {e}")
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Ocurrió un error: {e}")
         
     def evento_guardar_metodo_integral_clicked(self):
 
@@ -1004,7 +1067,16 @@ class PanelDataAnalisis(QMainWindow):
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Ocurrió un error al generar el reporte: {str(e)}", QMessageBox.StandardButton.Ok)
             return None
+        
+        # funciones especiales para datos
+    def establecer_fecha_sistema(self):
+        # Obtener la fecha actual del sistema
+        fecha_actual = datetime.now().date()
 
+        # Convertir la fecha a una cadena en el formato dd/mm/yyyy
+        fecha_str = fecha_actual.strftime("%d/%m/%Y")
+
+        self.fecha_edit.setText(fecha_str)
 
 class MatplotlibWidget(QWidget):
     def __init__(self, parent=None):
