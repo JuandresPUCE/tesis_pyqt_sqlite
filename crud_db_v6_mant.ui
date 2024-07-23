@@ -80,6 +80,13 @@
           </spacer>
          </item>
          <item>
+          <widget class="QPushButton" name="data_lista_btn">
+           <property name="text">
+            <string>Datos Listos</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <spacer name="horizontalSpacer_38">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -277,7 +284,7 @@
                </size>
               </property>
               <property name="currentIndex">
-               <number>6</number>
+               <number>0</number>
               </property>
               <widget class="QWidget" name="rde_tab">
                <attribute name="title">

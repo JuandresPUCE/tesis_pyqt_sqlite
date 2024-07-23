@@ -1,4 +1,6 @@
+import os
 import sys
+import subprocess
 from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
@@ -63,6 +65,8 @@ class PantallaCrud(QMainWindow):
 
         self.ajustes_visuales_tabla()
 
+        self.data_lista_btn = self.ui.data_lista_btn
+        self.data_lista_btn.clicked.connect(self.reiniciar_aplicacion)
 
          # Conectar la señal cellChanged para actualizar la base de datos cuando cambie una celda
         self.tabla_datos.cellChanged.connect(self.actualizar_valor_celda_datos)
@@ -880,6 +884,25 @@ class PantallaCrud(QMainWindow):
             self.metodos_comunes.buscar_datos_db(columnas, elementos_visuales,aplicar_strip, self.RegistroDatosSalidaArrhenius, self.mostrar_datos_tabla_salida_arrhenius,True)
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Se produjo un error al buscar los datos de salida Arrhenius: {e}", QMessageBox.StandardButton.Ok)
+
+    def reiniciar_aplicacion(self):
+        try:
+            # Cerrar la aplicación actual
+            QApplication.quit()
+
+            # Obtener el nombre del archivo de script actual (main.py)
+            script_name = os.path.abspath(sys.argv[0])
+
+            # Volver a ejecutar el script
+            subprocess.Popen([sys.executable, script_name])
+
+            # Salir del proceso actual
+            sys.exit()
+
+        except Exception as e:
+            # Mostrar un mensaje de error en caso de excepción
+            QMessageBox.critical(self, "Error", f"Se produjo un error al reiniciar la aplicación: {e}")
+
 
 
 if __name__ == "__main__":

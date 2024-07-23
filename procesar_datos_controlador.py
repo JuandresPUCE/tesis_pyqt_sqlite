@@ -110,6 +110,7 @@ class PanelDataAnalisis(QMainWindow):
         self.registro_datos_box.currentIndexChanged.connect(self.imprimir_registro_seleccionado)
         self.registro_datos_box.currentIndexChanged.connect(self.buscar_unidades_nombre_data)
 
+
         #combo box filtro datos experimentales
         self.filtro_datos_box = self.ui.filtro_datos_box
 
@@ -244,11 +245,11 @@ class PanelDataAnalisis(QMainWindow):
         self.menu_bar.clicked.connect(self.modificar_menu)
     
     def modificar_menu(self):
+        self.refrescar_data()
         if self.menu_derecho.isVisible():
             self.menu_derecho.hide()
         else:
-            self.menu_derecho.show()
-    
+            self.menu_derecho.show()            
    
     def cargar_datos_json_constante_r(self, archivo):
         self.metodos_comunes.cargar_datos_json_box_group_box(archivo, "constante_R_gases", self.r_box, "valor",self.ui.groupBox_22)
@@ -1110,6 +1111,7 @@ class PanelDataAnalisis(QMainWindow):
             # Ejecutar la lógica de impresión
             self.imprimir_registro_seleccionado()
 
+
             # Verificar si los datos están listos
             if hasattr(self, 'df_datos_cineticos_listos') and self.df_datos_cineticos_listos is not None and not self.df_datos_cineticos_listos.empty:
                 self.guardar_reporte()
@@ -1150,6 +1152,13 @@ class PanelDataAnalisis(QMainWindow):
         fecha_str = fecha_actual.strftime("%d/%m/%Y")
 
         self.fecha_edit.setText(fecha_str)
+
+    def refrescar_data(self):
+        self.buscar_registros()
+        self.buscar_dato()
+        self.buscar_condiciones_iniciales()
+        self.buscar_datos_salida()
+        self.buscar_datos_salida_arrhenius()
 
 class MatplotlibWidget(QWidget):
     def __init__(self, parent=None):

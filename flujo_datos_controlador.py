@@ -1,3 +1,6 @@
+import os
+import sys
+import subprocess
 import sys
 from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
@@ -182,6 +185,7 @@ class FlujoDatos(QMainWindow):
         self.concentracion_reactivo_limitante_calculo_2=self.ui.concentracion_reactivo_limitante_calculo_2
         self.agregar_dc_archivo_btn=self.ui.agregar_dc_archivo_btn
         self.respaldar_btn = self.ui.respaldar_btn
+        self.data_lista_btn = self.ui.data_lista_btn
 
         self.calculos_adicionales_btn=self.ui.calculos_adicionales_btn
 
@@ -227,6 +231,7 @@ class FlujoDatos(QMainWindow):
 
         self.respaldar_btn.clicked.connect(self.generar_respaldo)
 
+        self.data_lista_btn.clicked.connect(self.reiniciar_aplicacion)
 
     def ocultar_elementos_vista(self):
         # Lista de nombres de elementos a ocultar
@@ -1560,6 +1565,25 @@ class FlujoDatos(QMainWindow):
         except Exception as e:
             #print(f"Ocurrió un error al generar el respaldo: {e}")
             QMessageBox.critical(self, "Error", f"Ocurrió un error al generar el respaldo: {e}", QMessageBox.StandardButton.Ok)
+
+    def reiniciar_aplicacion(self):
+        try:
+            # Cerrar la aplicación actual
+            QApplication.quit()
+
+            # Obtener el nombre del archivo de script actual (main.py)
+            script_name = os.path.abspath(sys.argv[0])
+
+            # Volver a ejecutar el script
+            subprocess.Popen([sys.executable, script_name])
+
+            # Salir del proceso actual
+            sys.exit()
+
+        except Exception as e:
+            # Mostrar un mensaje de error en caso de excepción
+            QMessageBox.critical(self, "Error", f"Se produjo un error al reiniciar la aplicación: {e}")
+
 
 
 if __name__ == "__main__":

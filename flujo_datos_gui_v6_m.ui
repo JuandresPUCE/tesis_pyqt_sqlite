@@ -2117,7 +2117,7 @@
               </widget>
               <widget class="QWidget" name="u_tab">
                <attribute name="title">
-                <string>Configuracion unidades</string>
+                <string>Configuración unidades</string>
                </attribute>
                <layout class="QVBoxLayout" name="verticalLayout_36">
                 <item>

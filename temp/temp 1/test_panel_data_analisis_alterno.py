@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-from panel_data_analisis_alterno import Ui_MainWindow
+from temp.panel_data_analisis_alterno import Ui_MainWindow
 from repositorios import *
 
 from funciones import *
@@ -94,9 +94,6 @@ class PanelDataAnalisis(QMainWindow):
         #combo box filtro datos experimentales por especie quimica
         self.filtro_datos_box_2 = self.ui.filtro_datos_box_2
         self.filtrar_especie_quimica()
-
-        self.filtro_datos_box_3 = self.ui.filtro_datos_box_3
-        self.filtrar_datos_id_condiciones_iniciales()
         
         # Crear un widget para el gráfico de Matplotlib
         self.matplotlib_widget = MatplotlibWidget(self)
@@ -220,20 +217,6 @@ class PanelDataAnalisis(QMainWindow):
                 self.filtro_datos_box_2.addItem(especie)
         else:
             QMessageBox.information(self, "No hay datos", "No se encontraron datos en la base de datos.", QMessageBox.StandardButton.Ok)
-    
-    def filtrar_datos_id_condiciones_iniciales(self):
-        self.filtro_datos_box_3.clear()
-        self.filtro_datos_box_3.addItem("Todos")
-
-        datos_cineticos = self.DatosCineticosManejador.consultar()
-
-        if datos_cineticos:
-            id_condiciones_iniciales = set(registro.id_condiciones_iniciales for registro in datos_cineticos)
-            
-            for id_condicion in id_condiciones_iniciales:
-                self.filtro_datos_box_3.addItem(str(id_condicion))
-        else:
-            QMessageBox.information(self, "No hay datos", "No se encontraron datos en la base de datos.", QMessageBox.StandardButton.Ok)
 
 
 #manejar try except cuando la base de datos no tiene datos, regresar version no refactorizada
@@ -269,7 +252,6 @@ class PanelDataAnalisis(QMainWindow):
     def imprimir_registro_seleccionado(self):
         self.actualizar_datos_cineticos()
         nombre_data = self.registro_datos_box.currentText()
-        id_condiciones_iniciales = self.filtro_datos_box_3.currentData()
         tipo_especie = self.filtro_datos_box.currentText()
         especie_quimica = self.filtro_datos_box_2.currentText()
 
@@ -294,10 +276,6 @@ class PanelDataAnalisis(QMainWindow):
         # Filtrar datos cinéticos por especie_quimica si se selecciona una específica
         if especie_quimica != "Todos":
             datos_cineticos = [dato for dato in datos_cineticos if dato.especie_quimica == especie_quimica]
-        
-        #filtra por id de condiciones iniciales
-        if id_condiciones_iniciales != "Todos":
-            datos_cineticos = [dato for dato in datos_cineticos if dato.id_condiciones_iniciales == id_condiciones_iniciales]
 
         # Convertir los datos a un DataFrame de pandas
         df_datos_cineticos_listos = pd.DataFrame.from_records([dato.__dict__ for dato in datos_cineticos])

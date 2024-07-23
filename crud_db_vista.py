@@ -34,6 +34,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.addItem(spacerItem)
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem1)
+        self.data_lista_btn = QtWidgets.QPushButton(parent=self.panel_comando_superior)
+        self.data_lista_btn.setObjectName("data_lista_btn")
+        self.horizontalLayout_4.addWidget(self.data_lista_btn)
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
         self.horizontalLayout_4.addItem(spacerItem2)
         spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
@@ -1452,12 +1455,13 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget_2.setCurrentIndex(6)
+        self.tabWidget_2.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.data_lista_btn.setText(_translate("MainWindow", "Datos Listos"))
         self.groupBox_33.setTitle(_translate("MainWindow", "Nombre data"))
         self.groupBox_35.setTitle(_translate("MainWindow", "Fecha"))
         self.groupBox_34.setTitle(_translate("MainWindow", "Detalle"))
