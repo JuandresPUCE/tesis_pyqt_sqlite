@@ -213,6 +213,10 @@ class PanelDataAnalisis(QMainWindow):
 
         self.fecha_edit=self.ui.fecha_edit
         self.establecer_fecha_sistema()
+
+        # Crear un atajo para la tecla F5
+        shortcut = QShortcut(QKeySequence.StandardKey.Refresh, self)
+        shortcut.activated.connect(self.refrescar_data)
     
     def ajustes_visuales_tabla(self):
          #ajuste visual columnas tabla datos
@@ -245,7 +249,7 @@ class PanelDataAnalisis(QMainWindow):
         self.menu_bar.clicked.connect(self.modificar_menu)
     
     def modificar_menu(self):
-        self.refrescar_data()
+        
         if self.menu_derecho.isVisible():
             self.menu_derecho.hide()
         else:

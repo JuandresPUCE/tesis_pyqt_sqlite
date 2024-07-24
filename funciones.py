@@ -348,3 +348,20 @@ class Funciones:
         conversion_A = ((propiedad/propiedad_inicial) - 1)
         
         return conversion_A
+    
+    def propiedad_conversion_reactivo_limitante_fluctuante(self, propiedad, propiedad_inicial, epsilon_a=None, aumento=None):
+        """
+        Calcula la conversión del reactivo limitante dado el cambio en una propiedad medible.
+        """
+        if aumento:  # Si la propiedad aumenta
+            if epsilon_a is None:
+                conversion_reactivo_limitante = ((propiedad / propiedad_inicial) - 1)
+            else:
+                conversion_reactivo_limitante = ((propiedad / propiedad_inicial) - 1) / epsilon_a
+        else:  # Si la propiedad disminuye o si aumento es None o False
+            if epsilon_a is None:
+                conversion_reactivo_limitante = (1 - (propiedad / propiedad_inicial))
+            else:
+                conversion_reactivo_limitante = (1 - (propiedad / propiedad_inicial)) / (-epsilon_a)
+                
+        return conversion_reactivo_limitante

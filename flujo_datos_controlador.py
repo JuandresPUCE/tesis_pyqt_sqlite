@@ -201,6 +201,12 @@ class FlujoDatos(QMainWindow):
 
         self.delta_n_rq = self.ui.delta_n_edit
 
+        self.conversion_propiedad_aumenta = self.ui.conversion_propiedad_aumenta
+        self.conversion_propiedad_disminuye = self.ui.conversion_propiedad_disminuye
+        self.conversion_propiedad_aumenta.clicked.connect(lambda: self.calcular_conversion_reactivo_limitante_otra_propiedad(aumento=True))
+        self.conversion_propiedad_disminuye.clicked.connect(lambda: self.calcular_conversion_reactivo_limitante_otra_propiedad(aumento=False))
+
+
         #calculos
         
         self.calculo0.clicked.connect(self.marcar_quimico_inicial)
@@ -211,7 +217,7 @@ class FlujoDatos(QMainWindow):
 
         self.calculo5.clicked.connect(self.calcular_concentracion_reactivo_limitante_dado_conversion)
         self.calculo6.clicked.connect(self.calcular_concentracion_producto_dado_conversion)
-        self.calculo7.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_epsilon_a_otra_propiedad)
+        self.calculo7.clicked.connect(self.calcular_conversion_reactivo_limitante_dado_epsilon_a_presion)
         self.calculo8.clicked.connect(self.calcular_concentracion_reactivo_limitante_dado_concentracion_gas)
         
 
@@ -1307,15 +1313,15 @@ class FlujoDatos(QMainWindow):
         except Exception as e:
             self.statusbar.showMessage(f"Error inesperado: {e}", 5000)
             
-    def calcular_conversion_reactivo_limitante_dado_epsilon_a_otra_propiedad(self):
+    def calcular_conversion_reactivo_limitante_dado_epsilon_a_presion(self):
         try:
             funciones = Funciones()
             # Verificar individualmente cada campo y mostrar un mensaje específico si está vacío
             if not self.otra_propiedad_inicial.text():
-                raise ValueError("El campo 'Otra Propiedad Inicial del panel' está vacío. Por favor, llénelo.")
+                raise ValueError("El campo 'Propiedad Inicial del panel' está vacío. Por favor, llénelo.")
                 
             if not self.otra_propiedad.text():
-                raise ValueError("El campo 'Otra Propiedad de la pestaña datos cinéticos' está vacío. Por favor, llénelo.")
+                raise ValueError("El campo 'Propiedad de la pestaña datos cinéticos' está vacío. Por favor, llénelo.")
                 
             if not self.epsilon_reactivo_limitante_calculo.text():
                 raise ValueError("El campo 'Epsilon Reactivo Limitante del panel' está vacío. Por favor, llénelo.")
@@ -1324,7 +1330,7 @@ class FlujoDatos(QMainWindow):
             otra_propiedad_inicial = float(self.otra_propiedad_inicial.text())
             otra_propiedad = float(self.otra_propiedad.text())
             epsilon_a = float(self.epsilon_reactivo_limitante_calculo.text())
-            gas_conversion_componente_principal = funciones.propiedad_conversion_componente_principal_epsilon_a(otra_propiedad, otra_propiedad_inicial, epsilon_a)
+            gas_conversion_componente_principal = funciones.gas_conversion_componente_principal_epsilon_a(otra_propiedad, otra_propiedad_inicial, epsilon_a)
             
             self.conversion_reactivo_limitante_gas.setText(str(gas_conversion_componente_principal))
             self.statusbar.showMessage(f" La conversion del reactivo limitante es x reactivo limitante= {gas_conversion_componente_principal} .", 5000)
@@ -1333,6 +1339,42 @@ class FlujoDatos(QMainWindow):
             self.statusbar.showMessage(f"Error al convertir a float: {e}", 5000)
         except Exception as e:
             self.statusbar.showMessage(f"Error inesperado: {e}", 5000)
+
+    def calcular_conversion_reactivo_limitante_otra_propiedad(self,aumento):
+        try:
+            funciones = Funciones()
+            # Verificar individualmente cada campo y mostrar un mensaje específico si está vacío
+            if not self.otra_propiedad_inicial.text():
+                raise ValueError("El campo 'Propiedad Inicial del panel' está vacío. Por favor, llénelo.")
+                
+            if not self.otra_propiedad.text():
+                raise ValueError("El campo 'Propiedad de la pestaña datos cinéticos' está vacío. Por favor, llénelo.")
+            
+            otra_propiedad_inicial = float(self.otra_propiedad_inicial.text())
+            otra_propiedad = float(self.otra_propiedad.text())
+            
+            # Verificar si el campo epsilon_reactivo_limitante_calculo está vacío
+            if self.epsilon_reactivo_limitante_calculo.text():
+                epsilon_a = float(self.epsilon_reactivo_limitante_calculo.text())
+            else:
+                epsilon_a = None
+            
+            # Realizar el cálculo de conversión del reactivo limitante
+            conversion_reactivo_limitante = funciones.propiedad_conversion_reactivo_limitante_fluctuante(
+                propiedad=otra_propiedad,
+                propiedad_inicial=otra_propiedad_inicial,
+                epsilon_a=epsilon_a,
+                aumento=aumento
+            )
+            
+            self.ui.conversion_RL_otra_propiedad.setText(str(conversion_reactivo_limitante))
+            self.statusbar.showMessage(f"La conversión del reactivo limitante es: {conversion_reactivo_limitante}", 5000)
+        except ValueError as e:
+            QMessageBox.warning(self, "Revisar", f"{e}", QMessageBox.StandardButton.Ok)
+            self.statusbar.showMessage(f"Error al convertir a float: {e}", 5000)
+        except Exception as e:
+            self.statusbar.showMessage(f"Error inesperado: {e}", 5000)
+
 
     def calcular_concentracion_reactivo_limitante_dado_concentracion_gas(self):
         try:
@@ -1490,8 +1532,8 @@ class FlujoDatos(QMainWindow):
 
         # Verificar los nombres de las columnas
         columnas_esperadas = ['tiempo', 'concentracion', 'otra_propiedad', 'conversion_reactivo_limitante', 
-                              'tipo_especie', 'id_condiciones_iniciales', 'nombre_data', 
-                              'nombre_reaccion', 'especie_quimica']
+                            'tipo_especie', 'id_condiciones_iniciales', 'nombre_data', 
+                            'nombre_reaccion', 'especie_quimica']
         columnas_faltantes = [col for col in columnas_esperadas if col not in df.columns]
 
         if columnas_faltantes:
@@ -1500,6 +1542,12 @@ class FlujoDatos(QMainWindow):
 
         # Iterar sobre cada fila del DataFrame
         for _, fila in df.iterrows():
+            # Convertir los valores a cadenas y reemplazar comas por puntos en las columnas numéricas
+            fila['tiempo'] = str(fila['tiempo']).replace(',', '.')
+            fila['concentracion'] = str(fila['concentracion']).replace(',', '.')
+            fila['otra_propiedad'] = str(fila['otra_propiedad']).replace(',', '.')
+            fila['conversion_reactivo_limitante'] = str(fila['conversion_reactivo_limitante']).replace(',', '.')
+
             # Crear el objeto DatosIngresadosCineticos
             dato = DatosIngresadosCineticos(
                 tiempo=float(fila['tiempo']),
