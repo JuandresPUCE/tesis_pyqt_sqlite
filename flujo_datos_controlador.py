@@ -23,6 +23,7 @@ from funciones import *
 
 # metodos comunes
 from servicios import *
+from componentes_auxiliares import *
 
 #respaldos 
 from respaldos import Respaldos
@@ -134,6 +135,7 @@ class FlujoDatos(QMainWindow):
         self.RegistroDatosSalidaManejador = RegistroDatosSalidaManejador()     
 
         self.metodos_comunes = Servicios(self)
+        self.componentes_auxiliares = ComponentesAuxiliares()
 
     def init_ui_menu_derecho(self):
         #nombre_data_general_edit
@@ -927,40 +929,15 @@ class FlujoDatos(QMainWindow):
         self.fecha_ds_edit.setText(fecha_str)
 
     def ajustes_visuales_tabla(self):
-        #ajuste visual columnas tabla data experimental
-        titulos_columnas_data_experimental = ["id", "Nombre\ndata", "Fecha", "Detalle"]
-        # Aplicar los títulos a la tabla
-        self.tabla_registro_data_experimental.setHorizontalHeaderLabels(titulos_columnas_data_experimental)
-        # Autoajustar el ancho de las columnas al contenido
-        self.tabla_registro_data_experimental.resizeColumnsToContents()
+        self.componentes_auxiliares.ajustar_tabla(self.tabla_registro_data_experimental, ["id", "Nombre\ndata", "Fecha", "Detalle"])
+        self.componentes_auxiliares.ajustar_tabla(self.tabla_reaccion_quimica, ["id","Especie\nQuimica", "Fórmula", "Coeficiente\nEstequiométrico", "Detalle", "Tipo\nEspecie", "Nombre\nreaccion"])
+        self.componentes_auxiliares.ajustar_tabla(self.tabla_registro_unidades, ["id", "Presión", "Temperatura", "Tiempo", "Concentración", "Energía", "R", "Nombre\ndata"])
+        self.componentes_auxiliares.ajustar_tabla(self.tabla_condiciones_iniciales, ["id", "Temperatura", "Tiempo", "Presión\nTotal", "Presión\nParcial", "Fracción\nMolar", "Especie\nQuímica", "Tipo\nEspecie", "Detalle", "Nombre\ndata"])
+        self.componentes_auxiliares.ajustar_tabla(self.tabla_datos, ["id", "Tiempo", "Concentración", "Otra\nPropiedad", "Conversión\nReactivo\nLimitante", "Tipo\nEspecie", "id\nCondiciones\nIniciales", "Nombre\ndata", "Nombre\nreacción", "Especie\nquímica"])
+        self.componentes_auxiliares.ajustar_tabla(self.tabla_datos_salida, ["id", "Nombre\ndata\nsalida", "Fecha", "id\nNombre\ndata", "id\nCondiciones\niniciales", "id\nRegistro\nunidades", "R\nutilizada", "Nombre\ndata", "Nombre\nreacción", "Δn\nreacción", "ε\nreactivo\nlimitante", "Tipo\nespecie", "Especie\nquímica", "Constante\ncinética", "Orden\nreacción", "Modelo\ncinético", "Tipo\ncálculo", "Detalles"])
+        self.componentes_auxiliares.ocultar_columnas(self.tabla_datos_salida, [11,12,13,14,15,16,17,18,19])
+        #self.componentes_auxiliares.ajustar_tabla(self.tabla_datos_salida_arrhenius, ["id","Nombre\ncaso","id\nNombre\ndata\nsalida","id\nNombre\ndata","Fecha","Temperatura","1/Temperatura absoluta","Constante\ncinética","ln\nConstante\ncinética\n0","Energía\nactivación\nR","R\nutilizada","Energía\nactivación","Constante\ncinética\n0","ln\nConstante\ncinética","Detalles"])
 
-        #ajuste visual columnas tabla reaccion quimica
-        titulos_columnas_reaccion_q = ["id","Especie\nQuimica", "Fórmula", "Coeficiente\nEstequiométrico", "Detalle", "Tipo\nEspecie", "Nombre\nreaccion"]
-        # Aplicar los títulos a la tabla
-        self.tabla_reaccion_quimica.setHorizontalHeaderLabels(titulos_columnas_reaccion_q)
-        # Autoajustar el ancho de las columnas al contenido
-        self.tabla_reaccion_quimica.resizeColumnsToContents()
-        #ajuste visual columnas tabla registro unidades
-        titulos_columnas_registro_unidades = ["id", "Presión", "Temperatura", "Tiempo", "Concentración", "Energía", "R", "Nombre\ndata"]
-        self.tabla_registro_unidades.setHorizontalHeaderLabels(titulos_columnas_registro_unidades)
-        self.tabla_registro_unidades.resizeColumnsToContents()
-        #ajuste visual columnas condiciones iniciales
-        titulos_columnas_condiciones_iniciales = ["id", "Temperatura", "Tiempo", "Presión\nTotal", "Presión\nParcial", "Fracción\nMolar", "Especie\nQuímica", "Tipo\nEspecie", "Detalle", "Nombre\ndata"]
-        self.tabla_condiciones_iniciales.setHorizontalHeaderLabels(titulos_columnas_condiciones_iniciales)
-        self.tabla_condiciones_iniciales.resizeColumnsToContents()
-        #ajuste visual columnas tabla datos
-        titulos_columnas_datos = ["id", "Tiempo", "Concentración", "Otra\nPropiedad", "Conversión\nReactivo\nLimitante", "Tipo\nEspecie", "id\nCondiciones\nIniciales", "Nombre\ndata", "Nombre\nreacción", "Especie\nquímica"]
-        self.tabla_datos.setHorizontalHeaderLabels(titulos_columnas_datos)
-        self.tabla_datos.resizeColumnsToContents()
-        #ajuste visual columnas tabla datos salida
-        titulos_columnas_datos_salida = ["id", "Nombre\ndata\nsalida", "Fecha", "id Nombre\ndata", "id Condiciones\niniciales", "id Registro\nunidades", "R\nutilizada", "Nombre\ndata", "Nombre\nreacción", "Δn\nreacción", "ε\nreactivo\nlimitante", "Tipo\nespecie", "Especie\nquímica", "Constante\ncinética", "Orden\nreacción", "Modelo\ncinético", "Tipo\ncálculo", "Detalles"]
-        self.tabla_datos_salida.setHorizontalHeaderLabels(titulos_columnas_datos_salida)
-        self.tabla_datos_salida.resizeColumnsToContents()
-        #columnas ocultas de datos de salida
-        columnas_ocultas_salida = [11,12,13,14,15,16,17,18,19]
-        #self.tabla_datos_salida.hideColumn(columnas_ocultas_salida)
-        for col in columnas_ocultas_salida:
-            self.tabla_datos_salida.hideColumn(col)
 
     
     def cargar_datos_json_unidades_temperatura(self, archivo):
@@ -1615,24 +1592,7 @@ class FlujoDatos(QMainWindow):
             QMessageBox.critical(self, "Error", f"Ocurrió un error al generar el respaldo: {e}", QMessageBox.StandardButton.Ok)
 
     def reiniciar_aplicacion(self):
-        try:
-            # Cerrar la aplicación actual
-            QApplication.quit()
-
-            # Obtener el nombre del archivo de script actual (main.py)
-            script_name = os.path.abspath(sys.argv[0])
-
-            # Volver a ejecutar el script
-            subprocess.Popen([sys.executable, script_name])
-
-            # Salir del proceso actual
-            sys.exit()
-
-        except Exception as e:
-            # Mostrar un mensaje de error en caso de excepción
-            QMessageBox.critical(self, "Error", f"Se produjo un error al reiniciar la aplicación: {e}")
-
-
+        self.componentes_auxiliares.reiniciar_aplicacion()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

@@ -22,6 +22,7 @@ from repositorios import *
 from funciones import *
 from modelos_metodo_integral import *
 from modelos_metodo_arrhenius import *
+from componentes_auxiliares import *
 
 #otras ventanas
 from crud_db_controlador import PantallaCrud
@@ -57,6 +58,7 @@ class PanelDataAnalisis(QMainWindow):
         self.df_datos_cineticos_listos = None
         # metodos comunes refactorizados
         self.metodos_comunes = Servicios()
+        self.componentes_auxiliares = ComponentesAuxiliares()
 
         # Inicializar elementos gráficos
         self.iniciar_iu_elementos()
@@ -219,28 +221,12 @@ class PanelDataAnalisis(QMainWindow):
         shortcut.activated.connect(self.refrescar_data)
     
     def ajustes_visuales_tabla(self):
-         #ajuste visual columnas tabla datos
-        titulos_columnas_datos = ["id", "Tiempo", "Concentración", "Otra\nPropiedad", "Conversión\nReactivo\nLimitante", "Tipo\nEspecie", "id\nCondiciones\nIniciales", "Nombre\ndata", "Nombre\nreacción", "Especie\nquímica"]
-        self.tabla_datos.setHorizontalHeaderLabels(titulos_columnas_datos)
-        self.tabla_datos.resizeColumnsToContents()
-         #ajuste visual columnas condiciones iniciales
-        titulos_columnas_condiciones_iniciales = ["id", "Temperatura", "Tiempo", "Presión\nTotal", "Presión\nParcial", "Fracción\nMolar", "Especie\nQuímica", "Tipo\nEspecie", "Detalle", "Nombre\ndata"]
-        self.condiciones_iniciales_tabla.setHorizontalHeaderLabels(titulos_columnas_condiciones_iniciales)
-        self.condiciones_iniciales_tabla.resizeColumnsToContents()
-        titulos_columnas_datos_salida = ["id","Data\nsalida","Fecha","id\nNombre\ndata","id\nCondiciones\niniciales","id\nRegistro\nunidades","r\nutilizada","Nombre\ndata","Nombre\nreaccion","Δn\nreacción","ε\nreactivo\nlimitante","Tipo\nespecie", "Especie\nquímica","Constante\ncinética", "Orden\nreacción", "Modelo\ncinético", "Tipo\ncálculo", "Detalles"]        
-        self.tabla_datos_salida.setHorizontalHeaderLabels(titulos_columnas_datos_salida)
-        self.tabla_datos_salida.resizeColumnsToContents()
-        
-        #ajuste visual columnas tabla reaccion quimica
-        titulos_columnas_reaccion_q = ["id","Especie\nQuimica", "Fórmula", "Coeficiente\nEstequiométrico", "Detalle", "Tipo\nEspecie", "Nombre\nreaccion"]
-        # Aplicar los títulos a la tabla
-        self.reaccion_quimica_tabla.setHorizontalHeaderLabels(titulos_columnas_reaccion_q)
-        # Autoajustar el ancho de las columnas al contenido
-        self.reaccion_quimica_tabla.resizeColumnsToContents()
+        self.componentes_auxiliares.ajustar_tabla(self.tabla_datos, ["id", "Tiempo", "Concentración", "Otra\nPropiedad", "Conversión reactivo\nlimitante", "Tipo\nEspecie", "id condiciones\nIniciales", "Nombre\ndata", "Nombre\nreacción", "Especie\nquímica"])
+        self.componentes_auxiliares.ajustar_tabla(self.condiciones_iniciales_tabla, ["id", "Temperatura", "Tiempo", "Presión\nTotal", "Presión\nParcial", "Fracción\nMolar", "Especie\nQuímica", "Tipo\nEspecie", "Detalle", "Nombre\ndata"])
+        self.componentes_auxiliares.ajustar_tabla(self.tabla_datos_salida, ["id","Data\nsalida","Fecha","id nombre\ndata","id condiciones\niniciales","id\nRegistro\nunidades","r\nutilizada","Nombre\ndata","Nombre\nreaccion","Δn\nreacción","ε\nreactivo\nlimitante","Tipo\nespecie", "Especie\nquímica","Constante\ncinética", "Orden\nreacción", "Modelo\ncinético", "Tipo\ncálculo", "Detalles"])
+        self.componentes_auxiliares.ajustar_tabla(self.reaccion_quimica_tabla, ["id","Especie\nQuimica", "Fórmula", "Coeficiente\nEstequiométrico", "Detalle", "Tipo\nEspecie", "Nombre\nreaccion"])
+        self.componentes_auxiliares.ajustar_tabla(self.datos_salida_arrhenius_tabla, ["id","Nombre\ncaso","id\nNombre\ndata\nsalida","id\nNombre\ndata","Fecha","Temperatura","1/Temperatura absoluta","Constante\ncinética","ln\nConstante\ncinética\n0","Energía\nactivación\nR","R\nutilizada","Energía\nactivación","Constante\ncinética\n0","ln\nConstante\ncinética","Detalles"])
 
-        titulos_columnas_datos_salida_arrhenius = ["id","Nombre\ncaso","id\nNombre\ndata\nsalida","id\nNombre\ndata","Fecha","Temperatura","1/Temperatura absoluta","Constante\ncinética","ln\nConstante\ncinética\n0","Energía\nactivación\nR","R\nutilizada","Energía\nactivación","Constante\ncinética\n0","ln\nConstante\ncinética","Detalles"]
-        self.datos_salida_arrhenius_tabla.setHorizontalHeaderLabels(titulos_columnas_datos_salida_arrhenius)
-        self.datos_salida_arrhenius_tabla.resizeColumnsToContents()
 
         # funciones de la barra de menu
     def init_panel_menu(self):
@@ -816,61 +802,13 @@ class PanelDataAnalisis(QMainWindow):
 
 
     def cambiar_config_base_datos(self):
-        try:
-            self.metodos_comunes.cambiar_configuracion_db()
-
-            # Confirmar al usuario que la aplicación se reiniciará
-            reply = QMessageBox.question(
-                self, 
-                'Reinicio necesario', 
-                'La configuración de la base de datos se ha actualizado. La aplicación se reiniciará para aplicar los cambios.',
-                QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel,
-                QMessageBox.StandardButton.Ok
-            )
-
-            if reply == QMessageBox.StandardButton.Ok:
-                self.reiniciar_aplicacion()
-
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"Se produjo un error al cambiar la configuración de la base de datos: {e}")
+        self.componentes_auxiliares.cambiar_config_base_datos()
 
     def reiniciar_aplicacion(self):
-        try:
-            # Cerrar la aplicación actual
-            QApplication.quit()
-
-            # Obtener el nombre del archivo de script actual (main.py)
-            script_name = os.path.abspath(sys.argv[0])
-
-            # Volver a ejecutar el script
-            subprocess.Popen([sys.executable, script_name])
-
-            # Salir del proceso actual
-            sys.exit()
-
-        except Exception as e:
-            # Mostrar un mensaje de error en caso de excepción
-            QMessageBox.critical(self, "Error", f"Se produjo un error al reiniciar la aplicación: {e}")
-
+        self.componentes_auxiliares.reiniciar_aplicacion()
 
     def crear_base_datos(self):
-        try:
-            self.metodos_comunes.nueva_configuracion_db()
-            
-            # Confirmar al usuario que la aplicación se reiniciará
-            reply = QMessageBox.question(
-                self, 
-                'Reinicio necesario', 
-                'Se ha creado una nueva configuración de la base de datos. La aplicación se reiniciará para aplicar los cambios.',
-                QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel,
-                QMessageBox.StandardButton.Ok
-            )
-            
-            if reply == QMessageBox.StandardButton.Ok:
-                self.reiniciar_aplicacion()
-        
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"Se produjo un error al crear la base de datos: {e}")
+        self.componentes_auxiliares.crear_base_datos()
 
 
     def actualizar_datos_salida(self):
