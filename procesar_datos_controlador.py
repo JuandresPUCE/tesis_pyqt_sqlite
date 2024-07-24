@@ -559,13 +559,25 @@ class PanelDataAnalisis(QMainWindow):
         titulo = "Concentracion vs Tiempo"
         componente = f"{tipo_especie} - {especie_quimica}"
             
+        # Verificar si la columna 'concentracion' está vacía y usar 'otra_propiedad' si es necesario
+        if self.df_datos_cineticos_listos['concentracion'].isnull().all() or self.df_datos_cineticos_listos['concentracion'].empty:
+            if 'otra_propiedad' in self.df_datos_cineticos_listos.columns:
+                etiqueta_vertical = "Otra Propiedad"
+                columna_y = "otra_propiedad"
+            else:
+                self.mostrar_imagen_datos_vacios('assets/_2dcfdd65-68b6-4c73-ab67-0c542d136375.jpeg', grafico_mostrar=self.matplotlib_widget)
+                self.statusBar().showMessage("La columna 'concentracion' y 'otra_propiedad' están vacías. No se puede graficar.", 5000)
+                return
+        else:
+            columna_y = "concentracion"
+
         try:
             self.matplotlib_widget.canvas.figure.clf()
             self.matplotlib_widget.ax = self.matplotlib_widget.canvas.figure.subplots()
 
             self.matplotlib_widget.funciones.graficar_datos_experimentales_iniciales(
                 self.df_datos_cineticos_listos["tiempo"], 
-                self.df_datos_cineticos_listos["concentracion"],
+                self.df_datos_cineticos_listos[columna_y],
                 etiqueta_horizontal, 
                 etiqueta_vertical, 
                 titulo, 
@@ -576,7 +588,7 @@ class PanelDataAnalisis(QMainWindow):
             )
 
             self.matplotlib_widget.ax.set_xlim([self.df_datos_cineticos_listos["tiempo"].min(), self.df_datos_cineticos_listos["tiempo"].max()])
-            self.matplotlib_widget.ax.set_ylim([self.df_datos_cineticos_listos["concentracion"].min(), self.df_datos_cineticos_listos["concentracion"].max()])
+            self.matplotlib_widget.ax.set_ylim([self.df_datos_cineticos_listos[columna_y].min(), self.df_datos_cineticos_listos[columna_y].max()])
             self.matplotlib_widget.ax.set_xlabel(etiqueta_horizontal)
             self.matplotlib_widget.ax.set_ylabel(etiqueta_vertical)
 
@@ -585,6 +597,7 @@ class PanelDataAnalisis(QMainWindow):
             QMessageBox.information(self, "Datos Listos", "Los datos iniciales han sido identificados y están listos para ser modelados.")
         except KeyError as e:
             print(f"Error: {e}. La columna no existe en el DataFrame.")
+
 
     def grafico_inicial_calcular_arrhenius(self):
         try:

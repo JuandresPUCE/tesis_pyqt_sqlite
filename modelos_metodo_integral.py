@@ -19,12 +19,6 @@ class MetodoIntegralModelos:
     @staticmethod
     def modelo_segundo_orden(t, k_ord_2, A_0,n=None):
         return 1/((1/A_0) + k_ord_2*t)
-    
-    #metodo especial de lambda para conductividad
-    @staticmethod
-    def modelo_lambda_2_ord(t, k, A0, Lc, L0):
-        Lt = Lc + (L0 - Lc) / (k * A0 * t)
-        return Lt
 
     
 class MetodoIntegralAjustador:
@@ -159,93 +153,49 @@ class MetodoIntegralAjustador:
         print('n_optimo:', n)
 
         return k_optimo, A_0_optimo, n , nombre_modelo , ecuacion_texto,ecuacion_texto_cadena
-    
-    @staticmethod
-    def ajustar_modelo_lambda(data_cinetica, columna_tiempo, columna_otra_propiedad_reactivo_limitante, estimacion_inicial_k, n_orden, A0=None, estimacion_inicial_Lc=None, estimacion_inicial_L0=None):
-        # Obtener los datos experimentales
-        t_data = np.array(data_cinetica[columna_tiempo])
-        conductividad_data = np.array(data_cinetica[columna_otra_propiedad_reactivo_limitante])
-        
-        # Verificar que A0 esté proporcionado
-        if A0 is None:
-            raise ValueError("El valor de A0 es obligatorio y debe ser proporcionado.")
-        
-        # Verificar y calcular estimacion_inicial_L0
-        if estimacion_inicial_L0 is None:
-            if 0 in t_data:
-                estimacion_inicial_L0 = conductividad_data[t_data == 0][0]
-            else:
-                raise ValueError("No se encontró un valor de tiempo igual a 0 para calcular L0.")
-        
-        # Verificar y calcular estimacion_inicial_Lc
-        if estimacion_inicial_Lc is None:
-            estimacion_inicial_Lc = np.min(conductividad_data)  # Asumir el mínimo valor de A_data como estimación de Lc
-        
-        # Asignar n_orden = 2 directamente
-        n_orden = 2
-        
-        # Ajustar el modelo a los datos experimentales para encontrar k, A0, Lc y L0
-        params, covariance = curve_fit(MetodoIntegralModelos.modelo_lambda_2_ord, t_data, conductividad_data, p0=[estimacion_inicial_k, A0, estimacion_inicial_Lc, estimacion_inicial_L0])
-
-        # Los valores óptimos de k, A0, Lc y L0
-        k_optimo, A0_optimo, Lc_optimo, L0_optimo = params
-        
-        # Generar la cadena de texto con la ecuación del modelo ajustado
-        ecuacion_texto = f'$L(t) = {Lc_optimo:.4e} + \\frac{{{L0_optimo:.4e} - {Lc_optimo:.4e}}}{{{k_optimo:.4e} * {A0_optimo:.4e} * t}}$'
-        ecuacion_texto_cadena = f"L(t) = {Lc_optimo:.4e} + ({L0_optimo:.4e} - {Lc_optimo:.4e}) / ({k_optimo:.4e} * {A0_optimo:.4e} * t)"
-        
-        print('k_optimo:', k_optimo)
-        print('A0_optimo:', A0_optimo)
-        print('Lc_optimo:', Lc_optimo)
-        print('L0_optimo:', L0_optimo)
-        
-        return k_optimo, A0_optimo, n_orden, "modelo_conductividad", ecuacion_texto, ecuacion_texto_cadena
-
-
 #ämetodo ocupado dashboard
 class MetodoIntegralGraficador:
     @staticmethod
-    def graficar_modelo_salida_opcional(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, k_ord_n_optimo, A_0_optimo, n_optimo, data_producto=None, columna_concentracion_producto=None, grafico=None, ax=None, canvas=None, columna_otra_propiedad_reactivo_limitante=None):
-       # Graficos de los datos
+    def graficar_modelo_salida_opcional(data_cinetica, columna_tiempo, columna_concentracion_reactivo_limitante, k_ord_n_optimo, A_0_optimo, n_optimo, data_producto=None, columna_concentracion_producto=None, grafico=None, ax=None, canvas=None):
+        # Graficos de los datos
         if grafico == "MatplotlibWidget":
             print("Iniciando graficado con MatplotlibWidget")
             print(f"Datos cinéticos: {data_cinetica}")
             print(f"k_ord_n_optimo: {k_ord_n_optimo}, A_0_optimo: {A_0_optimo}, n_optimo: {n_optimo}")
             
             ax.clear()  # Limpiar el eje para una nueva gráfica
-            ax.plot(data_cinetica[columna_tiempo], data_cinetica[columna_otra_propiedad_reactivo_limitante], linestyle=':', label='Datos', color='orange', linewidth=5)
+            ax.plot(data_cinetica[columna_tiempo], data_cinetica[columna_concentracion_reactivo_limitante], linestyle=':', label='A', color='orange', linewidth=5)
             
             if data_producto is not None and columna_concentracion_producto is not None:
-                ax.plot(data_producto[columna_tiempo], data_producto[columna_concentracion_producto], linestyle='--', label='Producto', color='cyan', linewidth=1)
+                ax.plot(data_producto[columna_tiempo], data_producto[columna_concentracion_producto], linestyle='--', label='R', color='cyan', linewidth=1)
 
-            # Graficar la función ajustada
-            t_data_graf = np.linspace(min(data_cinetica[columna_tiempo]), max(data_cinetica[columna_tiempo]), 100)
-            L_funcion_ajustada = MetodoIntegralModelos.modelo_lambda_2_ord(t_data_graf, k_ord_n_optimo, A_0_optimo, A_0_optimo, A_0_optimo)  # Usar A_0_optimo para L0 y A0
+            # Grafica de la funcion 
+            t_data_graf = data_cinetica[columna_tiempo]
+            A_funcion_n_orden = MetodoIntegralGraficador.calcular_funcion_n_orden(t_data_graf, k_ord_n_optimo, A_0_optimo, n_optimo)
+            print("Valores calculados para la función n-orden:", A_funcion_n_orden)
 
-            ax.plot(t_data_graf, L_funcion_ajustada, label='Modelo Ajustado', color='green')
-            ax.set_xlabel('Tiempo')
-            ax.set_ylabel('Otra Propiedad')
-            ax.set_title('Modelo de datos: Otra Propiedad vs Tiempo')
+            ax.plot(t_data_graf, A_funcion_n_orden, label='Modelo de n orden', color='green')
+            ax.set_xlabel('tiempo')
+            ax.set_ylabel('Concentracion ')
+            ax.set_title('Modelo de datos: reactivo limitante vs tiempo')
             ax.legend()
             canvas.draw()  # Actualizar el lienzo con el nuevo gráfico
         else:
-            plt.plot(data_cinetica[columna_tiempo], data_cinetica[columna_otra_propiedad_reactivo_limitante], linestyle=':', label='Datos', color='orange', linewidth=5)
+            plt.plot(data_cinetica[columna_tiempo], data_cinetica[columna_concentracion_reactivo_limitante], linestyle=':', label='A', color='orange', linewidth=5)
             
             if data_producto is not None and columna_concentracion_producto is not None:
-                plt.plot(data_producto[columna_tiempo], data_producto[columna_concentracion_producto], linestyle='--', label='Producto', color='cyan', linewidth=1)
+                plt.plot(data_producto[columna_tiempo], data_producto[columna_concentracion_producto], linestyle='--', label='R', color='cyan', linewidth=1)
 
-            # Graficar la función ajustada
-            t_data_graf = np.linspace(min(data_cinetica[columna_tiempo]), max(data_cinetica[columna_tiempo]), 100)
-            L_funcion_ajustada = MetodoIntegralModelos.modelo_lambda_2_ord(t_data_graf, k_ord_n_optimo, A_0_optimo, A_0_optimo, A_0_optimo)  # Usar A_0_optimo para L0 y A0
+            # Grafica de la funcion 
+            t_data_graf = data_cinetica[columna_tiempo]
+            A_funcion_n_orden = MetodoIntegralGraficador.calcular_funcion_n_orden(t_data_graf, k_ord_n_optimo, A_0_optimo, n_optimo)
 
-            plt.plot(t_data_graf, L_funcion_ajustada, label='Modelo Ajustado', color='green')
-            plt.xlabel('Tiempo')
-            plt.ylabel('Otra Propiedad')
-            plt.title('Modelo de datos: Otra Propiedad vs Tiempo')
+            plt.plot(t_data_graf, A_funcion_n_orden, label='Modelo de n orden', color='green')
+            plt.xlabel('tiempo')
+            plt.ylabel('Concentracion ')
+            plt.title('Modelo de datos: A vs t')
             plt.legend()
             plt.show()
-
-    
 
     @staticmethod
     def calcular_funcion_n_orden(t_data_graf, k_ord_n_optimo, A_0_optimo, n_optimo):
