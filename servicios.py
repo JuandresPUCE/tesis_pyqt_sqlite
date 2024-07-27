@@ -41,33 +41,33 @@ class Servicios:
 
 
     #mostar tablas
-    def mostrar_datos_tabla_arrenhius(self, tabla_datos_arrhenius, resultados,no_mostrar_aviso=None):
-        columnas = ["id","nombre_caso","id_nombre_data_salida","id_nombre_data","fecha","temperatura","reciproco_temperatura_absoluta","constante_cinetica","logaritmo_constante_cinetica","energia_activacion_r","r_utilizada","energia_activacion","constante_cinetica_0","logaritmo_constante_cinetica_0","detalles"]
-        self.mostrar_datos_en_tabla(tabla_datos_arrhenius, resultados, columnas, descripcion_nombre_tabla="Datos Arrhenius",no_mostrar_aviso=no_mostrar_aviso)
+    def mostrar_datos_tabla_arrhenius(self, tabla_datos_arrhenius, resultados, no_mostrar_aviso=None):
+        columnas = ["id", "nombre_caso", "id_nombre_data_salida", "id_nombre_data", "fecha", "temperatura", "reciproco_temperatura_absoluta", "constante_cinetica", "logaritmo_constante_cinetica", "energia_activacion_r", "r_utilizada", "energia_activacion", "constante_cinetica_0", "logaritmo_constante_cinetica_0", "detalles"]
+        self.mostrar_datos_en_tabla(tabla_datos_arrhenius, resultados, columnas, descripcion_nombre_tabla="Datos Arrhenius", no_mostrar_aviso=no_mostrar_aviso)
     
-    def mostrar_datos_tabla_salida(self, tabla_datos_salida, resultados):
-        columnas = ["id","nombre_data_salida","fecha","id_nombre_data","id_condiciones_iniciales","id_registro_unidades","r_utilizada","nombre_data","nombre_reaccion","delta_n_reaccion","epsilon_reactivo_limitante","tipo_especie","especie_quimica","constante_cinetica","orden_reaccion","modelo_cinetico","tipo_calculo","detalles"]
-        self.mostrar_datos_en_tabla(tabla_datos_salida, resultados, columnas, descripcion_nombre_tabla="Datos de Salida")
+    def mostrar_datos_tabla_salida(self, tabla_datos_salida, resultados, no_mostrar_aviso=None):
+        columnas = ["id", "nombre_data_salida", "fecha", "id_nombre_data", "id_condiciones_iniciales", "id_registro_unidades", "r_utilizada", "nombre_data", "nombre_reaccion", "delta_n_reaccion", "epsilon_reactivo_limitante", "tipo_especie", "especie_quimica", "constante_cinetica", "orden_reaccion", "modelo_cinetico", "tipo_calculo", "detalles"]
+        self.mostrar_datos_en_tabla(tabla_datos_salida, resultados, columnas, descripcion_nombre_tabla="Datos de Salida", no_mostrar_aviso=no_mostrar_aviso)
     
-    def mostrar_condiciones_iniciales(self, condiciones_iniciales_tabla, condiciones):
-        columnas = ["id","temperatura","tiempo","presion_total","presion_parcial","fraccion_molar","especie_quimica","tipo_especie","detalle","nombre_data"]
-        self.mostrar_datos_en_tabla(condiciones_iniciales_tabla, condiciones, columnas, descripcion_nombre_tabla="Condiciones Iniciales")
+    def mostrar_condiciones_iniciales(self, condiciones_iniciales_tabla, condiciones, no_mostrar_aviso=None):
+        columnas = ["id", "temperatura", "tiempo", "presion_total", "presion_parcial", "fraccion_molar", "especie_quimica", "tipo_especie", "detalle", "nombre_data"]
+        self.mostrar_datos_en_tabla(condiciones_iniciales_tabla, condiciones, columnas, descripcion_nombre_tabla="Condiciones Iniciales", no_mostrar_aviso=no_mostrar_aviso)
     
-    def mostrar_datos_tabla(self, tabla_datos_cineticos, resultados):
-        columnas = ["id","tiempo","concentracion","otra_propiedad","conversion_reactivo_limitante","tipo_especie","id_condiciones_iniciales","nombre_data","nombre_reaccion","especie_quimica"]
-        self.mostrar_datos_en_tabla(tabla_datos_cineticos, resultados, columnas, descripcion_nombre_tabla="Datos Cinéticos")
+    def mostrar_datos_tabla(self, tabla_datos_cineticos, resultados, no_mostrar_aviso=None):
+        columnas = ["id", "tiempo", "concentracion", "otra_propiedad", "conversion_reactivo_limitante", "tipo_especie", "id_condiciones_iniciales", "nombre_data", "nombre_reaccion", "especie_quimica"]
+        self.mostrar_datos_en_tabla(tabla_datos_cineticos, resultados, columnas, descripcion_nombre_tabla="Datos Cinéticos", no_mostrar_aviso=no_mostrar_aviso)
 
-    def mostrar_reacciones(self, reacciones_tabla, reacciones):
-        columnas = ["id","especie_quimica","formula","coeficiente_estequiometrico","detalle","tipo_especie","nombre_reaccion"]
-        self.mostrar_datos_en_tabla(reacciones_tabla, reacciones, columnas, descripcion_nombre_tabla="Reacciones")
+    def mostrar_reacciones(self, reacciones_tabla, reacciones, no_mostrar_aviso=None):
+        columnas = ["id", "especie_quimica", "formula", "coeficiente_estequiometrico", "detalle", "tipo_especie", "nombre_reaccion"]
+        self.mostrar_datos_en_tabla(reacciones_tabla, reacciones, columnas, descripcion_nombre_tabla="Reacciones", no_mostrar_aviso=no_mostrar_aviso)
     
-    def mostrar_registros(self, registro_datos_tabla, registros):
-        columnas = ["id","nombre_data","fecha","detalle"]
-        self.mostrar_datos_en_tabla(registro_datos_tabla, registros, columnas, descripcion_nombre_tabla="Registros")
+    def mostrar_registros(self, registro_datos_tabla, registros, no_mostrar_aviso=None):
+        columnas = ["id", "nombre_data", "fecha", "detalle"]
+        self.mostrar_datos_en_tabla(registro_datos_tabla, registros, columnas, descripcion_nombre_tabla="Registros Experimentales", no_mostrar_aviso=no_mostrar_aviso)
     
-    def mostrar_unidades(self, unidades_tabla, unidades):
-        columnas = ["id","presion","temperatura","tiempo","concentracion","energia","r","nombre_data"]
-        self.mostrar_datos_en_tabla(unidades_tabla, unidades, columnas, descripcion_nombre_tabla="Unidades")
+    def mostrar_unidades(self, unidades_tabla, unidades, no_mostrar_aviso=None):
+        columnas = ["id", "presion", "temperatura", "tiempo", "concentracion", "energia", "r", "nombre_data"]
+        self.mostrar_datos_en_tabla(unidades_tabla, unidades, columnas, descripcion_nombre_tabla="Unidades", no_mostrar_aviso=no_mostrar_aviso)
     
     #seleccionar informacion de la tabla
     def seleccionar_datos(self, tabla, columnas):
@@ -246,17 +246,54 @@ class Servicios:
         except Exception as e:
             QMessageBox.critical(self.parent, "Error", f"Error inesperado al actualizar el line edit: {e}", QMessageBox.StandardButton.Ok)
 
+    def validar_ruta(self, ruta):
+        # Verifica si la ruta es una ruta de archivo válida
+        return os.path.isfile(ruta)
+
     
-    def cargar_configuracion_json(self,archivo,catalogo):
+    def cargar_configuracion_json(self, archivo, catalogo):
         try:
+            # Intenta abrir y leer el archivo principal
             with open(archivo, 'r') as f:
                 configuracion = json.load(f)
                 
-                return configuracion.get(catalogo, 'Ruta por defecto si db_path no existe')
+                # Verificar si la clave catalogo está en la configuración
+                if catalogo in configuracion:
+                    valor = configuracion[catalogo]
+                    
+                    # Validar si el valor es una ruta de archivo válida
+                    if self.validar_ruta(valor):
+                        return valor
+                    else:
+                        raise ValueError(f"El valor de '{catalogo}' en el archivo {archivo} no es una ruta válida.")
+                else:
+                    raise KeyError(f"La clave '{catalogo}' no se encontró en el archivo {archivo}")
+                
+        except (FileNotFoundError, json.JSONDecodeError, KeyError, ValueError) as e:
+            print(str(e))
+            print(f"Intentando cargar archivo de configuración temporal...")
+            return self.cargar_configuracion_json_temporal(catalogo)
+    
+    def cargar_configuracion_json_temporal(self, catalogo):
+        #QMessageBox.warning(self.parent, "Advertencia", "No se pudo cargar la configuración principal. Intentando cargar la configuración temporal.", QMessageBox.StandardButton.Ok)
+        dir_db_temp = r"config\config_temp.json"
+        
+        try:
+            with open(dir_db_temp, 'r') as f:
+                configuracion = json.load(f)
+                
+                # Verificar si la clave catalogo está en la configuración
+                if catalogo in configuracion:
+                    return configuracion[catalogo]
+                else:
+                    raise KeyError(f"La clave '{catalogo}' no se encontró en el archivo de configuración temporal {dir_db_temp}")
+                
         except FileNotFoundError:
-            raise Exception(f"No se encontró el archivo {archivo}")
+            raise Exception(f"No se encontró el archivo de configuración temporal {dir_db_temp}")
         except json.JSONDecodeError:
-            raise Exception(f"Error al leer el archivo {archivo}")
+            raise Exception(f"Error al leer el archivo de configuración temporal {dir_db_temp}")
+        except KeyError as e:
+            raise Exception(str(e))
         
     def cambiar_configuracion_db(self):
         # Abre un diálogo para seleccionar el nuevo archivo de base de datos
@@ -268,7 +305,14 @@ class Servicios:
         # Abre un diálogo para seleccionar o crear un nuevo archivo de base de datos
         fileName, _ = QFileDialog.getSaveFileName(self.parent, "Guardar como...", "", "SQLite Files (*.db)")
         if fileName:
-            self.actualizar_configuracion_db(fileName)
+            # Crear el archivo si no existe
+            try:
+                if not os.path.exists(fileName):
+                    open(fileName, 'w').close()
+                # Luego actualiza el archivo de configuración
+                self.actualizar_configuracion_db(fileName)
+            except Exception as e:
+                QMessageBox.critical(self.parent, "Error", f"No se pudo crear el archivo de base de datos: {str(e)}")
 
     def actualizar_configuracion_db(self, nueva_ruta):
             # Define la ruta completa al archivo config.json dentro de la carpeta config

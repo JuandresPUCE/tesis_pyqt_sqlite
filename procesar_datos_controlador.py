@@ -292,7 +292,7 @@ class PanelDataAnalisis(QMainWindow):
         self.metodos_comunes.mostrar_condiciones_iniciales(self.condiciones_iniciales_tabla, condiciones)
     
     def mostrar_condiciones_iniciales_tabla(self, condiciones):
-        self.metodos_comunes.mostrar_condiciones_iniciales(self.condiciones_iniciales_tabla, condiciones)
+        self.metodos_comunes.mostrar_condiciones_iniciales(self.condiciones_iniciales_tabla, condiciones, True)
 
     def buscar_dato(self):
         datos_resultados = self.DatosCineticosManejador.consultar()
@@ -339,7 +339,7 @@ class PanelDataAnalisis(QMainWindow):
     def mostrar_datos_tabla(self, resultados):
         self.tabla_datos = self.datos_cineticos_tabla
         self.tabla_datos.clearContents()
-        self.metodos_comunes.mostrar_datos_tabla(self.tabla_datos, resultados)
+        self.metodos_comunes.mostrar_datos_tabla(self.tabla_datos, resultados,True)
 
     def mostrar_reaccion_tabla(self, resultados):
         tabla = self.reaccion_quimica_tabla
@@ -347,10 +347,10 @@ class PanelDataAnalisis(QMainWindow):
         self.metodos_comunes.mostrar_reacciones(self.reaccion_quimica_tabla, resultados)
     
     def mostrar_datos_tabla_salida(self, resultados):
-        self.metodos_comunes.mostrar_datos_tabla_salida(self.tabla_datos_salida, resultados)
+        self.metodos_comunes.mostrar_datos_tabla_salida(self.tabla_datos_salida, resultados,True)
     
     def mostrar_datos_salida_arrhenius_tabla(self, resultados):
-        self.metodos_comunes.mostrar_datos_tabla_arrenhius(self.datos_salida_arrhenius_tabla, resultados,True)
+        self.metodos_comunes.mostrar_datos_tabla_arrhenius(self.datos_salida_arrhenius_tabla, resultados,True)
 
 
     def mostrar_metodos_ajustador(self):

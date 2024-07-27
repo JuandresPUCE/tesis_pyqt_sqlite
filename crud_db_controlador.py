@@ -799,7 +799,7 @@ class PantallaCrud(QMainWindow):
     # funciones crud para registro de datos de salida arrhenius
     # Registro de datos de salida Arrhenius
     def mostrar_datos_tabla_salida_arrhenius(self, resultados):
-        self.metodos_comunes.mostrar_datos_tabla_arrenhius(self.tabla_datos_salida_arrhenius, resultados)
+        self.metodos_comunes.mostrar_datos_tabla_arrhenius(self.tabla_datos_salida_arrhenius, resultados)
     
     def agregar_datos_salida_arrhenius(self):
         try:
