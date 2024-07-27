@@ -26,3 +26,4 @@ pyuic6 -x flujo_datos_gui_v6_m.ui -o flujo_datos_vista.py
 
 pyuic6 -x flujo_datos_gui_v6.ui -o flujo_datos_vista.py
 pyuic6 -x .\crud_db_v6_mant.ui -o crud_db_vista.py 
+pyuic6 -x .\dashboard_v4.ui -o procesar_datos_vista.py

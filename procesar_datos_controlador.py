@@ -185,6 +185,9 @@ class PanelDataAnalisis(QMainWindow):
         self.nuevo_archivo_btn=self.ui.nuevo_archivo_btn
         self.nuevo_archivo_btn.clicked.connect(self.crear_base_datos)
 
+        self.respaldar_conjunto_btn = self.ui.respaldar_conjunto_btn
+        self.respaldar_conjunto_btn.clicked.connect(self.respaldar_base_datos)
+
         #reportes de datos
         self.ui.rep1.clicked.connect(self.evento_guardar_clicked)
         self.ui.rep2.clicked.connect(self.evento_guardar_metodo_integral_clicked)
@@ -809,6 +812,9 @@ class PanelDataAnalisis(QMainWindow):
 
     def crear_base_datos(self):
         self.componentes_auxiliares.crear_base_datos()
+    
+    def respaldar_base_datos(self):
+        self.componentes_auxiliares.respaldar_base_datos()
 
 
     def actualizar_datos_salida(self):

@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import *
 import json
 import logging
 import os
+import shutil
 
 class Servicios:
     def __init__(self, parent=None):
@@ -294,6 +295,42 @@ class Servicios:
             raise Exception(f"Error al leer el archivo de configuración temporal {dir_db_temp}")
         except KeyError as e:
             raise Exception(str(e))
+    
+    def respaldar_db(self):
+        config_path = r"config\config.json"
+        config_temp_path = r"config\config_temp.json"
+        
+        # Intentar cargar la ruta de la base de datos desde ambos archivos de configuración
+        db_path = None
+        title = ""
+        try:
+            if os.path.isfile(config_path):
+                db_path = self.cargar_configuracion_json(config_path, "db_path")
+                title = "Guardar Respaldo - Base de Datos Principal"
+            if not db_path and os.path.isfile(config_temp_path):
+                db_path = self.cargar_configuracion_json(config_temp_path, "db_path")
+                title = "Guardar Respaldo - Base de Datos Temporal"
+        except Exception as e:
+            print(str(e))
+
+        if not db_path:
+            QMessageBox.warning(self.parent, "Advertencia", "No se encontró una ruta de base de datos válida en los archivos de configuración.", QMessageBox.StandardButton.Ok)
+            return
+
+        if not os.path.isfile(db_path):
+            QMessageBox.critical(self.parent, "Error", "El archivo de base de datos especificado no existe.")
+            return
+
+        respaldo_file, _ = QFileDialog.getSaveFileName(self.parent, title, "", "SQLite Files (*.db)")
+        
+        if respaldo_file:
+            try:
+                shutil.copyfile(db_path, respaldo_file)
+                QMessageBox.information(self.parent, "Respaldo Completo", "El respaldo de la base de datos se ha realizado con éxito.")
+            except Exception as e:
+                QMessageBox.critical(self.parent, "Error", f"No se pudo realizar el respaldo: {str(e)}")
+
+
         
     def cambiar_configuracion_db(self):
         # Abre un diálogo para seleccionar el nuevo archivo de base de datos

@@ -73,6 +73,16 @@ class ComponentesAuxiliares:
         except Exception as e:
             QMessageBox.critical(self.parent, "Error", f"Se produjo un error al cambiar la configuración de la base de datos: {e}")
     
+    def respaldar_base_datos(self):
+        try:
+            self.metodos_comunes.respaldar_db()
+
+            # Mostrar mensaje de éxito
+            #QMessageBox.information(self.parent, "Respaldo exitoso", "La base de datos se ha respaldado correctamente.")
+        
+        except Exception as e:
+            QMessageBox.critical(self.parent, "Error", f"Se produjo un error al respaldar la base de datos: {e}")
+    
     def manejadores_base(self):
         
         # manejadores de base
