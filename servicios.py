@@ -9,7 +9,7 @@ class Servicios:
         self.mensaje = "Metodos comunes del controlador"
     
     # refactor mostrar datos en tabla
-    def mostrar_datos_en_tabla(self, tabla, datos, columnas):
+    def mostrar_datos_en_tabla(self, tabla, datos, columnas, descripcion_nombre_tabla=None, no_mostrar_aviso=None):
         try:
             # Definir la tabla
             self.tabla = tabla
@@ -27,7 +27,10 @@ class Servicios:
 
             else:
                 self.tabla.setRowCount(0)
-                QMessageBox.information(self.parent, "No hay registros", "No se encontraron registros en la base de datos.", QMessageBox.StandardButton.Ok)
+                if not no_mostrar_aviso:
+                    # Usar descripcion_nombre_tabla si se proporciona, de lo contrario usar un mensaje genérico
+                    mensaje = f"No se encontraron registros de {descripcion_nombre_tabla} en la base de datos." if descripcion_nombre_tabla else "No se encontraron registros en la base de datos."
+                    QMessageBox.information(self.parent, "No hay registros", mensaje, QMessageBox.StandardButton.Ok)
 
         except AttributeError as ae:
             print(f"Error de atributo: {ae}")
@@ -38,33 +41,33 @@ class Servicios:
 
 
     #mostar tablas
-    def mostrar_datos_tabla_arrenhius(self, tabla_datos_arrenhius, resultados):
+    def mostrar_datos_tabla_arrenhius(self, tabla_datos_arrhenius, resultados,no_mostrar_aviso=None):
         columnas = ["id","nombre_caso","id_nombre_data_salida","id_nombre_data","fecha","temperatura","reciproco_temperatura_absoluta","constante_cinetica","logaritmo_constante_cinetica","energia_activacion_r","r_utilizada","energia_activacion","constante_cinetica_0","logaritmo_constante_cinetica_0","detalles"]
-        self.mostrar_datos_en_tabla(tabla_datos_arrenhius, resultados, columnas)
+        self.mostrar_datos_en_tabla(tabla_datos_arrhenius, resultados, columnas, descripcion_nombre_tabla="Datos Arrhenius",no_mostrar_aviso=no_mostrar_aviso)
     
     def mostrar_datos_tabla_salida(self, tabla_datos_salida, resultados):
         columnas = ["id","nombre_data_salida","fecha","id_nombre_data","id_condiciones_iniciales","id_registro_unidades","r_utilizada","nombre_data","nombre_reaccion","delta_n_reaccion","epsilon_reactivo_limitante","tipo_especie","especie_quimica","constante_cinetica","orden_reaccion","modelo_cinetico","tipo_calculo","detalles"]
-        self.mostrar_datos_en_tabla(tabla_datos_salida, resultados, columnas)
+        self.mostrar_datos_en_tabla(tabla_datos_salida, resultados, columnas, descripcion_nombre_tabla="Datos de Salida")
     
     def mostrar_condiciones_iniciales(self, condiciones_iniciales_tabla, condiciones):
         columnas = ["id","temperatura","tiempo","presion_total","presion_parcial","fraccion_molar","especie_quimica","tipo_especie","detalle","nombre_data"]
-        self.mostrar_datos_en_tabla(condiciones_iniciales_tabla, condiciones, columnas)
+        self.mostrar_datos_en_tabla(condiciones_iniciales_tabla, condiciones, columnas, descripcion_nombre_tabla="Condiciones Iniciales")
     
     def mostrar_datos_tabla(self, tabla_datos_cineticos, resultados):
         columnas = ["id","tiempo","concentracion","otra_propiedad","conversion_reactivo_limitante","tipo_especie","id_condiciones_iniciales","nombre_data","nombre_reaccion","especie_quimica"]
-        self.mostrar_datos_en_tabla(tabla_datos_cineticos, resultados, columnas)
+        self.mostrar_datos_en_tabla(tabla_datos_cineticos, resultados, columnas, descripcion_nombre_tabla="Datos Cinéticos")
 
     def mostrar_reacciones(self, reacciones_tabla, reacciones):
         columnas = ["id","especie_quimica","formula","coeficiente_estequiometrico","detalle","tipo_especie","nombre_reaccion"]
-        self.mostrar_datos_en_tabla(reacciones_tabla, reacciones, columnas)
+        self.mostrar_datos_en_tabla(reacciones_tabla, reacciones, columnas, descripcion_nombre_tabla="Reacciones")
     
     def mostrar_registros(self, registro_datos_tabla, registros):
         columnas = ["id","nombre_data","fecha","detalle"]
-        self.mostrar_datos_en_tabla(registro_datos_tabla, registros, columnas)
+        self.mostrar_datos_en_tabla(registro_datos_tabla, registros, columnas, descripcion_nombre_tabla="Registros")
     
     def mostrar_unidades(self, unidades_tabla, unidades):
         columnas = ["id","presion","temperatura","tiempo","concentracion","energia","r","nombre_data"]
-        self.mostrar_datos_en_tabla(unidades_tabla, unidades, columnas)
+        self.mostrar_datos_en_tabla(unidades_tabla, unidades, columnas, descripcion_nombre_tabla="Unidades")
     
     #seleccionar informacion de la tabla
     def seleccionar_datos(self, tabla, columnas):

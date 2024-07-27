@@ -1,6 +1,7 @@
 import os
 import sys
 import subprocess
+from datetime import datetime
 
 from PyQt6.QtWidgets import QWidget, QApplication, QMessageBox
 
@@ -93,3 +94,12 @@ class ComponentesAuxiliares:
     def ocultar_columnas(self, tabla: QTableWidget, columnas_ocultas: list):
         for col in columnas_ocultas:
             tabla.hideColumn(col)
+    
+    def establecer_fecha_sistema(self,fecha_edit):
+        # Obtener la fecha actual del sistema
+        self.fecha_actual = datetime.now().date()
+
+        # Convertir la fecha a una cadena en el formato dd/mm/yyyy
+        self.fecha_str = self.fecha_actual.strftime("%d/%m/%Y")
+
+        fecha_edit.setText(self.fecha_str)

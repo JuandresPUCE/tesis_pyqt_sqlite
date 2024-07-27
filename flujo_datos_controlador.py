@@ -914,19 +914,9 @@ class FlujoDatos(QMainWindow):
 
     # funciones especiales para datos
     def establecer_fecha_sistema(self):
-        # Obtener la fecha actual del sistema
-        fecha_actual = datetime.now().date()
+        self.componentes_auxiliares.establecer_fecha_sistema(self.fecha_ds_edit)
+        self.componentes_auxiliares.establecer_fecha_sistema(self.ui.fecha_rde_edit)
 
-        # Convertir la fecha a una cadena en el formato dd/mm/yyyy
-        fecha_str = fecha_actual.strftime("%d/%m/%Y")
-
-        # Establecer la fecha en fecha_rde_edit
-        self.ui.fecha_rde_edit.setText(fecha_str)
-
-        # Asignar fecha_rde_edit a fecha_data_experimental
-        self.fecha_data_experimental = self.ui.fecha_rde_edit
-
-        self.fecha_ds_edit.setText(fecha_str)
 
     def ajustes_visuales_tabla(self):
         self.componentes_auxiliares.ajustar_tabla(self.tabla_registro_data_experimental, ["id", "Nombre\ndata", "Fecha", "Detalle"])

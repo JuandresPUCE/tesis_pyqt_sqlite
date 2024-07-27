@@ -350,7 +350,7 @@ class PanelDataAnalisis(QMainWindow):
         self.metodos_comunes.mostrar_datos_tabla_salida(self.tabla_datos_salida, resultados)
     
     def mostrar_datos_salida_arrhenius_tabla(self, resultados):
-        self.metodos_comunes.mostrar_datos_tabla_arrenhius(self.datos_salida_arrhenius_tabla, resultados)
+        self.metodos_comunes.mostrar_datos_tabla_arrenhius(self.datos_salida_arrhenius_tabla, resultados,True)
 
 
     def mostrar_metodos_ajustador(self):
@@ -1100,13 +1100,7 @@ class PanelDataAnalisis(QMainWindow):
         
         # funciones especiales para datos
     def establecer_fecha_sistema(self):
-        # Obtener la fecha actual del sistema
-        fecha_actual = datetime.now().date()
-
-        # Convertir la fecha a una cadena en el formato dd/mm/yyyy
-        fecha_str = fecha_actual.strftime("%d/%m/%Y")
-
-        self.fecha_edit.setText(fecha_str)
+        self.componentes_auxiliares.establecer_fecha_sistema(self.fecha_edit)
 
     def refrescar_data(self):
         self.buscar_registros()
