@@ -905,14 +905,10 @@ class PanelDataAnalisis(QMainWindow):
                 QMessageBox.critical(self, "Error", f"Se produjo un error al mostrar la imagen: {e}", QMessageBox.StandardButton.Ok)
 
     def guardar_reporte(self):
-        # Definir el nombre del archivo y la ruta
-        file_dialog = QFileDialog(self)
-        file_dialog.setWindowTitle("Guardar Reporte")
-        file_dialog.setNameFilter("HTML Files (*.html)")
+        # Crear cuadro de diálogo para guardar archivo
+        ruta_archivo, _ = QFileDialog.getSaveFileName(self, "Guardar Reporte", "", "HTML Files (*.html)")
 
-        if file_dialog.exec():
-            ruta_archivo = file_dialog.selectedFiles()[0]
-
+        if ruta_archivo:
             # Asegurarse de que la extensión del archivo sea correcta
             if not ruta_archivo.endswith(".html"):
                 ruta_archivo += ".html"
@@ -924,25 +920,38 @@ class PanelDataAnalisis(QMainWindow):
 
                 # Crear contenido HTML
                 html_content = "<html><head><title>Reporte</title></head><body>"
-                html_content += f"<h1>Reporte de Datos</h1>"
+                html_content += "<h1>Reporte de Datos</h1>"
                 html_content += f"<h2>Gráfico</h2><img src='{grafico_path}' alt='Gráfico'>"
 
                 # Agregar tablas al HTML
+                #Agregar tablas al HTML con orden de columnas especificado
                 if hasattr(self, 'df_unidades') and not self.df_unidades.empty:
                     df_unidades = self.df_unidades.drop(columns=['_sa_instance_state'], errors='ignore')
-                    html_content += f"<h2>Set de Unidades</h2>"
+                    # Ordenar columnas
+                    orden_columnas_unidades = ["id", "presion", "temperatura", "tiempo", "concentracion", "energia", "r", "nombre_data"]
+                    df_unidades = df_unidades.reindex(columns=orden_columnas_unidades)
+                    html_content += "<h2>Set de Unidades</h2>"
                     html_content += df_unidades.to_html(classes='table table-striped', border=0, index=False)
-                if hasattr(self, 'df_datos_cineticos_listos'):
+                if hasattr(self, 'df_datos_cineticos_listos') and not self.df_datos_cineticos_listos.empty:
                     df_datos_cineticos = self.df_datos_cineticos_listos.drop(columns=['_sa_instance_state'], errors='ignore')
-                    html_content += f"<h2>Datos Cinéticos Listos</h2>"
+                    # Ordenar columnas
+                    orden_columnas_datos_cineticos = ["id", "tiempo", "concentracion", "otra_propiedad", "conversion_reactivo_limitante", "tipo_especie", "id_condiciones_iniciales", "nombre_data", "nombre_reaccion", "especie_quimica"]
+                    df_datos_cineticos = df_datos_cineticos.reindex(columns=orden_columnas_datos_cineticos)
+                    html_content += "<h2>Datos Cinéticos Listos</h2>"
                     html_content += df_datos_cineticos.to_html(classes='table table-striped', border=0, index=False)
                 if hasattr(self, 'df_condiciones_iniciales') and not self.df_condiciones_iniciales.empty:
                     df_condiciones = self.df_condiciones_iniciales.drop(columns=['_sa_instance_state'], errors='ignore')
-                    html_content += f"<h2>Condiciones Iniciales</h2>"
+                    orden_columnas_condiciones_iniciales = ["id", "temperatura", "tiempo", "presion_total", "presion_parcial", "fraccion_molar", "especie_quimica", "tipo_especie", "detalle", "nombre_data"]
+                    df_condiciones = df_condiciones.reindex(columns=orden_columnas_condiciones_iniciales)
+                    html_content += "<h2>Condiciones Iniciales</h2>"
                     html_content += df_condiciones.to_html(classes='table table-striped', border=0, index=False)
+
                 if hasattr(self, 'df_reaccion_quimica') and not self.df_reaccion_quimica.empty:
                     df_reaccion = self.df_reaccion_quimica.drop(columns=['_sa_instance_state'], errors='ignore')
-                    html_content += f"<h2>Reacción Química</h2>"
+                    # Ordenar columnas (ajustar el orden según tus necesidades)
+                    orden_columnas_reaccion =  ["id","especie_quimica", "formula", "coeficiente_estequiometrico", "detalle", "tipo_especie", "nombre_reaccion"]
+                    df_reaccion = df_reaccion.reindex(columns=orden_columnas_reaccion)
+                    html_content += "<h2>Reacción Química</h2>"
                     html_content += df_reaccion.to_html(classes='table table-striped', border=0, index=False)
 
                 html_content += "</body></html>"
@@ -953,16 +962,12 @@ class PanelDataAnalisis(QMainWindow):
                 QMessageBox.information(self, "Éxito", "El reporte se ha guardado correctamente.")
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Ocurrió un error al guardar el reporte: {e}")
-    
+        
     def guardar_reporte_metodo_integral(self, resultado):
-        # Definir el nombre del archivo y la ruta
-        file_dialog = QFileDialog(self)
-        file_dialog.setWindowTitle("Guardar Reporte del Método Integral")
-        file_dialog.setNameFilter("HTML Files (*.html)")
+        # Crear cuadro de diálogo para guardar archivo
+        ruta_archivo, _ = QFileDialog.getSaveFileName(self, "Guardar Reporte del Método Integral", "", "HTML Files (*.html)")
 
-        if file_dialog.exec():
-            ruta_archivo = file_dialog.selectedFiles()[0]
-
+        if ruta_archivo:
             # Asegurarse de que la extensión del archivo sea correcta
             if not ruta_archivo.endswith(".html"):
                 ruta_archivo += ".html"
@@ -974,25 +979,36 @@ class PanelDataAnalisis(QMainWindow):
 
                 # Crear contenido HTML
                 html_content = "<html><head><title>Reporte del Método Integral</title></head><body>"
-                html_content += f"<h1>Reporte del Método Integral</h1>"
+                html_content += "<h1>Reporte del Método Integral</h1>"
                 html_content += f"<h2>Gráfico</h2><img src='{grafico_path}' alt='Gráfico'>"
 
                 # Agregar tablas y resultados al HTML
                 if hasattr(self, 'df_reaccion_quimica') and not self.df_reaccion_quimica.empty:
                     df_reaccion = self.df_reaccion_quimica.drop(columns=['_sa_instance_state'], errors='ignore')
-                    html_content += f"<h2>Reacción Química</h2>"
+                    # Ordenar columnas
+                    orden_columnas_reaccion = ["id", "especie_quimica", "formula", "coeficiente_estequiometrico", "detalle", "tipo_especie", "nombre_reaccion"]
+                    df_reaccion = df_reaccion.reindex(columns=orden_columnas_reaccion)
+                    html_content += "<h2>Reacción Química</h2>"
                     html_content += df_reaccion.to_html(classes='table table-striped', border=0, index=False)
+
                 if hasattr(self, 'df_unidades') and not self.df_unidades.empty:
                     df_unidades = self.df_unidades.drop(columns=['_sa_instance_state'], errors='ignore')
-                    html_content += f"<h2>Set de Unidades</h2>"
+                    # Ordenar columnas
+                    orden_columnas_unidades = ["id", "presion", "temperatura", "tiempo", "concentracion", "energia", "r", "nombre_data"]
+                    df_unidades = df_unidades.reindex(columns=orden_columnas_unidades)
+                    html_content += "<h2>Set de Unidades</h2>"
                     html_content += df_unidades.to_html(classes='table table-striped', border=0, index=False)
-                if hasattr(self, 'df_datos_cineticos_listos'):
+
+                if hasattr(self, 'df_datos_cineticos_listos') and not self.df_datos_cineticos_listos.empty:
                     df_datos_cineticos = self.df_datos_cineticos_listos.drop(columns=['_sa_instance_state'], errors='ignore')
-                    html_content += f"<h2>Datos Cinéticos Listos</h2>"
+                    # Ordenar columnas
+                    orden_columnas_datos_cineticos = ["id", "tiempo", "concentracion", "otra_propiedad", "conversion_reactivo_limitante", "tipo_especie", "id_condiciones_iniciales", "nombre_data", "nombre_reaccion", "especie_quimica"]
+                    df_datos_cineticos = df_datos_cineticos.reindex(columns=orden_columnas_datos_cineticos)
+                    html_content += "<h2>Datos Cinéticos Listos</h2>"
                     html_content += df_datos_cineticos.to_html(classes='table table-striped', border=0, index=False)
 
                 # Resultados del método integral
-                html_content += f"<h2>Resultados del Método Integral</h2>"
+                html_content += "<h2>Resultados del Método Integral</h2>"
                 html_content += f"<p>k: {resultado[0]}</p>"
                 html_content += f"<p>n: {resultado[2]}</p>"
                 html_content += f"<p>Reactivo Limitante Calculado: {resultado[1]}</p>"
@@ -1006,8 +1022,7 @@ class PanelDataAnalisis(QMainWindow):
 
                 QMessageBox.information(self, "Éxito", "El reporte se ha guardado correctamente.")
             except Exception as e:
-                QMessageBox.critical(self, "Error", f"Ocurrió un error al guardar el reporte: {e}")
-    
+                QMessageBox.critical(self, "Error", f"Ocurrió un error al guardar el reporte: {e}")  
     
     def guardar_reporte_arrhenius(self, resultado):
         # Definir el nombre del archivo y la ruta
