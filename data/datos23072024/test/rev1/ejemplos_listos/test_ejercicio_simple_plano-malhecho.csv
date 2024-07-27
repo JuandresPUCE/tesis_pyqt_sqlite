@@ -1,0 +1,10 @@
+﻿tiempo;otra_propiedad;conversion_reactivo_limitante;tipo_especie;id_condiciones_iniciales;nombre_data;nombre_reaccion;especie_quimica
+;;;;;;;;
+2 ;1,1070;;;reactivo_limitante ;1 ;test;ReaccionSimple ;A 
+4 ;0,6120;;;reactivo_limitante ;1 ;test;ReaccionSimple ;A 
+6 ;0,3380;;;reactivo_limitante ;1 ;test;ReaccionSimple ;A 
+8 ;0,1870;;;reactivo_limitante ;1 ;test;ReaccionSimple ;A 
+10 ;0,1030;;;reactivo_limitante ;1 ;test;ReaccionSimple ;A 
+;;;;;;;;
+;;;;;;;;
+;;;;;;;;

@@ -1467,11 +1467,6 @@ class FlujoDatos(QMainWindow):
         self.metodos_comunes.actualizar_valor_celda(self.tabla_datos_salida, self.RegistroDatosSalidaManejador, fila, columna)
 
 
-    def seleccionar_archivo_datos(self):
-            # Abre un cuadro de diálogo para seleccionar el archivo de datos
-        fileName, _ = QFileDialog.getOpenFileName(self.parent, "Selecciona el archivo de datos", "", "CSV Files (*.csv);;Excel Files (*.xlsx)")
-        if fileName:
-            self.insertar_datos_cineticos_archivo(fileName)
 
     def insertar_datos_cineticos_archivo(self, ruta_archivo):
         # Función auxiliar para leer el archivo con un delimitador específico
@@ -1488,13 +1483,17 @@ class FlujoDatos(QMainWindow):
             if df is None:
                 df = leer_archivo_con_delimitador(ruta_archivo, ',')
         elif ruta_archivo.endswith('.xlsx'):
-            df = pd.read_excel(ruta_archivo)
+            try:
+                df = pd.read_excel(ruta_archivo)
+            except Exception as e:
+                QMessageBox.critical(self.parent, "Error", f"Error al leer el archivo Excel: {e}", QMessageBox.StandardButton.Ok)
+                return
         else:
             QMessageBox.critical(self.parent, "Error", "Formato de archivo no soportado", QMessageBox.StandardButton.Ok)
             return
 
         if df is None:
-            QMessageBox.critical(self.parent, "Error", "Error al leer el archivo CSV con ambos delimitadores (';' y ',')", QMessageBox.StandardButton.Ok)
+            QMessageBox.critical(self.parent, "Error", "Error al leer el archivo con los delimitadores especificados", QMessageBox.StandardButton.Ok)
             return
 
         # Verificar los nombres de las columnas
@@ -1507,32 +1506,42 @@ class FlujoDatos(QMainWindow):
             QMessageBox.critical(self.parent, "Error", f"Faltan las siguientes columnas en el archivo: {', '.join(columnas_faltantes)}", QMessageBox.StandardButton.Ok)
             return
 
+        # Limpiar filas vacías
+        df = df.dropna(how='all')
+
         # Iterar sobre cada fila del DataFrame
         for _, fila in df.iterrows():
+            # Verificar que la fila no esté vacía
+            if fila.isnull().all() or fila.dropna().empty:
+                continue
+
             # Convertir los valores a cadenas y reemplazar comas por puntos en las columnas numéricas
-            fila['tiempo'] = str(fila['tiempo']).replace(',', '.')
-            fila['concentracion'] = str(fila['concentracion']).replace(',', '.')
-            fila['otra_propiedad'] = str(fila['otra_propiedad']).replace(',', '.')
-            fila['conversion_reactivo_limitante'] = str(fila['conversion_reactivo_limitante']).replace(',', '.')
-
-            # Crear el objeto DatosIngresadosCineticos
-            dato = DatosIngresadosCineticos(
-                tiempo=float(fila['tiempo']),
-                concentracion=float(fila['concentracion']),
-                otra_propiedad=float(fila['otra_propiedad']),
-                conversion_reactivo_limitante=float(fila['conversion_reactivo_limitante']),
-                tipo_especie=fila['tipo_especie'],
-                id_condiciones_iniciales=int(fila['id_condiciones_iniciales']),
-                nombre_data=fila['nombre_data'],
-                nombre_reaccion=fila['nombre_reaccion'],
-                especie_quimica=fila['especie_quimica'],
-            )
-
-            # Intentar agregar el dato a la base de datos
             try:
+                fila['tiempo'] = str(fila['tiempo']).replace(',', '.')
+                fila['concentracion'] = str(fila['concentracion']).replace(',', '.')
+                fila['otra_propiedad'] = str(fila['otra_propiedad']).replace(',', '.')
+                fila['conversion_reactivo_limitante'] = str(fila['conversion_reactivo_limitante']).replace(',', '.')
+
+                # Crear el objeto DatosIngresadosCineticos
+                dato = DatosIngresadosCineticos(
+                    tiempo=float(fila['tiempo']),
+                    concentracion=float(fila['concentracion']),
+                    otra_propiedad=float(fila['otra_propiedad']),
+                    conversion_reactivo_limitante=float(fila['conversion_reactivo_limitante']),
+                    tipo_especie=fila['tipo_especie'],
+                    id_condiciones_iniciales=int(fila['id_condiciones_iniciales']),
+                    nombre_data=fila['nombre_data'],
+                    nombre_reaccion=fila['nombre_reaccion'],
+                    especie_quimica=fila['especie_quimica'],
+                )
+
+                # Intentar agregar el dato a la base de datos
                 agregar_resultado = self.DatosCineticosManejador.agregar(dato)
                 if not agregar_resultado:
                     QMessageBox.critical(self.parent, "Error", "Hubo un problema al agregar los datos", QMessageBox.StandardButton.Ok)
+
+            except ValueError as ve:
+                QMessageBox.critical(self.parent, "Error", f"Error en los datos del archivo: {ve}", QMessageBox.StandardButton.Ok)
             except Exception as e:
                 QMessageBox.critical(self.parent, "Error", f"Se produjo un error al agregar los datos: {e}", QMessageBox.StandardButton.Ok)
 
@@ -1542,13 +1551,24 @@ class FlujoDatos(QMainWindow):
 
 
     def cargar_datos_btn_click(self):
-        # Abrir la ventana de diálogo para seleccionar el archivo
-        ruta_archivo, _ = QFileDialog.getOpenFileName(self, "Seleccionar archivo")
+        try:
+            # Abrir la ventana de diálogo para seleccionar el archivo
+            ruta_archivo, _ = QFileDialog.getOpenFileName(self, "Seleccionar archivo")
 
-        # Si el usuario seleccionó un archivo (es decir, no hizo clic en "Cancelar")
-        if ruta_archivo:
-            # Llamar a tu función con la ruta del archivo seleccionado
-            self.insertar_datos_cineticos_archivo(ruta_archivo)
+            # Si el usuario seleccionó un archivo (es decir, no hizo clic en "Cancelar")
+            if ruta_archivo:
+                # Verificar si el archivo existe antes de intentar cargarlo
+                if not os.path.isfile(ruta_archivo):
+                    raise FileNotFoundError("El archivo seleccionado no existe.")
+                
+                # Llamar a tu función con la ruta del archivo seleccionado
+                self.insertar_datos_cineticos_archivo(ruta_archivo)
+        
+        except FileNotFoundError as e:
+            QMessageBox.warning(self, "Error", str(e))
+        
+        except Exception as e:
+            QMessageBox.critical(self, "Error inesperado", f"Ocurrió un error inesperado: {str(e)}")
 
     def calculos_adicionales(self):
         # Lista de nombres de elementos a alternar visibilidad
