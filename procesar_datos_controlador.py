@@ -310,7 +310,8 @@ class PanelDataAnalisis(QMainWindow):
             for tipo_especie in tipos_especie:
                 self.filtro_datos_box.addItem(tipo_especie)
         else:
-            QMessageBox.information(self, "No hay datos", "No se encontraron datos en la base de datos.", QMessageBox.StandardButton.Ok)
+            print("No se encontraron datos en la base de datos.")
+            #QMessageBox.information(self, "No hay datos", "No se encontraron datos en la base de datos.", QMessageBox.StandardButton.Ok)
     
     def filtrar_especie_quimica(self):
         self.filtro_datos_box_2.clear()
@@ -322,7 +323,8 @@ class PanelDataAnalisis(QMainWindow):
             for especie in especie_quimica:
                 self.filtro_datos_box_2.addItem(especie)
         else:
-            QMessageBox.information(self, "No hay datos", "No se encontraron datos en la base de datos.", QMessageBox.StandardButton.Ok)
+            print("No se encontraron datos en la base de datos.")
+            #QMessageBox.information(self, "No hay datos", "No se encontraron datos en la base de datos.", QMessageBox.StandardButton.Ok)
 
     def filtrar_datos_id_condiciones_iniciales(self):
         self.filtro_datos_box_3.clear()
@@ -336,7 +338,8 @@ class PanelDataAnalisis(QMainWindow):
             for id_condicion in id_condiciones_iniciales:
                 self.filtro_datos_box_3.addItem(str(id_condicion))
         else:
-            QMessageBox.information(self, "No hay datos", "No se encontraron datos en la base de datos.", QMessageBox.StandardButton.Ok)
+            print("No se encontraron datos en la base de datos.")
+            #QMessageBox.information(self, "No hay datos", "No se encontraron datos en la base de datos.", QMessageBox.StandardButton.Ok)
 
 #manejar try except cuando la base de datos no tiene datos, regresar version no refactorizada
     def mostrar_datos_tabla(self, resultados):
@@ -956,7 +959,7 @@ class PanelDataAnalisis(QMainWindow):
 
                 html_content += "</body></html>"
 
-                with open(ruta_archivo, 'w') as f:
+                with open(ruta_archivo, 'w', encoding='utf-8') as f:
                     f.write(html_content)
 
                 QMessageBox.information(self, "Éxito", "El reporte se ha guardado correctamente.")
@@ -1017,7 +1020,7 @@ class PanelDataAnalisis(QMainWindow):
 
                 html_content += "</body></html>"
 
-                with open(ruta_archivo, 'w') as f:
+                with open(ruta_archivo, 'w', encoding='utf-8') as f:
                     f.write(html_content)
 
                 QMessageBox.information(self, "Éxito", "El reporte se ha guardado correctamente.")
@@ -1050,10 +1053,14 @@ class PanelDataAnalisis(QMainWindow):
                 # Agregar tablas y resultados al HTML
                 if hasattr(self, 'df_resultados_a_ci') and not self.df_resultados_a_ci.empty:
                     df_condiciones_iniciales = self.df_resultados_a_ci.drop(columns=['_sa_instance_state'], errors='ignore')
+                    orden_columnas_condiciones_iniciales = ["id", "temperatura", "tiempo", "presion_total", "presion_parcial", "fraccion_molar", "especie_quimica", "tipo_especie", "detalle", "nombre_data"]
+                    df_condiciones_iniciales = df_condiciones_iniciales.reindex(columns=orden_columnas_condiciones_iniciales)
                     html_content += f"<h2>Condiciones Iniciales</h2>"
                     html_content += df_condiciones_iniciales.to_html(classes='table table-striped', border=0, index=False)
                 if hasattr(self, 'df_resultados_unidades') and not self.df_resultados_unidades.empty:
                     df_unidades = self.df_resultados_unidades.drop(columns=['_sa_instance_state'], errors='ignore')
+                    orden_columnas_unidades = ["id", "presion", "temperatura", "tiempo", "concentracion", "energia", "r", "nombre_data"]
+                    df_unidades = df_unidades.reindex(columns=orden_columnas_unidades)
                     html_content += f"<h2>Unidades</h2>"
                     html_content += df_unidades.to_html(classes='table table-striped', border=0, index=False)
                 if hasattr(self, 'df_combinado'):
@@ -1063,6 +1070,8 @@ class PanelDataAnalisis(QMainWindow):
                 
                 if hasattr(self, 'df_resultados_ds') and not self.df_resultados_ds.empty:
                     df_resultados_ds = self.df_resultados_ds.drop(columns=['_sa_instance_state'], errors='ignore')
+                    orden_columnas_resultados_ds = [ "id","nombre_data_salida", "fecha", "id_nombre_data", "id_condiciones_iniciales","id_registro_unidades", "r_utilizada", "nombre_data", "nombre_reaccion","delta_n_reaccion", "epsilon_reactivo_limitante", "tipo_especie", "especie_quimica", "constante_cinetica", "orden_reaccion", "modelo_cinetico", "tipo_calculo", "detalles"]
+                    df_resultados_ds = df_resultados_ds.reindex(columns=orden_columnas_resultados_ds)
                     html_content += f"<h2>Datos de Salida</h2>"
                     html_content += df_resultados_ds.to_html(classes='table table-striped', border=0, index=False)
 
@@ -1075,7 +1084,7 @@ class PanelDataAnalisis(QMainWindow):
 
                 html_content += "</body></html>"
 
-                with open(ruta_archivo, 'w') as f:
+                with open(ruta_archivo, 'w', encoding='utf-8') as f:
                     f.write(html_content)
 
                 QMessageBox.information(self, "Éxito", "El reporte se ha guardado correctamente.")
