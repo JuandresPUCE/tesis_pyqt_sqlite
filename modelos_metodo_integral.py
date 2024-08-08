@@ -1,6 +1,11 @@
 from scipy.optimize import curve_fit
+from scipy.integrate import odeint
 import numpy as np
 import matplotlib.pyplot as plt
+import os
+from PyQt6.QtWidgets import QInputDialog, QMessageBox
+from PyQt6.QtCore import Qt
+import pandas as pd
 
 class MetodoIntegralModelos:
     
@@ -153,6 +158,110 @@ class MetodoIntegralAjustador:
         print('n_optimo:', n)
 
         return k_optimo, A_0_optimo, n , nombre_modelo , ecuacion_texto,ecuacion_texto_cadena
+    @staticmethod
+    def ajustar_modelo_bimolecular(data_cinetica, columna_tiempo, columna_conversion, estimacion_inicial_k, coeficiente_a, coeficiente_b, data_auxiliar,n=None, m=None):
+        # Solicitar el valor de n al usuario si no se proporciona
+        if n is None:
+            while True:
+                try:
+                    n, ok_n = QInputDialog.getDouble(None, "Entrada de Valor", "Ingrese el valor de n:", decimals=4)
+                    if not ok_n:
+                        QMessageBox.warning(None, "Advertencia", "Operación cancelada por el usuario.")
+                        return None
+                    break  # Salir del bucle si la entrada es válida
+                except ValueError:
+                    QMessageBox.critical(None, "Error", "Por favor, ingrese un número válido para n.")
+
+        # Solicitar el valor de m al usuario si no se proporciona
+        if m is None:
+            while True:
+                try:
+                    m, ok_m = QInputDialog.getDouble(None, "Entrada de Valor", "Ingrese el valor de estimacion_inicial_m:", decimals=4)
+                    if not ok_m:
+                        QMessageBox.warning(None, "Advertencia", "Operación cancelada por el usuario.")
+                        return None
+                    break  # Salir del bucle si la entrada es válida
+                except ValueError:
+                    QMessageBox.critical(None, "Error", "Por favor, ingrese un número válido para estimacion_inicial_m.")
+
+        t_data = data_cinetica[columna_tiempo]
+        conversiones_data = data_cinetica[columna_conversion]
+        A_concentracion = data_cinetica['concentracion']
+
+        filtro_A0 = (data_auxiliar['tipo_especie'] == 'reactivo_limitante') & (data_auxiliar['tiempo'] == 0) & (data_auxiliar['conversion_reactivo_limitante'] == 0)
+        filtro_B0 = (data_auxiliar['tipo_especie'] == 'reactivo') & (data_auxiliar['tiempo'] == 0) & (data_auxiliar['conversion_reactivo_limitante'] == 0)
+
+        B_concentracion = data_auxiliar.loc[filtro_B0, 'concentracion']
+        B0 = data_auxiliar.loc[filtro_B0, 'concentracion'].iloc[0]
+        A0 = data_auxiliar.loc[filtro_A0, 'concentracion'].iloc[0]
+        print('A0:', A0)
+        print('B0:', B0)
+
+        # Definimos la función de la ecuación diferencial
+        def modelo_bimolecular(X, t, k, n, m):
+            A = A0 * (1 - X)
+            B = B0 - (coeficiente_b / coeficiente_a) * A0 * X
+            dXdt = k * (A0 ** (n-1)) * (A ** n) * (B ** m)
+            return dXdt
+
+        # Función para resolver la ODE
+        def resolver_ode(params, t, X0):
+            k, n, m = params
+            X_sol = odeint(modelo_bimolecular, X0, t, args=(k, n, m), atol=1e-8, rtol=1e-8)
+            return X_sol.flatten()
+
+        # Función de ajuste para curve_fit
+        def funcion_ajuste(t, k, n, m):
+            X0 = 0  # Conversión inicial
+            X_ajustada = resolver_ode([k, n, m], t, X0)
+            return X_ajustada
+
+        # Valores iniciales para los parámetros k, n y m
+        valores_iniciales = [estimacion_inicial_k, n, m]
+
+        # Ajuste de los parámetros usando curve_fit
+        parametros_optimos, covarianza = curve_fit(funcion_ajuste, t_data, conversiones_data, p0=valores_iniciales)
+
+        # Los valores óptimos de k, n y m
+        k_optimo, n_optimo, m_optimo = parametros_optimos
+
+        # Generar la cadena de texto con la ecuación del modelo ajustado
+        ecuacion_texto = f'$-\\frac{{dA}}{{dt}} = {k_optimo:.4e} A^{{{n_optimo:.4f}}} B^{{{m_optimo:.4f}}}$'
+        ecuacion_texto_cadena = f"-dA/dt = {k_optimo:.4e} * A^{{{n_optimo:.4f}}} * B^{{{m_optimo:.4f}}}"
+
+        # Imprimir los parámetros óptimos
+        print('k_optimo:', k_optimo)
+        print('n_optimo:', n_optimo)
+        print('m_optimo:', m_optimo)
+
+        # Usar los parámetros óptimos para calcular los valores ajustados
+        X_ajustada = funcion_ajuste(t_data, *parametros_optimos)
+        A_ajustada = A0 * (1 - X_ajustada)
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.scatter(t_data, A_concentracion, label='Datos experimentales reactivo limitante', color='blue')
+        ax.plot(t_data, A_ajustada, label='Ajuste', color='red')
+        ax.text(0.02, 0.5, ecuacion_texto, transform=ax.transAxes, fontsize=10, verticalalignment='top', bbox=dict(facecolor='white', alpha=0.5))
+        ax.set_xlabel('Tiempo')
+        ax.set_ylabel('Concentración')
+        ax.set_title('Ajuste del Modelo Bimolecular')
+        ax.legend()
+        ax.grid(True)
+
+        # Verificar si la carpeta 'temp' existe, si no, crearla
+        if not os.path.exists('temp'):
+            os.makedirs('temp')
+
+        # Ruta de la imagen
+        ruta_imagen = 'temp/temp_bimol.png'
+
+        # Guardar la imagen en la carpeta 'temp' con el nombre 'temp_bimol.png'
+        plt.savefig(ruta_imagen, format='png')
+        plt.close(fig)
+
+        return k_optimo, A0, n_optimo, 'modelo_bimolecular', ecuacion_texto, ecuacion_texto_cadena, ruta_imagen
+    
+
 #ämetodo ocupado dashboard
 class MetodoIntegralGraficador:
     @staticmethod

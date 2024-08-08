@@ -1,5 +1,6 @@
 import os
 import sys
+import shutil
 import subprocess
 from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
@@ -366,7 +367,7 @@ class PanelDataAnalisis(QMainWindow):
         for metodo in metodos:
             self.ajustar_modelo_box.addItem(metodo)
 
-    # Maneja la selección del modelo de ajuste
+        # Maneja la selección del modelo de ajuste
     def manejador_seleccion_modelo(self, index=None, guardar_reporte=False):
         if index == 0 and not guardar_reporte:  # Si se selecciona "Modelos cinéticos", no computa
             QMessageBox.warning(self, "Selección requerida", "Por favor, escoja un modelo.")
@@ -396,47 +397,107 @@ class PanelDataAnalisis(QMainWindow):
                 QMessageBox.warning(self, "Error", "Por favor ingrese valores numéricos válidos.", QMessageBox.StandardButton.Ok)
                 return
 
-            # Llamar al método con los parámetros y el reactivo opcional
-            if self.reactivo_limitante_inicial_edit.text().strip():  # Si el campo no está vacío
-                reactivo_limitante_inicial = float(self.reactivo_limitante_inicial_edit.text().strip())
-                resultado = metodo(dataframe, "tiempo", "concentracion", estimacion_inicial_k, estimacion_inicial_n, reactivo_limitante_inicial)
+            # Manejar el ajuste para el modelo bimolecular
+            if nombre_metodo == 'ajustar_modelo_bimolecular':
+                # Obtener el nombre de la reacción desde el DataFrame
+                if not dataframe.empty:
+                    nombre_reaccion = dataframe.iloc[0]['nombre_reaccion']
+                else:
+                    raise ValueError("El DataFrame de datos cinéticos está vacío.")
+
+                filtro_reaccion = {'nombre_reaccion': nombre_reaccion}
+                reaccion_quimica = self.ReaccionQuimicaManejador.consultar(filtros=filtro_reaccion)
+                self.df_reaccion_quimica = pd.DataFrame.from_records([reaccion.__dict__ for reaccion in reaccion_quimica])
+
+                filtros_data = {"nombre_data": self.registro_datos_box.currentText()}
+                datos_cineticos = self.DatosCineticosManejador.consultar(filtros=filtros_data)
+                self.df_datos_cineticos_completos = pd.DataFrame.from_records([dato.__dict__ for dato in datos_cineticos])
+
+                # Obtener coeficientes
+                coeficiente_a_values = self.df_reaccion_quimica.loc[
+                    self.df_reaccion_quimica['tipo_especie'] == 'reactivo_limitante', 
+                    'coeficiente_estequiometrico'
+                ].values
+
+                coeficiente_b_values = self.df_reaccion_quimica.loc[
+                    self.df_reaccion_quimica['tipo_especie'] == 'reactivo', 
+                    'coeficiente_estequiometrico'
+                ].values
+
+                coeficiente_a = coeficiente_a_values[0] if coeficiente_a_values.size > 0 else 1
+                coeficiente_b = coeficiente_b_values[0] if coeficiente_b_values.size > 0 else 1
+
+                print("Coeficiente A:", coeficiente_a)
+                print("Coeficiente B:", coeficiente_b)
+
+                # Llamar al método ajustador específico para el modelo bimolecular
+                if self.estimacion_inicial_n_edit.text().strip():
+                    n_inicial = float(self.estimacion_inicial_n_edit.text().strip())
+                    #ajustar_modelo_bimolecular(data_cinetica, columna_tiempo, columna_conversion, estimacion_inicial_k, coeficiente_a, coeficiente_b, data_auxiliar):
+                    resultado = metodo(dataframe, "tiempo", "conversion_reactivo_limitante", estimacion_inicial_k, 
+                                       coeficiente_a, coeficiente_b, self.df_datos_cineticos_completos,n_inicial)
+
+                    k_optimo, A0, m_optimo, _, ecuacion_texto, ecuacion_texto_cadena, ruta_imagen = resultado
+
+                    # Mostrar la imagen generada en el widget de Matplotlib
+                    self.mostrar_imagen_datos_vacios(ruta_imagen, grafico_mostrar=self.matplotlib_widget)
+
+                    # Actualizar los campos de la interfaz
+                    self.reactivo_limitante_calculado.setText(str(A0))
+                    self.k_calculado.setText(str(k_optimo))
+                    self.n_calculado.setText(str(m_optimo))
+                    self.modelo_utilizado.setText(str(resultado[3]))
+                    self.ecuacion_utilizada=(ecuacion_texto_cadena)
+                    # Guardar el reporte si se solicita
+                    QMessageBox.information(self, "Resultado", f"El modelo se ajustó. Resultado: {resultado[0], resultado[2], resultado[3]}", QMessageBox.StandardButton.Ok)
+                    self.statusbar.showMessage(f"El modelo se ajustó. Resultado: {resultado[0], resultado[2], resultado[3]}", 5000)
+                    if guardar_reporte:
+                        self.guardar_reporte_metodo_integral(resultado, otra_imagen=ruta_imagen)
+
             else:
-                resultado = metodo(dataframe, "tiempo", "concentracion", estimacion_inicial_k, estimacion_inicial_n)
+                # Llamar al método con los parámetros y el reactivo opcional
+                if self.reactivo_limitante_inicial_edit.text().strip():  # Si el campo no está vacío
+                    reactivo_limitante_inicial = float(self.reactivo_limitante_inicial_edit.text().strip())
+                    resultado = metodo(dataframe, "tiempo", "concentracion", estimacion_inicial_k, estimacion_inicial_n, reactivo_limitante_inicial)
+                else:
+                    resultado = metodo(dataframe, "tiempo", "concentracion", estimacion_inicial_k, estimacion_inicial_n)
 
-            # Mostrar resultados
-            QMessageBox.information(self, "Resultado", f"El modelo se ajustó. Resultado: {resultado[0],resultado[2],resultado[3]}", QMessageBox.StandardButton.Ok)
-            self.statusbar.showMessage(f"El modelo se ajustó. Resultado: {resultado[0],resultado[2],resultado[3]}", 5000)
-            print(resultado)
-            
-            # Actualizar los campos de la interfaz
-            self.reactivo_limitante_calculado.setText(str(resultado[1]))
-            self.k_calculado.setText(str(resultado[0]))
-            self.n_calculado.setText(str(resultado[2]))
-            self.modelo_utilizado.setText(str(resultado[3]))
-            self.ecuacion_utilizada=(resultado[5])
+                # Mostrar resultados
+                QMessageBox.information(self, "Resultado", f"El modelo se ajustó. Resultado: {resultado[0], resultado[2], resultado[3]}", QMessageBox.StandardButton.Ok)
+                self.statusbar.showMessage(f"El modelo se ajustó. Resultado: {resultado[0], resultado[2], resultado[3]}", 5000)
+                print(resultado)
 
-            # Graficar utilizando el resultado obtenido
-            MetodoIntegralGraficador.graficar_modelo_salida_opcional_ecuacion(
-                dataframe,
-                "tiempo",
-                "concentracion",
-                resultado[0],
-                dataframe['concentracion'].iloc[0],
-                resultado[2],
-                resultado[3],
-                resultado[4],
-                data_producto=None,
-                columna_concentracion_producto=None,
-                grafico="MatplotlibWidget",
-                ax=self.matplotlib_widget.ax,
-                canvas=self.matplotlib_widget.canvas
-            )
+                # Actualizar los campos de la interfaz
+                self.reactivo_limitante_calculado.setText(str(resultado[1]))
+                self.k_calculado.setText(str(resultado[0]))
+                self.n_calculado.setText(str(resultado[2]))
+                self.modelo_utilizado.setText(str(resultado[3]))
+                self.ecuacion_utilizada=(resultado[5])
 
-            if guardar_reporte:
-                self.guardar_reporte_metodo_integral(resultado)
+                # Graficar utilizando el resultado obtenido
+                MetodoIntegralGraficador.graficar_modelo_salida_opcional_ecuacion(
+                    dataframe,
+                    "tiempo",
+                    "concentracion",
+                    resultado[0],
+                    dataframe['concentracion'].iloc[0],
+                    resultado[2],
+                    resultado[3],
+                    resultado[4],
+                    data_producto=None,
+                    columna_concentracion_producto=None,
+                    grafico="MatplotlibWidget",
+                    ax=self.matplotlib_widget.ax,
+                    canvas=self.matplotlib_widget.canvas
+                )
+                if guardar_reporte:
+                    self.guardar_reporte_metodo_integral(resultado)
+
+                    
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Ocurrió un error al ejecutar el modelo: {str(e)}", QMessageBox.StandardButton.Ok)
             return None
+
 
             
     def ejecutar_modelo(self):
@@ -966,7 +1027,7 @@ class PanelDataAnalisis(QMainWindow):
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Ocurrió un error al guardar el reporte: {e}")
         
-    def guardar_reporte_metodo_integral(self, resultado):
+    def guardar_reporte_metodo_integral(self, resultado, otra_imagen=None):
         # Crear cuadro de diálogo para guardar archivo
         ruta_archivo, _ = QFileDialog.getSaveFileName(self, "Guardar Reporte del Método Integral", "", "HTML Files (*.html)")
 
@@ -974,58 +1035,67 @@ class PanelDataAnalisis(QMainWindow):
             # Asegurarse de que la extensión del archivo sea correcta
             if not ruta_archivo.endswith(".html"):
                 ruta_archivo += ".html"
+            
+            # Crear la ruta para la copia de la imagen
+            if otra_imagen:
+                grafico_path = ruta_archivo.replace('.html', '.png')
+                try:
+                    # Copiar la imagen alternativa a la ruta de destino
+                    shutil.copy(otra_imagen, grafico_path)
+                except Exception as e:
+                    QMessageBox.warning(self, "Advertencia", f"No se pudo copiar la imagen alternativa: {e}")
 
-            try:
-                # Usar el nombre del archivo HTML para el gráfico
+            else:
                 grafico_path = ruta_archivo.replace('.html', '.png')
                 self.matplotlib_widget.canvas.figure.savefig(grafico_path, format='png')
 
-                # Crear contenido HTML
-                html_content = "<html><head><title>Reporte del Método Integral</title></head><body>"
-                html_content += "<h1>Reporte del Método Integral</h1>"
-                html_content += f"<h2>Gráfico</h2><img src='{grafico_path}' alt='Gráfico'>"
+            # Crear contenido HTML
+            html_content = "<html><head><title>Reporte del Método Integral</title></head><body>"
+            html_content += "<h1>Reporte del Método Integral</h1>"
+            html_content += f"<h2>Gráfico</h2><img src='{grafico_path}' alt='Gráfico'>"
 
-                # Agregar tablas y resultados al HTML
-                if hasattr(self, 'df_reaccion_quimica') and not self.df_reaccion_quimica.empty:
-                    df_reaccion = self.df_reaccion_quimica.drop(columns=['_sa_instance_state'], errors='ignore')
-                    # Ordenar columnas
-                    orden_columnas_reaccion = ["id", "especie_quimica", "formula", "coeficiente_estequiometrico", "detalle", "tipo_especie", "nombre_reaccion"]
-                    df_reaccion = df_reaccion.reindex(columns=orden_columnas_reaccion)
-                    html_content += "<h2>Reacción Química</h2>"
-                    html_content += df_reaccion.to_html(classes='table table-striped', border=0, index=False)
+            # Agregar tablas y resultados al HTML
+            if hasattr(self, 'df_reaccion_quimica') and not self.df_reaccion_quimica.empty:
+                df_reaccion = self.df_reaccion_quimica.drop(columns=['_sa_instance_state'], errors='ignore')
+                # Ordenar columnas
+                orden_columnas_reaccion = ["id", "especie_quimica", "formula", "coeficiente_estequiometrico", "detalle", "tipo_especie", "nombre_reaccion"]
+                df_reaccion = df_reaccion.reindex(columns=orden_columnas_reaccion)
+                html_content += "<h2>Reacción Química</h2>"
+                html_content += df_reaccion.to_html(classes='table table-striped', border=0, index=False)
 
-                if hasattr(self, 'df_unidades') and not self.df_unidades.empty:
-                    df_unidades = self.df_unidades.drop(columns=['_sa_instance_state'], errors='ignore')
-                    # Ordenar columnas
-                    orden_columnas_unidades = ["id", "presion", "temperatura", "tiempo", "concentracion", "energia", "r", "nombre_data"]
-                    df_unidades = df_unidades.reindex(columns=orden_columnas_unidades)
-                    html_content += "<h2>Set de Unidades</h2>"
-                    html_content += df_unidades.to_html(classes='table table-striped', border=0, index=False)
+            if hasattr(self, 'df_unidades') and not self.df_unidades.empty:
+                df_unidades = self.df_unidades.drop(columns=['_sa_instance_state'], errors='ignore')
+                # Ordenar columnas
+                orden_columnas_unidades = ["id", "presion", "temperatura", "tiempo", "concentracion", "energia", "r", "nombre_data"]
+                df_unidades = df_unidades.reindex(columns=orden_columnas_unidades)
+                html_content += "<h2>Set de Unidades</h2>"
+                html_content += df_unidades.to_html(classes='table table-striped', border=0, index=False)
 
-                if hasattr(self, 'df_datos_cineticos_listos') and not self.df_datos_cineticos_listos.empty:
-                    df_datos_cineticos = self.df_datos_cineticos_listos.drop(columns=['_sa_instance_state'], errors='ignore')
-                    # Ordenar columnas
-                    orden_columnas_datos_cineticos = ["id", "tiempo", "concentracion", "otra_propiedad", "conversion_reactivo_limitante", "tipo_especie", "id_condiciones_iniciales", "nombre_data", "nombre_reaccion", "especie_quimica"]
-                    df_datos_cineticos = df_datos_cineticos.reindex(columns=orden_columnas_datos_cineticos)
-                    html_content += "<h2>Datos Cinéticos Listos</h2>"
-                    html_content += df_datos_cineticos.to_html(classes='table table-striped', border=0, index=False)
+            if hasattr(self, 'df_datos_cineticos_listos') and not self.df_datos_cineticos_listos.empty:
+                df_datos_cineticos = self.df_datos_cineticos_listos.drop(columns=['_sa_instance_state'], errors='ignore')
+                # Ordenar columnas
+                orden_columnas_datos_cineticos = ["id", "tiempo", "concentracion", "otra_propiedad", "conversion_reactivo_limitante", "tipo_especie", "id_condiciones_iniciales", "nombre_data", "nombre_reaccion", "especie_quimica"]
+                df_datos_cineticos = df_datos_cineticos.reindex(columns=orden_columnas_datos_cineticos)
+                html_content += "<h2>Datos Cinéticos Listos</h2>"
+                html_content += df_datos_cineticos.to_html(classes='table table-striped', border=0, index=False)
 
-                # Resultados del método integral
-                html_content += "<h2>Resultados del Método Integral</h2>"
-                html_content += f"<p>k: {resultado[0]}</p>"
-                html_content += f"<p>n: {resultado[2]}</p>"
-                html_content += f"<p>Reactivo Limitante Calculado: {resultado[1]}</p>"
-                html_content += f"<p>Modelo Utilizado: {resultado[3]}</p>"
-                html_content += f"<p>Ecuación: {resultado[5]}</p>"
+            # Resultados del método integral
+            html_content += "<h2>Resultados del Método Integral</h2>"
+            html_content += f"<p>k: {resultado[0]}</p>"
+            html_content += f"<p>n: {resultado[2]}</p>"
+            html_content += f"<p>Reactivo Limitante Calculado: {resultado[1]}</p>"
+            html_content += f"<p>Modelo Utilizado: {resultado[3]}</p>"
+            html_content += f"<p>Ecuación: {resultado[5]}</p>"
 
-                html_content += "</body></html>"
+            html_content += "</body></html>"
 
+            try:
                 with open(ruta_archivo, 'w', encoding='utf-8') as f:
                     f.write(html_content)
 
                 QMessageBox.information(self, "Éxito", "El reporte se ha guardado correctamente.")
             except Exception as e:
-                QMessageBox.critical(self, "Error", f"Ocurrió un error al guardar el reporte: {e}")  
+                QMessageBox.critical(self, "Error", f"Ocurrió un error al guardar el reporte: {e}")
     
     def guardar_reporte_arrhenius(self, resultado):
         # Definir el nombre del archivo y la ruta
@@ -1166,8 +1236,6 @@ class MatplotlibWidget(QWidget):
         self.ax.clear()
         img = mpimg.imread(ruta_imagen)
         self.ax.imshow(img)
-        self.ax.set_facecolor('none')
-        self.figure.patch.set_alpha(0)
         self.ax.axis('off')  # Ocultar los ejes
         self.canvas.draw()
 
